@@ -1,0 +1,127 @@
+Treacl - dynamic attributes class
+
+2018-06-02 kleymik  - derivative of very similar datatypes in various interpreted languages from myself and others
+
+
+* Intro
+
+markdown yaml json configurations
+
+semantic through properties dict
+
+treacl - exploiting dynamic attributes for trees and directed graphs
+
+
+Using python's "dunder"-based accessibility it's possible to make object attributes dynamic,
+allowing tree creation dynamic and concise.  
+
+  from treacl import Treacl
+
+  foo = Treacl()                # an instance of the class Treacl
+  foo.aa.bb.cc.dd.ee = 1        # for each attribute down the dot-path expression chain a instance of the class Treacl are created all the 
+  foo.aa.qq.rr = "Hello World"
+
+The ability to write such code segments is very analogous to the use of markdown variants (such as yaml (= yaml ain't markdown language)
+
+Though the same can be implemeted with an attribute in a class containg a dicts, 
+the advantage of this approach is that the natural python dot operator is made pre-eminent.
+
+Treacl is a misnomer in that it works fine for making directed graphs too.
+
+Indeed, the discipline here is to avoid creating 
+
+** for Example
+
+a yaml configuration such as
+
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: rss-site
+      labels:
+        app: web
+    spec:
+      replicas: 2
+      selector:
+        matchLabels:
+          app: web
+      template:
+        metadata:
+          labels:
+            app: web
+        spec:
+          containers:
+            - name: front-end
+              image: nginx
+              ports:
+                - containerPort: 80
+            - name: rss-reader
+              image: nickchase/rss-php-nginx:v1
+              ports:
+                - containerPort: 88
+
+can represented
+
+def test_2_yaml():
+    kubConfig = Treacl()
+	kubConfig.apiVersion = "apps/v1"
+	kubConfig.kind = "Deployment"
+	kubConfig.metadata.name = "rss-site"
+	kubConfig.metadata.labels.app = "web"
+	spec:
+	  replicas: 2
+	  selector:
+		matchLabels:
+		  app: web
+	  template:
+		metadata:
+		  labels:
+			app: web
+		spec:
+		  containers:
+			- name: front-end
+			  image: nginx
+			  ports:
+				- containerPort: 80
+			- name: rss-reader
+			  image: nickchase/rss-php-nginx:v1
+			  ports:
+				- containerPort: 88
+
+
+* The essence
+
+By overrding the getter in python so that it defaults to initialising a new attribute of a class with a values 
+that is an empty object the *this same class*
+
+class Treacl(object):
+    ''' Treacl: a tree class'''
+
+   def __getattr__(self, name):
+        '''only called for undefined attributes'''
+        setattr(self, name, vdd := Treacl())                      # I am the walrus
+        return vdd
+
+That's it!
+ 
+
+* Run Example
+
+from treacl import Treacl
+from treacl.util imports tests
+
+tests.run()
+
+
+
+* Acknowledgements
+
+The basic trick (and its of Pythons' ) is well known 
+see for example
+autodict
+
+Matlab:     In Matlab "structs" (and hence their weird cousin "struct Array"), and the effectively foo.(bar) evaluating parentheses provide dyanmic attributes.
+
+Javascript: In Javascript dot-path expressions are alredy used to access attributes
+
+
