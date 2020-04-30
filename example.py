@@ -12,27 +12,39 @@ from textwrap import indent
 class Treacl(object):
     ''' Treacl: a tree class'''
 
+	# attribute manipulation
+
     def __getattr__(self, name):
         '''only called for undefined attributes'''
         setattr(self, name, vdd := Treacl())                      # I am the walrus
         return vdd
 
     def delBranch(self, pthLst):                                  # TBD: traverses path, then deletes branch, pruning on the way back up
-        if self.hasattr(pthLst[0]):
+        if self.hasattr(pthLst[0]):                               # maybe not needed a.b.c = None
             delbranch(self, pth[1:])
             delattr()
 
-    searchMaxDepth = 10_000_000                                   # in case of cycles: limit any search
 
+	# a bit of support for treacl node properties
+	
     tProps = {"long_name":None, "type":None}                      # Treacl "user" properties instead of attributes - see README explanation
 
-    def addProp(self, name, value):
-        return None
-    def getProp(self, name, value):
-        return None
+    def addProp(self, pName, value):
+		tProps[pName] = value
+        return value
+	
+    def getProp(self, pName, value):
+		try:
+			return tProps[pName]
+		except AttributeError:
+			print('No %s property' % pName)
 
 
+	# some basic traversal methods
+	
+    searchMaxDepth = 10_000_000                                   # in case of cycles: limit any search
     ppIndent = 4                                                  # indent for tree printing
+	
     def pptree(self, depth=0):
         '''print tree recursively'''
         for at in self.__dict__:                                  # tbd: if singleton, don't print a CRLF
@@ -48,11 +60,6 @@ class Treacl(object):
                 # pdb.set_trace()
                 # ilines = indent(pformat(atv).splitlines(True),' '*depth)
                 # for l in ilines: print('X', l)
-
-    def paths_to_dot():
-        ''' export data as dot/dotty graph format file'''
-        return None
-
 
     def pathsToList(self, curPath="", resLst=[], depth=0, showValP=False): # list all paths in tree
         '''generate all paths to a given depth'''
@@ -94,11 +101,32 @@ class Treacl(object):
                     print(' ' * depth, f'{at}=', end='')
                     print(pformat(atv))
 
+	# graph functions				
+    def ppgraph(self, depth=0):                                   # same as pptree, but with occurs-check
+        '''print graph recursively'''
+        for at in self.__dict__:                                  # tbd: if singleton, don't print a CRLF
+            atv = getattr(self, at)                               # attribute value
+            if isinstance(atv, Treacl):
+                print(' ' * depth, f'{at}: ')
+                atv.pptree(depth + self.ppIndent)                 # recurse
+            else:
+                print(' ' * depth, f'{at}= ', end='')
+                print(pformat(atv))                               # tbd: keep indent even if multi-line
+					
+	# import / export graphs
+	
+    def paths_to_dot():
+        ''' export data as dot/dotty graph format file'''
+        return None
+
+
 
 # for testing
 
 def test_1_cfg():
+
     # simple example
+
     config = Treacl()
     config.boo = 1
     config.bar.alpha = 11
@@ -118,17 +146,17 @@ def test_1_cfg():
     config.a.b.c.d3 = 42
     config.dag = config.bar  # this works, but creates a DAG! # tbd: table hint?
 
-    print("test: Tree")
+    print("test 1: ")
     config.pptree()
 
-    print("test: enumerated list of all paths")
+    print("test 1: enumerated list of all paths")
     for e in config.pathsToList("config"): print(e)
 
     return config
 
 def test_2_yaml():
 
-    # random snippet of yaml to illustrate conversion to treacl:
+    # random snippet of YAML - to illustrate conversion to treacl:
     #
     #   apiVersion: apps/v1
     #   kind: Deployment
@@ -156,6 +184,7 @@ def test_2_yaml():
     #             ports:
     #               - containerPort: 88
 
+	# treacl version of the above snippet:
     kubConfig = Treacl()
     kubConfig.apiVersion = "apps/v1"
     kubConfig.kind       = "Deployment"
@@ -248,8 +277,29 @@ def test_2_divisble_by_7():
         print("Not Divisible by 7")
 
 def standard_model_interactions():
-    # https://www.wikiwand.com/en/Standard_Model
 
+    # https://www.wikiwand.com/en/Standard_Model
+	# https://www.theatlantic.com/technology/archive/2012/07/still-confused-about-the-higgs-boson-read-this/259472/
+	
+	photon = Treacl()
+	
+	leptons = Treacl()
+
+	higgs_boson = Treacl()
+
+	gluon = Treacl()
+
+	electron,          tau,          muon          = Treacl(), Treacl(), Treacl()
+	electron_neutrino, tau_neutrino, muon_neutrino = Treacl(), Treacl(), Treacl()
+	
+	up_quark,      down_quark   = Treacl(), Treacl()
+	strange_quark, charm_quark  = Treacl(), Treacl()
+	top_quark,     bottom_quark = Treacl(), Treacl()
+
+	Wplus_boson, Wminus_boson, Z_boson = Treacl(), Treacl(), Treacl()
+
+	return photon
+	
 if __name__ == '__main__':
 
     test_1_config()
@@ -279,14 +329,6 @@ if __name__ == '__main__':
 
     # univ.addProp('role','The Big One')
 
-# from see import see
-# import pdb
-# import numpy as np
-# def print_field(obj, field):
-#    try:
-#       print(getattr(obj, field))
-#    except AttributeError:
-#       print('No %s field' % field)
 
 
 
