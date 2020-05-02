@@ -39,13 +39,10 @@ class Treacl(object):
         return pName
 
     def getProp(self, pName, value):
-        try:
-            return __props__[pName]
-        except AttributeError:
-            print('No %s property' % pName)
+        return __props__[pName]
 
     def listProps(self):
-     return [ k for k in __props__.keys() ]
+        return [ k for k in __props__.keys() ]
 
 
     # some basic traversal methods
