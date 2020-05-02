@@ -10,13 +10,13 @@
 
 Treacl allows exploiting dynamic attributes for creating trees and directed graphs.
 
-In regular Python, though a *first* level attribute will be dynamically added to an instance of any class 
+In regular Python, though a *first* level attribute will be dynamically added to an instance of any class
 (e.g. "foo.aa = 1"), it will fail when attempting more than one level ("foo.aa.bb = 1"). Treacl enables this.
 
     from treacl import Treacl
 
     foo = Treacl()                # an instance of the class Treacl
-    foo.aa.bb.cc.dd.ee = 1        # for each attribute down the dot-path expression chain, an instance of the Treacl class is dynamically created 
+    foo.aa.bb.cc.dd.ee = 1        # for each attribute down the dot-path expression chain, an instance of the Treacl class is dynamically created
     foo.aa.qq.rr = "Hello World"
 
     foo.allPaths()                # return all paths in the tree
@@ -24,12 +24,12 @@ In regular Python, though a *first* level attribute will be dynamically added to
 Using python's dunder-based access, it's possible to make object attributes on-the-fly,
 allowing declarative tree creation that is both dynamic and concise.
 
-Though the same could be implemented with an attribute in a class containing a dict, 
-the advantage of this approach here is that the natural and readable Python "." 
+Though the same could be implemented with an attribute in a class containing a dict,
+the advantage of this approach here is that the natural and readable Python "."
 dot operator for attributes is kept pre-eminent.
 
-The ability to write such declarative code segments can sometimes be preferable to the use of 
-markdown variants such as YAML (= Yaml Ain't Markdown Language), if only because 
+The ability to write such declarative code segments can sometimes be preferable to the use of
+markdown variants such as YAML (= Yaml Ain't Markdown Language), if only because
 having yet another declarative language is superfluous, Python will do fine:
 
 ** markdown equivalent example
@@ -37,38 +37,38 @@ having yet another declarative language is superfluous, Python will do fine:
       YAML                                          Python- Treacl
       ====                                          ==============
 
-                                                    kubConfig = Treacl()                                                             
-      apiVersion: apps/v1                           kubConfig.apiVersion = "apps/v1"                                                                               
-      kind: Deployment                              kubConfig.kind       = "Deployment"                                                                         
-      metadata:                                     kubConfig.metadata.name = "rss-site"                                                                        
-        name: rss-site                              kubConfig.metadata.labels.app = "web"                                                                       
-        labels:                                     kubConfig.spec.replicas = 2                                                                                 
-          app: web                                  kubConfig.spec.selector.matchLabels.app = "web"                                                             
-      spec:                                         kubConfig.spec.template.metadata.labels.app = "web"                                                         
-        replicas: 2                                 kubConfig.spec.template.spec.containers = [Treacl(), Treacl()]                                              
-        selector:                                   kubConfig.spec.template.spec.containers[0].name  = "front-end"                                                    
-          matchLabels:                              kubConfig.spec.template.spec.containers[0].image = "nginx"                                                  
-            app: web                                kubConfig.spec.template.spec.containers[0].ports.containerPort = 80                                         
-        template:                                   kubConfig.spec.template.spec.containers[1].name  = "rss-reader"                                             
-          metadata:                                 kubConfig.spec.template.spec.containers[1].image = "nickchase/rss-php-nginx:v1"                             
+                                                    kubConfig = Treacl()
+      apiVersion: apps/v1                           kubConfig.apiVersion = "apps/v1"
+      kind: Deployment                              kubConfig.kind       = "Deployment"
+      metadata:                                     kubConfig.metadata.name = "rss-site"
+        name: rss-site                              kubConfig.metadata.labels.app = "web"
+        labels:                                     kubConfig.spec.replicas = 2
+          app: web                                  kubConfig.spec.selector.matchLabels.app = "web"
+      spec:                                         kubConfig.spec.template.metadata.labels.app = "web"
+        replicas: 2                                 kubConfig.spec.template.spec.containers = [Treacl(), Treacl()]
+        selector:                                   kubConfig.spec.template.spec.containers[0].name  = "front-end"
+          matchLabels:                              kubConfig.spec.template.spec.containers[0].image = "nginx"
+            app: web                                kubConfig.spec.template.spec.containers[0].ports.containerPort = 80
+        template:                                   kubConfig.spec.template.spec.containers[1].name  = "rss-reader"
+          metadata:                                 kubConfig.spec.template.spec.containers[1].image = "nickchase/rss-php-nginx:v1"
             labels:                                 kubConfig.spec.template.spec.containers[1].ports.containerPort = 88
-              app: web                                                         
-          spec:                                                        
+              app: web
+          spec:
             containers:
               - name: front-end
                 image: nginx
                 ports:
                   - containerPort: 80
               - name: rss-reader
-                image: nickchase/rss-php-nginx:v1  
+                image: nickchase/rss-php-nginx:v1
                 ports:
                   - containerPort: 88
 
 
 * The Essence
 
-Treacl is implemented by overrding the __getattr__ class method in python so that it defaults to initialising a 
-new attribute in the instance of the class (i.e. self) with a value that is a new empty instance of *this same class*. 
+Treacl is implemented by overrding the __getattr__ class method in python so that it defaults to initialising a
+new attribute in the instance of the class (i.e. self) with a value that is a new empty instance of *this same class*.
 In this sense, Treacl is "dynamically recursive".
 
     class Treacl(object):
@@ -82,7 +82,16 @@ In this sense, Treacl is "dynamically recursive".
 That's it!
 
 
-* Run Example
+* Examples
+
+treacl/examples:
+  configuration.py    - just a simple sample configuration expressed using treacl
+  divide_by_7.py      - traversal of small graph to determine if divisible by 7
+  json.py             - sample json converted to equivalent treacl (xml too)
+  standard_model.py   - particle physics, gluons, leptons, etc, map of which interact
+  universe.py         - a start at compostional hierarchy of everything
+  yaml.py             - sample json converted to equivalent treacl
+
 
 from treacl import Treacl
 from treacl.util imports tests
@@ -93,7 +102,7 @@ tests.run()
 
 * Acknowledgements / Related
 
-This idiom/construct isn't new. Such an implementation overriding setattr, getattr, or delattr are widespread amongst pythonistas.  
+This idiom/construct isn't new. Such an implementation overriding setattr, getattr, or delattr are widespread amongst pythonistas.
 In other dynamic languages may or may not support such dynamic attributes:
 
   namedtuples: access is similar to create the attributes is not  dynamically recursive by default
@@ -102,7 +111,7 @@ In other dynamic languages may or may not support such dynamic attributes:
 
   Javascript: In Javascript dot-path expressions are alredy used to access attributes,
               From https://rosettacode.org/wiki/Add_a_variable_to_a_class_instance_at_runtime
-              "
+              "javascript:void(null);
                This kind of thing is fundamental to JavaScript, as it's a prototype-based language rather than a class-based one.
 
                e = {}       // generic object
