@@ -13,7 +13,7 @@ def test_1_cfg():
 
     # simple example
 
-    config = Treacl()
+    config = tcl()
     config.boo = 1
     config.bar.alpha = 11
     config.bar.beta = 22
@@ -70,8 +70,8 @@ def test_2_yaml():
     #             ports:
     #               - containerPort: 88
 
-	# treacl version of the above snippet:
-    kubConfig = Treacl()
+    # treacl version of the above snippet:
+    kubConfig = tcl()
     kubConfig.apiVersion = "apps/v1"
     kubConfig.kind       = "Deployment"
     kubConfig.metadata.name = "rss-site"
@@ -79,7 +79,7 @@ def test_2_yaml():
     kubConfig.spec.replicas = 2
     kubConfig.spec.selector.matchLabels.app = "web"
     kubConfig.spec.template.metadata.labels.app = "web"
-    kubConfig.spec.template.spec.containers = [Treacl(), Treacl()]
+    kubConfig.spec.template.spec.containers = [tcl(), tcl()]
     kubConfig.spec.template.spec.containers[0].name  = "front-end"
     kubConfig.spec.template.spec.containers[0].image = "nginx"
     kubConfig.spec.template.spec.containers[0].ports.containerPort = 80
@@ -90,7 +90,7 @@ def test_2_yaml():
 
 def test_2_universe():
     # a bigger example: the universe
-    univ = Treacl()
+    univ = tcl()
     univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.england.london.marylebone.langhamHotel.bar.pint.londonPride.bubble.co2.oxygen.neutron.upQuark = None
     univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.oxfordshire.oxford = None
     univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.languedoc.perpignan.gare = None
@@ -116,7 +116,7 @@ def test_2_universe():
 
 def test_3_divide_by_7():
     # a directed graph example - divisible by 7
-    allNodes = { e: Treacl() for e in "abcdefg" }                     # create 7 alphabetically labelled nodes
+    allNodes = { e: tcl() for e in "abcdefg" }                        # create 7 alphabetically labelled nodes
     allNodes['a'].B = allNodes['b']; allNodes['a'].W = allNodes['a']  # node a has a self loop
     allNodes['b'].B = allNodes['c']; allNodes['b'].W = allNodes['f']
     allNodes['c'].B = allNodes['f']; allNodes['c'].W = allNodes['d']
@@ -133,7 +133,7 @@ def test_3_divide_by_7_compact():
     # this graph is identical to the one in test_3_div7 but expressed
     # by decomposition into a set of line path expressions
     # extra credit for a minimal set of line path expressions
-    mod7 = Treacl()              # the starting node of the graph
+    mod7 = tcl()              # the starting node of the graph
     mod7.W = mod7                #   i) self cycle  a->a White
     mod7.B.B.W.B = mod7          #  ii) outer cycle a->b->c->d->a Black
     mod7.B.W.B.B.B = mod7.B.B.W  # iii) inner cycle a->b->f->g->e->d Black
@@ -157,34 +157,95 @@ def test_2_divisble_by_7():
         for _i in range(d): nxt = nxt.B      # for digits "d" times, move along BLACK edges
         nxt = nxt.W                          # then complete by one step along WHITE edge, repeat until all digits processed
 
-    if nxt is mod7:                          # back at start?
-        print("Divisible by 7")
-    else:
-        print("Not Divisible by 7")
+    if nxt is mod7: print("Divisible by 7")  # back at start?
+    else:           print("Not Divisible by 7")
 
 def standard_model_interactions():
 
+	# interactions of Physics' itty-bitty particles
     # https://www.wikiwand.com/en/Standard_Model
-	# https://www.theatlantic.com/technology/archive/2012/07/still-confused-about-the-higgs-boson-read-this/259472/
+    # https://www.theatlantic.com/technology/archive/2012/07/still-confused-about-the-higgs-boson-read-this/259472/
+    
+    photon = tcl()
+    
+    leptons = tcl()
+
+    higgs_boson = tcl()
+
+    gluon = tcl()
+
+    electron,          tau,          muon          = tcl(), tcl(), tcl()
+    electron_neutrino, tau_neutrino, muon_neutrino = tcl(), tcl(), tcl()
+    
+    up_quark,      down_quark   = tcl(), tcl()
+    strange_quark, charm_quark  = tcl(), tcl()
+    top_quark,     bottom_quark = tcl(), tcl()
+
+    Wplus_boson, Wminus_boson, Z_boson = tcl(), tcl(), tcl() 
+
+    return photon
+
+def test_n_json():
+
+	# json sample from json wikipedia page
+	person = tcl()
+	person.firstName = "Jonn"
+	person.lastName  = "Smith"
+    person.age       = 25
+    person.address.streetAddress = "21 2nd Street"
+    person.address.city          = "New York"
+    person.address.state         =  "NY"
+    person.address.postalCode    =  "10021"
+    person.address.phoneNumbers  = [ tcl(), tcl() ]
+    person.address.phoneNumbers[0].type   = "home"
+    person.address.phoneNumbers[0].number = "212 555-1234"
+    person.address.phoneNumbers[1].type   = "fax"
+    person.address.phoneNumbers[1].number = "646 555-4567"
+	person.sex.type = "male"
+
+	# json form:
+	# {
+	# 	"first name": "John",
+	# 	"last name": "Smith",
+	# 	"age": 25,
+	# 	"address": {
+	# 		"street address": "21 2nd Street",
+	# 		"city": "New York",
+	# 		"state": "NY",
+	# 		"postal code": "10021"
+	# 	},
+	# 	"phone numbers": [
+	# 		{
+	# 			"type": "home",
+	# 			"number": "212 555-1234"
+	# 		},
+	# 		{
+	# 			"type": "fax",
+	# 			"number": "646 555-4567"
+	# 		}
+	# 	],
+	# 	"sex": {
+	# 		"type": "male"
+	# 	}
+	# }
+
+	# or similarly with XML, in XML-with-properties form:
+    #
+	# <person firstName="John" lastName="Smith" age="25">
+	#   <address streetAddress="21 2nd Street" city="New York" state="NY" postalCode="10021" />
+	#   <phoneNumbers>
+	#     <phoneNumber type="home" number="212 555-1234"/>
+	#     <phoneNumber type="fax" number="646 555-4567"/>
+	#   </phoneNumbers>
+	#   <sex type="male"/>
+	# </person>
 	
-	photon = Treacl()
-	
-	leptons = Treacl()
 
-	higgs_boson = Treacl()
+def test_pascal():
 
-	gluon = Treacl()
-
-	electron,          tau,          muon          = Treacl(), Treacl(), Treacl()
-	electron_neutrino, tau_neutrino, muon_neutrino = Treacl(), Treacl(), Treacl()
-	
-	up_quark,      down_quark   = Treacl(), Treacl()
-	strange_quark, charm_quark  = Treacl(), Treacl()
-	top_quark,     bottom_quark = Treacl(), Treacl()
-
-	Wplus_boson, Wminus_boson, Z_boson = Treacl(), Treacl(), Treacl()
-
-	return photon
+	a = tcl()
+	a.setProp('num',1)
+	a.l.parSum()
 	
 if __name__ == '__main__':
 
@@ -200,14 +261,14 @@ if __name__ == '__main__':
     if False:
         # path expressions
         config.findPaths("*")                    ## all paths
-        config.findPaths("config*")                 ## all paths starting "config"
-        config.findPaths("*config")                 ## all paths ending "config"
-        config.findPaths("*config*")                ## all paths containing "config"
-        config.findPaths("*config*bar*")            ## all paths containing "config" followed by "bar"
+        config.findPaths("config*")              ## all paths starting "config"
+        config.findPaths("*config")              ## all paths ending "config"
+        config.findPaths("*config*")             ## all paths containing "config"
+        config.findPaths("*config*bar*")         ## all paths containing "config" followed by "bar"
         config.findPaths("*[[A-Z]]*")            ## all paths containing regexp "[A-Z]"
         config.findPaths("*[[A-Z]]*")            ## all paths containing regexp "[A-Z]*"
-        config.findPaths("*a:=config*a*")           ## all paths containing regexp "[A-Z]*"
-        config.findPaths("*.config.*")              ## all paths with a branch exactly "config"
+        config.findPaths("*a:=config*a*")        ## all paths containing regexp "[A-Z]*"
+        config.findPaths("*.config.*")           ## all paths with a branch exactly "config"
         config.findPaths("*ForAll().Exists*a*")  ## all paths containing regexp "[A-Z]*"
 
     print("Done")
