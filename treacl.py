@@ -12,7 +12,7 @@ from textwrap import indent
 class Treacl(object):
     ''' Treacl: a tree class'''
 
-	# attribute manipulation
+    # attribute manipulation
 
     def __getattr__(self, name):
         '''only called for undefined attributes'''
@@ -25,26 +25,34 @@ class Treacl(object):
             delattr()
 
 
-	# a bit of support for treacl node properties
-	
-    tProps = {"long_name":None, "type":None}                      # Treacl "user" properties instead of attributes - see README explanation
+    # a bit of support for treacl node properties
 
+    __props__ = {"long_name":None,                               # Treacl "user" properties
+                 "type"     :None}                               # instead of attributes' dunder __dict__
+                                                                 # - see README explanation
     def addProp(self, pName, value):
-		tProps[pName] = value
+        __props__[pName] = value
         return value
-	
+
+    def delProp(self, pName):
+        del __props__[pName]
+        return pName
+
     def getProp(self, pName, value):
-		try:
-			return tProps[pName]
-		except AttributeError:
-			print('No %s property' % pName)
+        try:
+            return __props__[pName]
+        except AttributeError:
+            print('No %s property' % pName)
+
+    def listProps(self):
+     return [ k for k in __props__.keys() ]
 
 
-	# some basic traversal methods
-	
+    # some basic traversal methods
+
     searchMaxDepth = 10_000_000                                   # in case of cycles: limit any search
     ppIndent = 4                                                  # indent for tree printing
-	
+
     def pptree(self, depth=0):
         '''print tree recursively'''
         for at in self.__dict__:                                  # tbd: if singleton, don't print a CRLF
@@ -61,6 +69,7 @@ class Treacl(object):
                 # ilines = indent(pformat(atv).splitlines(True),' '*depth)
                 # for l in ilines: print('X', l)
 
+
     def pathsToList(self, curPath="", resLst=[], depth=0, showValP=False): # list all paths in tree
         '''generate all paths to a given depth'''
         for at in self.__dict__:
@@ -69,12 +78,14 @@ class Treacl(object):
             if isinstance(atv := getattr(self, at), Treacl): atv.pathsToList(pth, resLst)  # recurse
         return resLst
 
+
     def findPaths(self, pattrn, depth=0, showValP=False):                          # list paths that match a pattern
         '''search tree recursively depth first
            find all paths with pattern matching
            anywhere in the path
         '''
         return [ p for p in self.pathsToList() if pattrn in p.split('.')]
+
 
     def findPathsRegex(self, regexPattrn, caseSensitive=re.I, depth=0, showValP=False):                          # list paths that match a pattern
         '''search tree recursively depth first
@@ -101,7 +112,9 @@ class Treacl(object):
                     print(' ' * depth, f'{at}=', end='')
                     print(pformat(atv))
 
-	# graph functions				
+
+    # graph functions
+
     def ppgraph(self, depth=0):                                   # same as pptree, but with occurs-check
         '''print graph recursively'''
         for at in self.__dict__:                                  # tbd: if singleton, don't print a CRLF
@@ -112,16 +125,13 @@ class Treacl(object):
             else:
                 print(' ' * depth, f'{at}= ', end='')
                 print(pformat(atv))                               # tbd: keep indent even if multi-line
-					
-	# import / export graphs
-	
+
+    # import / export graphs
+
     def paths_to_dot():
         ''' export data as dot/dotty graph format file'''
         return None
 
 
 
-
-
-
-
+print("Treacl Loaded")
