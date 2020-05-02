@@ -1,207 +1,3 @@
-#
-#  treacl.py
-#
-# Treacl - Tree Class - fun exploiting dynamic attibutes in python
-#
-# 2018-06-02 kleymik  - derivative of very similar datatypes by myself and others
-
-import re
-from pprint import pformat
-from textwrap import indent
-
-class Treacl(object):
-    ''' Treacl: a tree class'''
-
-	# attribute manipulation
-
-    def __getattr__(self, name):
-        '''only called for undefined attributes'''
-        setattr(self, name, vdd := Treacl())                      # I am the walrus
-        return vdd
-
-    def delBranch(self, pthLst):                                  # TBD: traverses path, then deletes branch, pruning on the way back up
-        if self.hasattr(pthLst[0]):                               # maybe not needed a.b.c = None
-            delbranch(self, pth[1:])
-            delattr()
-
-
-	# a bit of support for treacl node properties
-	
-    tProps = {"long_name":None, "type":None}                      # Treacl "user" properties instead of attributes - see README explanation
-
-    def addProp(self, pName, value):
-		tProps[pName] = value
-        return value
-	
-    def getProp(self, pName, value):
-		try:
-			return tProps[pName]
-		except AttributeError:
-			print('No %s property' % pName)
-
-
-	# some basic traversal methods
-	
-    searchMaxDepth = 10_000_000                                   # in case of cycles: limit any search
-    ppIndent = 4                                                  # indent for tree printing
-	
-    def pptree(self, depth=0):
-        '''print tree recursively'''
-        for at in self.__dict__:                                  # tbd: if singleton, don't print a CRLF
-            atv = getattr(self, at)                               # attribute value
-            if isinstance(atv, Treacl):
-                print(' ' * depth, f'{at}: ')
-                atv.pptree(depth + self.ppIndent)                 # recurse
-            else:
-                print(' ' * depth, f'{at}= ', end='')
-                print(pformat(atv))                               # tbd: keep indent even if multi-line
-                # print(indent(pformat(atv),' '*depth))
-                # g1 = pformat(atv)
-                # pdb.set_trace()
-                # ilines = indent(pformat(atv).splitlines(True),' '*depth)
-                # for l in ilines: print('X', l)
-
-    def pathsToList(self, curPath="", resLst=[], depth=0, showValP=False): # list all paths in tree
-        '''generate all paths to a given depth'''
-        for at in self.__dict__:
-            pth = curPath+'.'+f'{at}'
-            resLst += [pth]
-            if isinstance(atv := getattr(self, at), Treacl): atv.pathsToList(pth, resLst)  # recurse
-        return resLst
-
-    def findPaths(self, pattrn, depth=0, showValP=False):                          # list paths that match a pattern
-        '''search tree recursively depth first
-           find all paths with pattern matching
-           anywhere in the path
-        '''
-        return [ p for p in self.pathsToList() if pattrn in p.split('.')]
-
-    def findPathsRegex(self, regexPattrn, caseSensitive=re.I, depth=0, showValP=False):                          # list paths that match a pattern
-        '''search tree recursively depth first
-           find all paths with pattern matching
-           anywhere in the path
-        '''
-        lineRePat = re.compile(regexPattrn, re.I)
-        return [ p for p in self.pathsToList() if lineRePat.search(p)]
-
-
-    def findPaths2(self, pattrn, depth=0, showVal=False):                          # list paths that match a pattern
-        '''search tree recursively depth first
-           find all paths with pattern matching
-           anywhere in the path
-        '''
-        for at in self.__dict__:
-            atv = getattr(self, at)  # attribute value
-            if isinstance(atv, Treacl):
-                atv.pptree(depth + 2)  # recurse
-                if pattrn in str(atv):
-                    print(' ' * depth, f'{at}:')
-            else:
-                if pattrn in str(atv):
-                    print(' ' * depth, f'{at}=', end='')
-                    print(pformat(atv))
-
-	# graph functions				
-    def ppgraph(self, depth=0):                                   # same as pptree, but with occurs-check
-        '''print graph recursively'''
-        for at in self.__dict__:                                  # tbd: if singleton, don't print a CRLF
-            atv = getattr(self, at)                               # attribute value
-            if isinstance(atv, Treacl):
-                print(' ' * depth, f'{at}: ')
-                atv.pptree(depth + self.ppIndent)                 # recurse
-            else:
-                print(' ' * depth, f'{at}= ', end='')
-                print(pformat(atv))                               # tbd: keep indent even if multi-line
-					
-	# import / export graphs
-	
-    def paths_to_dot():
-        ''' export data as dot/dotty graph format file'''
-        return None
-
-
-
-# for testing
-
-def test_1_cfg():
-
-    # simple example
-
-    config = Treacl()
-    config.boo = 1
-    config.bar.alpha = 11
-    config.bar.beta = 22
-    config.bar.gamma = 'hello'
-    config.bas.rock = 'bye'
-    config.bas.scissors = 'hello'
-    config.bas.paper = ['hh', 'ii', 'jj']
-    config.cas = [[1, 2],
-                  [3, 4],
-                  [5, 6]]
-    config.dct = {'aa':11,'bb':22,'cc':33}
-    config.a.b.c.d.e.f.g.h.i.j = 42
-    config.a.b.c1 = 42
-    config.a.b.c.d1 = 42
-    config.a.b.c.d2.e = 42
-    config.a.b.c.d3 = 42
-    config.dag = config.bar  # this works, but creates a DAG! # tbd: table hint?
-
-    print("test 1: ")
-    config.pptree()
-
-    print("test 1: enumerated list of all paths")
-    for e in config.pathsToList("config"): print(e)
-
-    return config
-
-def test_2_yaml():
-
-    # random snippet of YAML - to illustrate conversion to treacl:
-    #
-    #   apiVersion: apps/v1
-    #   kind: Deployment
-    #   metadata:
-    #     name: rss-site
-    #     labels:
-    #       app: web
-    #   spec:
-    #     replicas: 2
-    #     selector:
-    #       matchLabels:
-    #         app: web
-    #     template:
-    #       metadata:
-    #         labels:
-    #           app: web
-    #       spec:
-    #         containers:
-    #           - name: front-end
-    #             image: nginx
-    #             ports:
-    #               - containerPort: 80
-    #           - name: rss-reader
-    #             image: nickchase/rss-php-nginx:v1
-    #             ports:
-    #               - containerPort: 88
-
-	# treacl version of the above snippet:
-    kubConfig = Treacl()
-    kubConfig.apiVersion = "apps/v1"
-    kubConfig.kind       = "Deployment"
-    kubConfig.metadata.name = "rss-site"
-    kubConfig.metadata.labels.app = "web"
-    kubConfig.spec.replicas = 2
-    kubConfig.spec.selector.matchLabels.app = "web"
-    kubConfig.spec.template.metadata.labels.app = "web"
-    kubConfig.spec.template.spec.containers = [Treacl(), Treacl()]
-    kubConfig.spec.template.spec.containers[0].name  = "front-end"
-    kubConfig.spec.template.spec.containers[0].image = "nginx"
-    kubConfig.spec.template.spec.containers[0].ports.containerPort = 80
-    kubConfig.spec.template.spec.containers[1].name  = "rss-reader"
-    kubConfig.spec.template.spec.containers[1].image = "nickchase/rss-php-nginx:v1"
-    kubConfig.spec.template.spec.containers[1].ports.containerPort = 88
-
-
 def test_2_universe():
     # a bigger example: the universe
     univ = Treacl()
@@ -279,27 +75,27 @@ def test_2_divisble_by_7():
 def standard_model_interactions():
 
     # https://www.wikiwand.com/en/Standard_Model
-	# https://www.theatlantic.com/technology/archive/2012/07/still-confused-about-the-higgs-boson-read-this/259472/
-	
-	photon = Treacl()
-	
-	leptons = Treacl()
+    # https://www.theatlantic.com/technology/archive/2012/07/still-confused-about-the-higgs-boson-read-this/259472/
 
-	higgs_boson = Treacl()
+    photon = Treacl()
 
-	gluon = Treacl()
+    leptons = Treacl()
 
-	electron,          tau,          muon          = Treacl(), Treacl(), Treacl()
-	electron_neutrino, tau_neutrino, muon_neutrino = Treacl(), Treacl(), Treacl()
-	
-	up_quark,      down_quark   = Treacl(), Treacl()
-	strange_quark, charm_quark  = Treacl(), Treacl()
-	top_quark,     bottom_quark = Treacl(), Treacl()
+    higgs_boson = Treacl()
 
-	Wplus_boson, Wminus_boson, Z_boson = Treacl(), Treacl(), Treacl()
+    gluon = Treacl()
 
-	return photon
-	
+    electron,          tau,          muon          = Treacl(), Treacl(), Treacl()
+    electron_neutrino, tau_neutrino, muon_neutrino = Treacl(), Treacl(), Treacl()
+
+    up_quark,      down_quark   = Treacl(), Treacl()
+    strange_quark, charm_quark  = Treacl(), Treacl()
+    top_quark,     bottom_quark = Treacl(), Treacl()
+
+    Wplus_boson, Wminus_boson, Z_boson = Treacl(), Treacl(), Treacl()
+
+    return photon
+
 if __name__ == '__main__':
 
     test_1_config()
