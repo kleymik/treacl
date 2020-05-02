@@ -1,3 +1,5 @@
+from treacl import Treacl as tcl
+
 def test_3_divide_by_7():
     # a directed graph example - divisible by 7
     allNodes = { e: tcl() for e in "abcdefg" }                        # create 7 alphabetically labelled nodes
@@ -43,93 +45,6 @@ def test_2_divisble_by_7():
 
     if nxt is mod7: print("Divisible by 7")  # back at start?
     else:           print("Not Divisible by 7")
-
-def standard_model_interactions():
-
-    # interactions of Physics' itty-bitty particles
-    # https://www.wikiwand.com/en/Standard_Model
-    # https://www.theatlantic.com/technology/archive/2012/07/still-confused-about-the-higgs-boson-read-this/259472/
-
-    photon = tcl()
-
-    leptons = tcl()
-
-    higgs_boson = tcl()
-
-    gluon = tcl()
-
-    electron,          tau,          muon          = tcl(), tcl(), tcl()
-    electron_neutrino, tau_neutrino, muon_neutrino = tcl(), tcl(), tcl()
-
-    up_quark,      down_quark   = tcl(), tcl()
-    strange_quark, charm_quark  = tcl(), tcl()
-    top_quark,     bottom_quark = tcl(), tcl()
-
-    Wplus_boson, Wminus_boson, Z_boson = tcl(), tcl(), tcl()
-
-    return photon
-
-def test_n_json():
-
-    # json sample from json wikipedia page
-    person = tcl()
-    person.firstName = "Jonn"
-    person.lastName  = "Smith"
-    person.age       = 25
-    person.address.streetAddress = "21 2nd Street"
-    person.address.city          = "New York"
-    person.address.state         =  "NY"
-    person.address.postalCode    =  "10021"
-    person.address.phoneNumbers  = [ tcl(), tcl() ]
-    person.address.phoneNumbers[0].type   = "home"
-    person.address.phoneNumbers[0].number = "212 555-1234"
-    person.address.phoneNumbers[1].type   = "fax"
-    person.address.phoneNumbers[1].number = "646 555-4567"
-    person.sex.type = "male"
-
-    # json form:
-    # {
-    #   "first name": "John",
-    #   "last name": "Smith",
-    #   "age": 25,
-    #   "address": {
-    #       "street address": "21 2nd Street",
-    #       "city": "New York",
-    #       "state": "NY",
-    #       "postal code": "10021"
-    #   },
-    #   "phone numbers": [
-    #       {
-    #           "type": "home",
-    #           "number": "212 555-1234"
-    #       },
-    #       {
-    #           "type": "fax",
-    #           "number": "646 555-4567"
-    #       }
-    #   ],
-    #   "sex": {
-    #       "type": "male"
-    #   }
-    # }
-
-    # or similarly with XML, in XML-with-properties form:
-    #
-    # <person firstName="John" lastName="Smith" age="25">
-    #   <address streetAddress="21 2nd Street" city="New York" state="NY" postalCode="10021" />
-    #   <phoneNumbers>
-    #     <phoneNumber type="home" number="212 555-1234"/>
-    #     <phoneNumber type="fax" number="646 555-4567"/>
-    #   </phoneNumbers>
-    #   <sex type="male"/>
-    # </person>
-
-
-def test_pascal():
-
-    a = tcl()
-    a.setProp('num',1)
-    a.l.parSum()
 
 if __name__ == '__main__':
 

@@ -1,10 +1,3 @@
-#
-#  treacl.py
-#
-# Treacl - Tree Class - fun exploiting dynamic attibutes in python
-#
-# 2018-06-02 kleymik  - derivative of very similar datatypes by myself and others
-
 from treacl import Treacl as tcl
 
 # for testing
