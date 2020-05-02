@@ -1,0 +1,4 @@
+
+
+runfile("./examples/configuration.py")
+
