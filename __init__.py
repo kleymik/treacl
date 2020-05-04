@@ -1,8 +1,13 @@
 # make treacl a module
 
 
+__title__ = "treacl"
+__description__ = "tree class"
+__author__  = 'kleymik'
+__version__ = '0.0.1'
+__copyright__ = 'Copyright (c) 2018-2020 Mike Kleyn'
+__license__ = 'BSD License'
 
-# __version__ = "19.3.0"
 # __version_info__ = VersionInfo._from_version_string(__version__)
 
 # __title__ = "attrs"
@@ -21,20 +26,20 @@
 
 # from see
 
-"""
-see: dir for humans.
+# """
+# see: dir for humans.
 
-Documentation is available at https://ljcooke.github.io/see/
+# Documentation is available at https://ljcooke.github.io/see/
 
-"""
-from .inspector import see
-from .output import SeeResult
+# """
+# from .inspector import see
+# from .output import SeeResult
 
 
-__all__ = ['see', 'SeeResult']
+# __all__ = ['see', 'SeeResult']
 
-__author__ = 'Liam Cooke'
-__contributors__ = 'See AUTHORS.rst'
-__version__ = '1.4.1'
-__copyright__ = 'Copyright (c) 2009-2017 Liam Cooke'
-__license__ = 'BSD License'
+# __author__ = 'Liam Cooke'
+# __contributors__ = 'See AUTHORS.rst'
+# __version__ = '1.4.1'
+# __copyright__ = 'Copyright (c) 2009-2017 Liam Cooke'
+# __license__ = 'BSD License'
