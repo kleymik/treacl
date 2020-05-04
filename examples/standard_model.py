@@ -5,6 +5,7 @@ def standard_model_interactions():
     # interactions of Physics' itty-bitty particles
     # https://www.wikiwand.com/en/Standard_Model
     # https://www.theatlantic.com/technology/archive/2012/07/still-confused-about-the-higgs-boson-read-this/259472/
+    # https://en.wikipedia.org/wiki/Spin_(physics)#/media/File:Standard_Model_of_Elementary_Particles.svg
 
     photon = tcl()
 
@@ -23,7 +24,15 @@ def standard_model_interactions():
 
     Wplus_boson, Wminus_boson, Z_boson = tcl(), tcl(), tcl()
 
-    return photon
+    # add pairs of of links to identify which particles/ groups of particles interact
+
+    # example of adding a property: spin quantum number
+    photon.addProp('spin', 'one')
+    electron.addProp('spin', 'half')
+    quarks.addProp('spin', 'half')
+    higgs_boson.addProp('spin', 'zero')
+
+    return photon   # all nodes are linked return one to retrun them all
 
 if __name__ == '__main__':
 

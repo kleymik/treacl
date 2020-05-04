@@ -1,17 +1,11 @@
-#
-#  treacl.py
-#
-# Treacl - Tree Class - fun exploiting dynamic attibutes in python
-#
-# 2018-06-02 kleymik  - derivative of very similar datatypes by myself and others
 
 from treacl import Treacl as tcl
+from treacl import treacl_pprint
+from pprint import pprint
 
-# for testing
+def sample_config():
 
-def test_1_cfg():
-
-    # simple example
+    # simple configuration example
 
     config = tcl()
     config.boo = 1
@@ -25,6 +19,7 @@ def test_1_cfg():
                   [3, 4],
                   [5, 6]]
     config.dct = {'aa':11,'bb':22,'cc':33}
+    config.a.b.c.d.e.f.mtx = [[42,43,44],[11,22,33]]
     config.a.b.c.d.e.f.g.h.i.j = 42
     config.a.b.c1 = 42
     config.a.b.c.d1 = 42
@@ -32,42 +27,19 @@ def test_1_cfg():
     config.a.b.c.d3 = 42
     config.dag = config.bar  # this works, but creates a DAG! # tbd: table hint?
 
-    print("test 1: ")
-    config.pptree()
-
-    print("test 1: enumerated list of all paths")
-    for e in config.pathsToList("config"): print(e)
-
     return config
 
 if __name__ == '__main__':
 
-    test_1_config()
+    cfg = sample_config()
+    print("sample config:pretty print config tree")
+    cfg.pptree()
 
-    test_2_universe()
-
-    test_eg_3()
-
-    print("test: find Paths")
-    for p in univ.findPaths("lead"): print(p)
-
-    if False:
-        # path expressions
-        config.findPaths("*")                    ## all paths
-        config.findPaths("config*")              ## all paths starting "config"
-        config.findPaths("*config")              ## all paths ending "config"
-        config.findPaths("*config*")             ## all paths containing "config"
-        config.findPaths("*config*bar*")         ## all paths containing "config" followed by "bar"
-        config.findPaths("*[[A-Z]]*")            ## all paths containing regexp "[A-Z]"
-        config.findPaths("*[[A-Z]]*")            ## all paths containing regexp "[A-Z]*"
-        config.findPaths("*a:=config*a*")        ## all paths containing regexp "[A-Z]*"
-        config.findPaths("*.config.*")           ## all paths with a branch exactly "config"
-        config.findPaths("*ForAll().Exists*a*")  ## all paths containing regexp "[A-Z]*"
-
-    print("Done")
+    #print("\nsample config: enumerated list of all paths")
+    #for e in cfg.pathsToList("config"): print(e)
 
 
-    # univ.addProp('role','The Big One')
+
 
 
 
