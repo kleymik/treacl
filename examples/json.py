@@ -18,18 +18,6 @@ def sample_json():
     person.address.phoneNumbers[1].number = "646 555-4567"
     person.sex.type = "male"
 
-
-    # or similarly with XML, in XML-with-properties form:
-    #
-    # <person firstName="John" lastName="Smith" age="25">
-    #   <address streetAddress="21 2nd Street" city="New York" state="NY" postalCode="10021" />
-    #   <phoneNumbers>
-    #     <phoneNumber type="home" number="212 555-1234"/>
-    #     <phoneNumber type="fax" number="646 555-4567"/>
-    #   </phoneNumbers>
-    #   <sex type="male"/>
-    # </person>
-
     return person
 
 if __name__ == '__main__':
@@ -61,11 +49,11 @@ if __name__ == '__main__':
     }
     '''
 
-    print("sample person in JSON:")
+    print("Sample person in JSON:")
     print(person_in_json)
 
     person = sample_json()
-    print("\nsample person in TREACL")
+    print("Sample person in TREACL:")
     person.pptree()
 
 

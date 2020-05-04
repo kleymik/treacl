@@ -2,35 +2,7 @@ from treacl import Treacl as tcl
 
 # for testing
 
-def test_2_yaml():
-
-    # random snippet of YAML - to illustrate conversion to treacl:
-    #
-    #   apiVersion: apps/v1
-    #   kind: Deployment
-    #   metadata:
-    #     name: rss-site
-    #     labels:
-    #       app: web
-    #   spec:
-    #     replicas: 2
-    #     selector:
-    #       matchLabels:
-    #         app: web
-    #     template:
-    #       metadata:
-    #         labels:
-    #           app: web
-    #       spec:
-    #         containers:
-    #           - name: front-end
-    #             image: nginx
-    #             ports:
-    #               - containerPort: 80
-    #           - name: rss-reader
-    #             image: nickchase/rss-php-nginx:v1
-    #             ports:
-    #               - containerPort: 88
+def sample_kub():
 
     # treacl version of the above snippet:
     kubConfig = tcl()
@@ -49,19 +21,51 @@ def test_2_yaml():
     kubConfig.spec.template.spec.containers[1].image = "nickchase/rss-php-nginx:v1"
     kubConfig.spec.template.spec.containers[1].ports.containerPort = 88
 
+    return kubConfig
+
 
 if __name__ == '__main__':
 
-    test_1_config()
+    #     random snippet of YAML - to illustrate conversion to treacl:
+    yaml_kub = '''
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: rss-site
+        labels:
+          app: web
+      spec:
+        replicas: 2
+        selector:
+          matchLabels:
+            app: web
+        template:
+          metadata:
+            labels:
+              app: web
+          spec:
+            containers:
+              - name: front-end
+                image: nginx
+                ports:
+                  - containerPort: 80
+              - name: rss-reader
+                image: nickchase/rss-php-nginx:v1
+                ports:
+                  - containerPort: 88
+    '''
 
-    test_2_universe()
+    print("Sample person in JSON:")
+    print(yaml_kub)
 
-    test_eg_3()
-
-    print("test: find Paths")
-    for p in univ.findPaths("lead"): print(p)
+    treacl_sample = sample_kub()
+    print("Sample person in TREACL:")
+    person.pptree()
 
     if False:
+        print("test: find Paths")
+        for p in univ.findPaths("lead"): print(p)
+
         # path expressions
         config.findPaths("*")                    ## all paths
         config.findPaths("config*")              ## all paths starting "config"
