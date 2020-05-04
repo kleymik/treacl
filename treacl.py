@@ -26,11 +26,11 @@ class Treacl(object):
             delbranch(self, pth[1:])
             delattr()
 
-    # a bit of support for treacl node properties
+    # a bit of support for adding properties to treacl nodes
 
-    __props__ = {"long_name":None,                               # Treacl "user" properties
-                 "type"     :None}                               # instead of attributes' dunder __dict__
-                                                                 # - see README explanation
+    __props__ = {"long_name":None,                                 # Treacl "user" properties
+                 "type"     :None}                                 # instead of attributes' dunder __dict__
+                                                                   # - see README explanation
     def addProp(self, pName, value):
         __props__[pName] = value
         return value
@@ -129,7 +129,7 @@ class Treacl(object):
 
     # graph functions
 
-    def ppgraph(self, depth=0):                                   # same as pptree, but with occurs-check
+    def ppgraph(self, depth=0, occurDict={}):                                   # same as pptree, but with occurs-check
         '''print graph recursively'''
         for at in self.__dict__:                                  # tbd: if singleton, don't print a CRLF
             atv = getattr(self, at)                               # attribute value
@@ -139,6 +139,7 @@ class Treacl(object):
             else:
                 print(' ' * depth, f'{at}= ', end='')
                 print(pformat(atv))                               # tbd: keep indent even if multi-line
+
 
     # import / export graphs
 
