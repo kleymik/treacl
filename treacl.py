@@ -1,21 +1,23 @@
 #
 #  treacl.py
 #
-# Treacl - Tree Class - fun exploiting dynamic attibutes in python
+# Treacl - Tree Class - fun exploiting dynamic attibutes in Python
 #
 # 2018-06-02 kleymik  - derivative of very similar datatypes by myself and others
 
 import re
 from pprint import pformat
 from textwrap import indent
+from collections.abc import Iterable
 
 class Treacl(object):
     ''' Treacl: a tree class'''
 
+
     # attribute manipulation
 
-    def __getattr__(self, name):
-        '''only called for undefined attributes'''
+    def __getattr__(self, name):                                  # dunder method that get's called when in the attributes
+        '''only called for undefined attributes'''                # does not (yet) exist in the object (__dict__)
         setattr(self, name, vdd := Treacl())                      # I am the walrus
         return vdd
 
@@ -23,7 +25,6 @@ class Treacl(object):
         if self.hasattr(pthLst[0]):                               # maybe not needed a.b.c = None
             delbranch(self, pth[1:])
             delattr()
-
 
     # a bit of support for treacl node properties
 
@@ -47,24 +48,40 @@ class Treacl(object):
 
     # some basic traversal methods
 
-    searchMaxDepth = 10_000_000                                   # in case of cycles: limit any search
-    ppIndent = 4                                                  # indent for tree printing
+    treeMaxDepth = 10_000_000                                        # in case of cycles: to limit searches & traversals
+    depthIndent = 4                                                  # indent for tree printing
+
+    def pf_indented(self, v, indent=0):
+        """use pprint pformat but then addtional indent for given depth
+        """                                                          # (pprint module inserts one less whitespace for first line)
+        pfStrings = pformat(v, width=20).split('\n')                 # (indent=1 is default, giving everything one extra whitespace)
+        return [('' if num==0 else ' ' * indent) + line for num, line in enumerate(pfStrings)]
 
     def pptree(self, depth=0):
-        '''print tree recursively'''
-        for at in self.__dict__:                                  # tbd: if singleton, don't print a CRLF
-            atv = getattr(self, at)                               # attribute value
-            if isinstance(atv, Treacl):
-                print(' ' * depth, f'{at}: ')
-                atv.pptree(depth + self.ppIndent)                 # recurse
-            else:
-                print(' ' * depth, f'{at}= ', end='')
-                print(pformat(atv))                               # tbd: keep indent even if multi-line
-                # print(indent(pformat(atv),' '*depth))
-                # g1 = pformat(atv)
-                # pdb.set_trace()
-                # ilines = indent(pformat(atv).splitlines(True),' '*depth)
-                # for l in ilines: print('X', l)
+        '''print treacl tree recursively'''
+        if depth < self.treeMaxDepth:
+            for at in self.__dict__:                                                      # tbd: if singleton, don't print a CRLF
+                atv = getattr(self, at)                                                   # attribute value
+                nameStr = ' ' * self.depthIndent * depth + f'{at}: '
+                print(nameStr, end='')
+                if isinstance(atv, Treacl):
+                    print()
+                    atv.pptree(depth + 1)                                                 # recurse
+                elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]): # recurse into lists only (not any other iterables), if case they contain at leat one Treacl
+                    for e in atv:                                                         # note deeper nested lists are not checked
+                        if isinstance(e, Treacl): e.pptree(depth + 1)                     # recurse
+                        else:
+                            for s in self.pf_indented(e, depth=depth+1): print(s)         # use pretty print to print python base datatype
+                else:
+                    for s in self.pf_indented(atv, len(nameStr)): print(s)                # tbd: keep indent even if multi-line
+        else:
+            print("Max recursion depth reached %i", treeMaxDepth)
+
+    def tprint(self, depth=0):
+        for at in self.__dict__:                                     # tbd: if singleton, don't print a CRLF
+            atv = getattr(self, at)                                  # attribute value
+            print('\n'+'Z' * self.depthIndent * depth, f'{at}: ', end='')
+            treacl_pprint(atv, depth + 1)                            # recurse
 
 
     def pathsToList(self, curPath="", resLst=[], depth=0, showValP=False): # list all paths in tree
@@ -129,6 +146,29 @@ class Treacl(object):
         ''' export data as dot/dotty graph format file'''
         return None
 
+# functions
+## cater for Treacl and Treacl inside other datatypes structures list
+
+treeMaxDepth = 10_000_000                                   # in case of cycles: limit any search
+depthIndent = 4                                             # indent for tree printing
+
+def treacl_pprint(node, depth=0):                            # not implemented as a method to allow pretty printer
+    '''print tree recursively'''                             # that recurses into non-treacl objects too
+    if isinstance(node, Treacl):
+        if depth < node.treeMaxDepth:
+            node.tprint(depth+1)
+            # print("AA")
+        else:
+            print("Max recursion depth reached %i", treeMaxDepth)
+    elif isinstance(node, str):
+        print(pformat(node))
+        # print("BB")
+    elif isinstance(node, Iterable):                    # but not a  string:
+        for e in node:
+            if isinstance(e, Treacl): node.tprint(depth + 1) # recurse
+            else:                     treacl_pprint(e, depth=depth+1)               # tbd: keep indent even if multi-line
+    else:
+        print(pformat(node), end='')
 
 
 print("Treacl Loaded")
