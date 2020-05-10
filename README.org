@@ -1,38 +1,45 @@
-(this README best viewed raw or in org-mode)
+(this README.org best viewed raw or in org-mode)
 
 
-  Treacl - a dynamic attributes class
+    Treacl - simple dynamic attributes class
 
-
-2018-06-02 kleymik - derivative of similar datatypes in various interpreted languages from others and myself.
+2018-06-02 kleymik - yet another derivative of similar datatypes in various interpreted languages from others and myself.
 
 * Intro
 
-Treacl allows exploiting dynamic attributes for creating trees and directed graphs.
+Treacl supports exploiting dynamic attributes for creating trees and directed graphs.
 
-In regular Python, though a *first* level attribute will be dynamically added to an instance of any class
-(e.g. "foo.aa = 1"), it will fail when attempting more than one level ("foo.aa.bb = 1"). Treacl enables this.
+In regular Python, though a *first* level attribute will be
+dynamically added to an instance of a class (e.g. "foo.aa = 1"), it
+will fail when attempting more than one level ("foo.aa.bb.cc = 1").
+Treacl enables this by instantiating by default an empty Treacl
+instance at each level:
 
     from treacl import Treacl
 
     foo = Treacl()                # an instance of the class Treacl
-    foo.aa.bb.cc.dd.ee = 1        # for each attribute down the dot-path expression chain, an instance of the Treacl class is dynamically created
+    foo.aa.bb.cc.dd.ee = 1        # for each attribute down the dot-path expression chain except the last (".ee"),
+                                  # an instance of the Treacl class is dynamically created
     foo.aa.qq.rr = "Hello World"
 
+    foo.ppTree()                  # pretty print the tree
     foo.allPaths()                # return all paths in the tree
 
-Using python's dunder-based access, it's possible to make object attributes on-the-fly,
-allowing declarative tree creation that is both dynamic and concise.
+Using python's dunder methods, it's possible to make object attributes
+on-the-fly, enabling tree creation that is declarative, dynamic, and
+concise.
 
-Though the same could be implemented with an attribute in a class containing a dict,
-the advantage of this approach here is that the natural and readable Python "."
-dot operator for attributes is kept pre-eminent.
+The ability to write such declarative code segments can often be
+preferable to the use of markdown variants such as YAML (= Yaml Ain't
+Markdown Language), if only because having yet another declarative
+language is unwarranted, Python will do fine.
 
-The ability to write such declarative code segments can sometimes be preferable to the use of
-markdown variants such as YAML (= Yaml Ain't Markdown Language), if only because
-having yet another declarative language is superfluous, Python will do fine:
+Though the same could be implemented in a class with an attribute
+containing a dict, the advantage of the approach here is that the
+natural and readable Python "."  dot operator for attributes is kept
+pre-eminent.
 
-** markdown equivalent example
+** yaml markdown equivalence example
 
       YAML                                          Python- Treacl
       ====                                          ==============
@@ -65,9 +72,9 @@ having yet another declarative language is superfluous, Python will do fine:
                   - containerPort: 88
 
 
-* The Essence
+* The Simple Essence
 
-Treacl is implemented by overrding the __getattr__ class method in python so that it defaults to initialising a
+Treacl is implemented by overriding the __getattr__ class method in python so that it defaults to initialising a
 new attribute in the instance of the class (i.e. self) with a value that is a new empty instance of *this same class*.
 In this sense, Treacl is "dynamically recursive".
 
@@ -88,26 +95,24 @@ treacl/examples:
   configuration.py    - just a simple sample configuration expressed using treacl
   divide_by_7.py      - traversal of small graph to determine if divisible by 7
   json.py             - sample json converted to equivalent treacl (xml too)
-  standard_model.py   - particle physics, gluons, leptons, etc, map of which interact
-  universe.py         - a start at compostional hierarchy of everything
+  standard_model.py   - particle physics, gluons, leptons, etc, a graph of how they group and interact
+  universe.py         - a start at spatial hierarchy of like, everything
   yaml.py             - sample json converted to equivalent treacl
-
-
-from treacl import Treacl
-from treacl.util imports tests
-
-tests.run()
-
-
+  tls_cert            = struture of a TLS certificate
 
 * Acknowledgements / Related
 
-This idiom/construct isn't new. Such an implementation overriding setattr, getattr, or delattr are widespread amongst pythonistas.
-In other dynamic languages may or may not support such dynamic attributes:
+This idiom/construct isn't new. Such an implementation overriding
+setattr, getattr, or delattr dunder methods are widespread amongst
+pythonistas.  In other dynamic languages may or may not support such
+dynamic attributes:
 
-  namedtuples: access is similar to create the attributes is not  dynamically recursive by default
+  namedtuples: access is similar to create the attributes is not dynamically recursive by default
+
+  defaultdict: automatically intialises new key values in dicts
 
   autodict:
+             https://gist.github.com/sebclaeys/1227566
 
   Javascript: In Javascript dot-path expressions are alredy used to access attributes,
               From https://rosettacode.org/wiki/Add_a_variable_to_a_class_instance_at_runtime
@@ -123,11 +128,15 @@ In other dynamic languages may or may not support such dynamic attributes:
               e  = struct();
               e.aa.bb.cc.dd = 1;
 
+  Perl:  yes, out of the box, but does anyone still care?
+
 ** see also
 
-https://stackoverflow.com/questions/1325673/how-to-add-property-to-a-class-dynamically
-
+autodata https://pypi.org/project/autodata/
+descriptors: https://stackoverflow.com/questions/1325673/how-to-add-property-to-a-class-dynamically
+long discussion on nested dicts: https://stackoverflow.com/questions/635483/what-is-the-best-way-to-implement-nested-dictionaries/19829714#19829714
 https://chase-seibert.github.io/blog/2013/04/12/getattr-setattr.html
+https://insights.dice.com/2018/01/05/5-xml-alternatives-to-consider/
 
 
 * Notes
