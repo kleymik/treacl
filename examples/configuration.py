@@ -1,11 +1,8 @@
-
 from treacl import Treacl as tcl
-from treacl import treacl_pprint
-from pprint import pprint
 
 def sample_config():
 
-    # simple configuration example
+    # plain simple configuration example
 
     config = tcl()
     config.boo = 1
@@ -25,7 +22,7 @@ def sample_config():
     config.a.b.c.d1 = 42
     config.a.b.c.d2.e = 42
     config.a.b.c.d3 = 42
-    config.dag = config.bar  # this works, but creates a DAG! # tbd: table hint?
+    # config.dag = config.bar  # this works, but creates a DAG
 
     return config
 
@@ -35,8 +32,8 @@ if __name__ == '__main__':
     print("sample config:pretty print config tree")
     cfg.pptree()
 
-    #print("\nsample config: enumerated list of all paths")
-    #for e in cfg.pathsToList("config"): print(e)
+    print("\nsample config: enumerated list of all paths")
+    for e in cfg.pathsToList("config"): print(e)
 
 
 
