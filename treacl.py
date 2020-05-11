@@ -16,21 +16,14 @@ class Treacl(object):
 
     # attribute manipulation
 
-    def __getattr__(self, name):                                  # dunder method that get's called when in the attributes
-        '''only called for undefined attributes'''                # does not (yet) exist in the object (__dict__)
-        setattr(self, name, vdd := Treacl())                      # I am the walrus
+    def __getattr__(self, name):                                                          # dunder method that get's called when in the attributes
+        '''only called for undefined attributes'''                                        # does not (yet) exist in the object (__dict__)
+        setattr(self, name, vdd := Treacl())                                              # I am the walrus
         return vdd
 
-    def delBranch(self, pthLst):                                  # TBD: traverses path, then deletes branch, pruning on the way back up
-        if self.hasattr(pthLst[0]):                               # maybe not needed a.b.c = None
-            delbranch(self, pth[1:])
-            delattr()
-
-    # a bit of support for adding properties to treacl nodes
-
-    __props__ = {"long_name":None,                                 # Treacl "user" properties
-                 "type"     :None}                                 # instead of attributes' dunder __dict__
-                                                                   # - see README explanation
+    __props__ = {"long_name":None,                                                        # Treacl "user" properties
+                 "type"     :None}                                                        # instead of attributes' dunder __dict__
+                                                                                          # - see README explanation
     def addProp(self, pName, value):
         __props__[pName] = value
         return value
@@ -48,13 +41,13 @@ class Treacl(object):
 
     # some basic traversal methods
 
-    treeMaxDepth = 10_000_000                                        # in case of cycles: to limit searches & traversals
-    depthIndent = 4                                                  # indent for tree printing
+    treeMaxDepth = 10_000_000                                                             # in case of cycles: to limit searches & traversals
+    depthIndent = 4                                                                       # indent for tree printing
 
     def pf_indented(self, v, indent=0):
         """use pprint pformat but then addtional indent for given depth
-        """                                                          # (pprint module inserts one less whitespace for first line)
-        pfStrings = pformat(v, width=20).split('\n')                 # (indent=1 is default, giving everything one extra whitespace)
+        """                                                                               # (pprint module inserts one less whitespace for first line)
+        pfStrings = pformat(v, width=20).split('\n')                                      # (indent=1 is default, giving everything one extra whitespace)
         return [('' if num==0 else ' ' * indent) + line for num, line in enumerate(pfStrings)]
 
     def pptree(self, depth=0):
@@ -78,22 +71,22 @@ class Treacl(object):
             print("Max recursion depth reached %i", treeMaxDepth)
 
     def tprint(self, depth=0):
-        for at in self.__dict__:                                     # tbd: if singleton, don't print a CRLF
-            atv = getattr(self, at)                                  # attribute value
+        for at in self.__dict__:                                                          # tbd: if singleton, don't print a CRLF
+            atv = getattr(self, at)                                                       # attribute value
             print('\n'+'Z' * self.depthIndent * depth, f'{at}: ', end='')
-            treacl_pprint(atv, depth + 1)                            # recurse
+            treacl_pprint(atv, depth + 1)                                                 # recurse
 
 
-    def pathsToList(self, curPath="", resLst=[], depth=0, showValP=False): # list all paths in tree
+    def pathsToList(self, curPath="", resLst=[], depth=0, showValP=False):                # list all paths in tree
         '''generate all paths to a given depth'''
         for at in self.__dict__:
             pth = curPath+'.'+f'{at}'
             resLst += [pth]
-            if isinstance(atv := getattr(self, at), Treacl): atv.pathsToList(pth, resLst)  # recurse
+            if isinstance(atv := getattr(self, at), Treacl): atv.pathsToList(pth, resLst) # recurse
         return resLst
 
 
-    def findPaths(self, pattrn, depth=0, showValP=False):                          # list paths that match a pattern
+    def findPaths(self, pattrn, depth=0, showValP=False):                                 # list paths that match a pattern
         '''search tree recursively depth first
            find all paths with pattern matching
            anywhere in the path
@@ -101,7 +94,7 @@ class Treacl(object):
         return [ p for p in self.pathsToList() if pattrn in p.split('.')]
 
 
-    def findPathsRegex(self, regexPattrn, caseSensitive=re.I, depth=0, showValP=False):                          # list paths that match a pattern
+    def findPathsRegex(self, regexPattrn, caseSensitive=re.I, depth=0, showValP=False):   # list paths that match a pattern
         '''search tree recursively depth first
            find all paths with pattern matching
            anywhere in the path
@@ -110,7 +103,7 @@ class Treacl(object):
         return [ p for p in self.pathsToList() if lineRePat.search(p)]
 
 
-    def findPaths2(self, pattrn, depth=0, showVal=False):                          # list paths that match a pattern
+    def findPaths2(self, pattrn, depth=0, showVal=False):                                 # list paths that match a pattern
         '''search tree recursively depth first
            find all paths with pattern matching
            anywhere in the path
@@ -129,16 +122,16 @@ class Treacl(object):
 
     # graph functions
 
-    def ppgraph(self, depth=0, occurDict={}):                                   # same as pptree, but with occurs-check
+    def ppgraph(self, depth=0, occurDict={}):                                             # same as pptree, but with occurs-check
         '''print graph recursively'''
-        for at in self.__dict__:                                  # tbd: if singleton, don't print a CRLF
-            atv = getattr(self, at)                               # attribute value
+        for at in self.__dict__:                                                          # tbd: if singleton, don't print a CRLF
+            atv = getattr(self, at)                                                       # attribute value
             if isinstance(atv, Treacl):
                 print(' ' * depth, f'{at}: ')
-                atv.pptree(depth + self.ppIndent)                 # recurse
+                atv.pptree(depth + self.ppIndent)                                         # recurse
             else:
                 print(' ' * depth, f'{at}= ', end='')
-                print(pformat(atv))                               # tbd: keep indent even if multi-line
+                print(pformat(atv))                                                       # tbd: keep indent even if multi-line
 
 
     # import / export graphs
