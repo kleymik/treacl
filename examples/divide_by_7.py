@@ -1,9 +1,13 @@
+from treacl import Treacl as t
 
-from treacl import Treacl as tcl
+# a directed graph example - divisible by 7 test by graph traversal
+# traversing this graph computes whether a number if divisble by 7,
+#   i.e. f(n) = {n mod 7 == 0}
+# From: http://blog.tanyakhanova.com/2009/divisibilty-by-7-is-a-walk
+
 
 def test_3_divide_by_7():
-    # a directed graph example - divisible by 7
-    allNodes = { e: tcl() for e in "abcdefg" }                        # create 7 alphabetically labelled nodes
+    allNodes = { e: t() for e in "abcdefg" }                          # create 7 alphabetically labelled nodes
     allNodes['a'].B = allNodes['b']; allNodes['a'].W = allNodes['a']  # node a has a self loop
     allNodes['b'].B = allNodes['c']; allNodes['b'].W = allNodes['f']
     allNodes['c'].B = allNodes['f']; allNodes['c'].W = allNodes['d']
@@ -16,11 +20,9 @@ def test_3_divide_by_7():
 
 
 def test_3_divide_by_7_compact():
-    # a directed graph example - divisible by 7
-    # this graph is identical to the one in test_3_div7 but expressed
-    # by decomposition into a set of line path expressions
-    # extra credit for a minimal set of line path expressions
-    mod7 = tcl()              # the starting node of the graph
+    # this graph is identical to the function above (test_3_div7) but
+    # expressed by decomposition into a set of line path expressions
+    mod7 = t()                   # the starting node of the graph
     mod7.W = mod7                #   i) self cycle  a->a White
     mod7.B.B.W.B = mod7          #  ii) outer cycle a->b->c->d->a Black
     mod7.B.W.B.B.B = mod7.B.B.W  # iii) inner cycle a->b->f->g->e->d Black
@@ -31,9 +33,6 @@ def test_3_divide_by_7_compact():
     return mod7
 
 def test_2_divisble_by_7():
-    # a directed graph example
-    # traversing this graph computes whether a number if divisble by 7, i.e. f(n) = {n mod 7 == 0}
-    # see http://blog.tanyakhanova.com/2009/divisibilty-by-7-is-a-walk
 
     mod7 = test_3_div7()
     mod7 = test_3_div7_compact()
@@ -48,6 +47,7 @@ def test_2_divisble_by_7():
     else:           print("Not Divisible by 7")
 
 if __name__ == '__main__':
+
 
     test_2_divisble_by_7()
 
