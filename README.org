@@ -1,23 +1,26 @@
 (this README.org best viewed raw or in org-mode)
 
 
-    Treacl - simple dynamic attributes class
+    Treacl - simple examples which exploit making class instance attributes dynamic
 
-2018-06-02 kleymik - yet another derivative of similar datatypes in various interpreted languages from others and myself.
 
-* Intro
+2018-06-02       kleymik - Treacl yet another variation on similar datatypes in various interpreted languages.
+2010-02-01 16:32 kleymik tdict.py python2 tree dict
+
+
+* Introduction
 
 Treacl supports exploiting dynamic attributes for creating trees and directed graphs.
 
-In regular Python, though a *first* level attribute will be
-dynamically added to an instance of a class (e.g. "foo.aa = 1"), it
-will fail when attempting more than one level ("foo.aa.bb.cc = 1").
-Treacl enables this by instantiating by default an empty Treacl
-instance at each level:
+In regular Python, though a *first* level attribute will be dynamically added to an instance of a
+class (e.g. "foo.aa = 1"), it will fail when attempting more than one level ("foo.aa.bb.cc = 1").
+Treacl enables this by instantiating the intermediate attributes with an empty Treacl class instance
+by default:
 
     from treacl import Treacl
 
     foo = Treacl()                # an instance of the class Treacl
+    foo.xx = 1                    # nothing new, just default Python class instance behaviour
     foo.aa.bb.cc.dd.ee = 1        # for each attribute down the dot-path expression chain except the last (".ee"),
                                   # an instance of the Treacl class is dynamically created
     foo.aa.qq.rr = "Hello World"
@@ -25,19 +28,17 @@ instance at each level:
     foo.ppTree()                  # pretty print the tree
     foo.allPaths()                # return all paths in the tree
 
-Using python's dunder methods, it's possible to make object attributes
-on-the-fly, enabling tree creation that is declarative, dynamic, and
-concise.
+By a simple tweak of one the class' dunder methods, it's possible to make object attributes
+on-the-fly. This enables tree creation that is declarative, dynamic, and concise.
 
-The ability to write such declarative code segments can often be
-preferable to the use of markdown variants such as YAML (= Yaml Ain't
-Markdown Language), if only because having yet another declarative
-language is unwarranted, Python will do fine.
+The ability to write such declarative code segments can often be preferable to the use of markdown
+variants such as YAML (= Yaml Ain't Markdown Language), if only because having yet another
+declarative language is unwarranted, Python will do fine. Sometimes it's even better: YAML doesn't
+admit comments, Python does.
 
-Though the same could be implemented in a class with an attribute
-containing a dict, the advantage of the approach here is that the
-natural and readable Python "."  dot operator for attributes is kept
-pre-eminent.
+Though the same could be implemented in a class with an attribute containing a dict, the advantage
+of the approach here is that the natural and readable Python "."  dot operator for attributes is
+kept pre-eminent.
 
 ** yaml markdown equivalence example
 
@@ -74,9 +75,9 @@ pre-eminent.
 
 * The Simple Essence
 
-Treacl is implemented by overriding the __getattr__ class method in python so that it defaults to initialising a
-new attribute in the instance of the class (i.e. self) with a value that is a new empty instance of *this same class*.
-In this sense, Treacl is "dynamically recursive".
+Treacl is a one-liner - implemented by overriding the __getattr__ class method in Python so that it
+defaults to initialising a new attribute in the instance of the class (i.e. self) with a value that
+is a new empty instance of *this same class*.  In this sense, Treacl is "dynamically recursive".
 
     class Treacl(object):
         ''' Treacl: a tree class'''
@@ -92,58 +93,76 @@ That's it!
 * Examples
 
 treacl/examples:
-  configuration.py    - just a simple sample configuration expressed using treacl
-  divide_by_7.py      - traversal of small graph to determine if divisible by 7
-  json.py             - sample json converted to equivalent treacl (xml too)
-  standard_model.py   - particle physics, gluons, leptons, etc, a graph of how they group and interact
-  universe.py         - a start at spatial hierarchy of like, everything
-  yaml.py             - sample json converted to equivalent treacl
-  tls_cert            = struture of a TLS certificate
+
+-  configuration.py  - just a simple sample configuration expressed using treacl
+-  yaml.py           - sample yaml converted to equivalent treacl
+-  xml.py            - sample xml converted to equivalent treacl
+-  json.py           - sample json converted to equivalent treacl
+-  ssl_x509_cert.py  - deconstruction of a TLS certificate
+
+-  divide_by_7.py    - traversal of small graph to determine if divisible by 7
+-  table.py          - quirky representation of a table/matrix as a DAG using treacle
+
+-  standard_model.py - particle physics, gluons, leptons, etc, a graph of how they group and interact
+                       illustrates using getProp and addProp since normal attributes
+-  universe.py         - a start at spatial hierarchy of like, everything
+
+
 
 * Acknowledgements / Related
 
-This idiom/construct isn't new. Such an implementation overriding
-setattr, getattr, or delattr dunder methods are widespread amongst
-pythonistas.  In other dynamic languages may or may not support such
-dynamic attributes:
+This idiom/construct isn't new. Getting new behaviour using the dunder methods setattr, getattr, or
+delattr is widespread.  Other dynamic languages may or may not support such dynamic attributes by
+default.
 
-  namedtuples: access is similar to create the attributes is not dynamically recursive by default
+- namedtuples: access is similar to creating the attributes but is not dynamically recursive by default
 
-  defaultdict: automatically intialises new key values in dicts
+- defaultdict: automatically intialises new key values in dicts, rather thas instance attributes
 
-  autodict:
+- autodict:
              https://gist.github.com/sebclaeys/1227566
 
-  Javascript: In Javascript dot-path expressions are alredy used to access attributes,
+- Javascript: In Javascript dot-path expressions are already used to access attributes,
               From https://rosettacode.org/wiki/Add_a_variable_to_a_class_instance_at_runtime
-              "javascript:void(null);
-               This kind of thing is fundamental to JavaScript, as it's a prototype-based language rather than a class-based one.
+                 This kind of thing is fundamental to JavaScript, as it's a
+                 prototype-based language rather than a class-based one.
 
-               e = {}       // generic object
-               e.foo = 1
-               e["bar"] = 2    // name specified at runtime"
+                 e = {}          // generic object
+                 e.foo = 1
+                 e["bar"] = 2    // name specified at runtime"
 
-  Matlab:     In Matlab "structs" (and hence their weird cousin "struct Array"), and the effectively foo.(bar) evaluating parentheses provide dyanmic attributes.
+- Matlab:     In Matlab "structs" (and hence its weird cousin "struct Array"), and the effectively
+              "evaluating parentheses" (e.g. "foo.(bar)") provide dyanmic attributes.
 
               e  = struct();
               e.aa.bb.cc.dd = 1;
 
-  Perl:  yes, out of the box, but does anyone still care?
+- Perl:  yes, works out of the box, but does anyone still care?
 
 ** see also
 
-autodata https://pypi.org/project/autodata/
-descriptors: https://stackoverflow.com/questions/1325673/how-to-add-property-to-a-class-dynamically
-long discussion on nested dicts: https://stackoverflow.com/questions/635483/what-is-the-best-way-to-implement-nested-dictionaries/19829714#19829714
-https://chase-seibert.github.io/blog/2013/04/12/getattr-setattr.html
-https://insights.dice.com/2018/01/05/5-xml-alternatives-to-consider/
+- autodata https://pypi.org/project/autodata/
+- descriptors: https://stackoverflow.com/questions/1325673/how-to-add-property-to-a-class-dynamically
+- long discussion on nested dicts: https://stackoverflow.com/questions/635483/what-is-the-best-way-to-implement-nested-dictionaries/19829714#19829714
+- getattr-setattr https://chase-seibert.github.io/blog/2013/04/12/getattr-setattr.html
+- other xmls https://insights.dice.com/2018/01/05/5-xml-alternatives-to-consider/
 
 
 * Notes
 
 Treacl is a slight misnomer, in that it works fine for making directed graphs as well as trees.
 
-Access to methods by the dot operator is unaffected, but it is preferable to have a separate set of attributes (called, say, "properties")
-maintained in a separate dict (as illustrated in the code) to keep properties associated with the nodes or links in the graph.
+Access to methods by the dot operator is unaffected, but it is sometimes preferable to have a
+separate set of attributes (called, say, "properties") maintained in a separate dict (as illustrated
+in the code) to keep properties associated with the nodes or links in the graph.
+
+
+* TBD
+
+- pass in props via constructor?
+- a more cute/declarative way to do attributes values which are lists of treacl instances,
+  i.e. a one-statement way to do "foo = [t(), t()]; foo[0].bar = 1"
+- option for automatcially including backpointers?
+
 
 
