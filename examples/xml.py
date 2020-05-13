@@ -1,9 +1,11 @@
-from treacl import Treacl as tcl
+from treacl import Treacl as t
+
+# random snippet of XML - equivalent representation using treacl
 
 def sample_xml():
 
     # xml sample from json wikipedia page
-    person = tcl()
+    person = t()
     person.firstName = "John"
     person.lastName  = "Smith"
     person.age       = 25
@@ -11,7 +13,7 @@ def sample_xml():
     person.address.city          = "New York"
     person.address.state         =  "NY"
     person.address.postalCode    =  "10021"
-    person.phoneNumbers  = [ tcl(), tcl() ]
+    person.phoneNumbers  = [ t(), t() ]
     person.phoneNumbers[0].type   = "home"
     person.phoneNumbers[0].number = "212 555-1234"
     person.phoneNumbers[1].type   = "fax"
@@ -23,8 +25,6 @@ def sample_xml():
     return person
 
 if __name__ == '__main__':
-
-    # random snippet of XML - to illustrate conversion to treacl
 
     person_in_xml = '''
 <person firstName="John" lastName="Smith" age="25">

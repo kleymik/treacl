@@ -1,6 +1,6 @@
 from treacl import Treacl as tcl
 
-# for testing
+# random snippet of YAML - equivalent representation using treacl
 
 def sample_kub():
 
