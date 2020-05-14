@@ -39,25 +39,7 @@ if __name__ == '__main__':
        # if filecmp.cmp(f"./tests/{ts}_test.ref", f"./tests/{ts}_test.out"): print("TEST PASSED for: configuration")
        # else:                                                            print("TEST FAILED for: configuration")
 
-    # print("-"*100)
-    # exec(open("./examples/yaml.py").read()) #  > tests/yaml_test.out
-    # # diff tests/yaml_test.ref tests/yaml_test.out
 
-    # print("-"*100)
-    # exec(open("./examples/xml.py").read())
-    # # diff tests/xml_test.ref tests/xml_test.out
-
-    # print("-"*100)
-    # exec(open("./examples/json.py").read())
-    # # diff tests/json_test.ref tests/json_test.out
-
-    # print("-"*100)
-    # exec(open("./examples/table.py").read())
-    # # diff tests/table_test.ref tests/table_test.out
-
-    # print("-"*100)
-    # exec(open("./examples/standard_model.py").read())
-    # # diff tests/standard_model_test.ref tests/standard_model_test.out
 
 
 
