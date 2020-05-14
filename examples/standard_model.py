@@ -1,8 +1,6 @@
 from treacl import Treacl as t
 
 # interactions of Physics' itty-bitty field-particles
-# to illustrate using properties ("Prop") instead of attributes
-# since attributes are reserved for the main tree/graph structure
 # taken from (see the diagrams)
 #  https://www.wikiwand.com/en/Standard_Model
 #  https://www.theatlantic.com/technology/archive/2012/07/still-confused-about-the-higgs-boson-read-this/259472/
@@ -12,18 +10,24 @@ from treacl import Treacl as t
 # relationships: grouping and interaction
 #  grouping/membership is declared via the ".M" attribute
 #  interaction is declared         via the ".I" attribute
-# some additional properties are separately recorded to ilustrate the use of addProp
+
+# some additional properties are separately recorded to ilustrate using properties ("__prop") addProp
+# since attributes are reserved for the main tree/graph structure
 
 def standard_model_interactions():
 
-    # particles and their groupings
+    # elementary particles and their groupings
+    ep = t();           ep.addProp('name', "elementary particles");   ep.addProp('type', "grouping")
+
+    # fermions
+    fm = t();           lp.addProp('name', "fermions");               lp.addProp('type', "grouping")
     # leptons
     lp = t();           lp.addProp('name', "leptons");                lp.addProp('type', "grouping")
     #  neutral leptons
     lpn = t();         lpn.addProp('name', "neutral leptons");       lpn.addProp('type', "grouping")
     en = t();           en.addProp('name', "electron neutrino");      en.addProp('type', "elementary")
     tn = t();           tn.addProp('name', "tau neutrino");           tn.addProp('type', "elementary")
-    mnn = t();         mnn.addProp('name', "muon neutrino");          mnn.addProp('type', "elementary")
+    mnn = t();         mnn.addProp('name', "muon neutrino");         mnn.addProp('type', "elementary")
     lpn.M = [en, tn, mnn]
     #  charged leptons
     lpc = t();         lpc.addProp('name', "charged leptons");       lpc.addProp('type', "grouping")
@@ -50,18 +54,26 @@ def standard_model_interactions():
     qkb = t();         qkb.addProp('name', "bottom quark");         qkb.addProp('type', "elementary")
     qktb.M = [qkt, qkb]
     qk.M = [qkud, qkcs, qktb]
+    fm.M = [lp, qk]
+
     # bosons
-    wb = t();           wb.addProp('name', "weak bosons");        wb.addProp('type', "grouping")
-    wp = t();           wp.addProp('name', "w-plus boson");       wp.addProp('type', "elementary")
-    wm = t();           wm.addProp('name', "w-minus boson");      wm.addProp('type', "elementary")
-    zb = t();           zb.addProp('name', "z boson");            zb.addProp('type', "elementary")
+    bn = t();           lp.addProp('name', "fermions");               lp.addProp('type', "grouping")
+    # weak bosons
+    wb = t();           wb.addProp('name', "weak bosons");            wb.addProp('type', "grouping")
+    wp = t();           wp.addProp('name', "w-plus boson");           wp.addProp('type', "elementary")
+    wm = t();           wm.addProp('name', "w-minus boson");          wm.addProp('type', "elementary")
+    zb = t();           zb.addProp('name', "z boson");                zb.addProp('type', "elementary")
     wb.M = [wp, wm, zb]
+
     # gluon
-    gn = t();           gn.addProp('name', "gluon");             gn.addProp('type', "elementary")
+    gn = t();           gn.addProp('name', "gluon");                  gn.addProp('type', "elementary")
     # photon
-    ph = t();           ph.addProp('name', "photon");            ph.addProp('type', "elementary")
+    ph = t();           ph.addProp('name', "photon");                 ph.addProp('type', "elementary")
     # higgs boson
-    hg = t();           hg.addProp('name', "higgs");             hg.addProp('type', "elementary")
+    hg = t();           hg.addProp('name', "higgs");                  hg.addProp('type', "elementary")
+    bn.M = [wb, gn, ph, hg]
+
+    ep.M = [fm, bn]
 
     # Interactions
     # add both-ways links to identify which particles/ groups of particles interact
@@ -77,16 +89,23 @@ def standard_model_interactions():
     wp.I  = [ph]
 
     # more properties
-    # charge, spin, mass
-    ph.addProp('spin', 'one')
-    if False:
-        # example of adding more properties: spin quantum number
+    # charge
+    lpn.addProp('charge', '0')
+    lpc.addProp('charge', '-1')
+    qku.addProp('charge', '2/3')
+    qkd.addProp('charge', '-1/3')
+    qkc.addProp('charge', '2/3')
+    qks.addProp('charge', '-1/3')
+    qkt.addProp('charge', '2/3')
+    qkb.addProp('charge', '-1/3')
+    # spin
+    ph.addProp('spin', '1/2')
+    wb.addProp('spin', '1')
+    gn.addProp('spin', '1')
+    ph.addProp('spin', '1')
+    hg.addProp('spin', '0')
 
-        lp.addProp('spin', 'half')
-        qk.addProp('spin', 'half')
-        hg.addProp('spin', 'zero')
-
-    return ph   # all nodes are linked return one to return them all
+    return ep   # all elementary particles
 
 
 if __name__ == '__main__':
