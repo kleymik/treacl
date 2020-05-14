@@ -1,0 +1,44 @@
+--------------------------------------------
+photon
+I:
+    charged leptons
+    M:
+        electron
+        tau
+        muon
+    I:
+        higgs
+        I:
+            weak bosons
+            M:
+                w-plus boson
+                I:
+                w-minus boson
+                z boson
+            I:
+                leptons
+                M:
+                    neutral leptons
+                    M:
+                        electron neutrino
+                        tau neutrino
+                        muon neutrino
+                I:
+                quarks
+                M:
+                    up/down quarks
+                    M:
+                        up quark
+                        down quark
+                    charm strange quarks
+                    M:
+                        charm quark
+                        strange quark
+                    top/bottom quarks
+                    M:
+                        top quark
+                        bottom quark
+                I:
+                    gluon
+                    I:
+
