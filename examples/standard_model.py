@@ -6,13 +6,13 @@ from treacl import Treacl as t
 #  https://www.theatlantic.com/technology/archive/2012/07/still-confused-about-the-higgs-boson-read-this/259472/
 #  https://en.wikipedia.org/wiki/Spin_(physics)#/media/File:Standard_Model_of_Elementary_Particles.svg
 
-# here the dot attributes are use to declare/encode two
+# here the dot attributes are used to declare/encode two
 # relationships: grouping and interaction
 #  grouping/membership is declared via the ".M" attribute
 #  interaction is declared         via the ".I" attribute
 
-# some additional properties are separately recorded to ilustrate using properties ("__prop") addProp
-# since attributes are reserved for the main tree/graph structure
+# some additional properties are separately recorded to illustrate using properties ("Treacl.__prop")
+# since attributes are reserved to emphasize the main tree/graph structure
 
 def standard_model_interactions():
 
@@ -73,7 +73,7 @@ def standard_model_interactions():
     hg = t();           hg.addProp('name', "higgs");                  hg.addProp('type', "elementary")
     bn.M = [wb, gn, ph, hg]
 
-    ep.M = [fm, bn]
+    ep.M = [fm, bn] # currently, it seems the universe consists of bosons and fermions
 
     # Interactions
     # add both-ways links to identify which particles/ groups of particles interact
@@ -113,11 +113,6 @@ if __name__ == '__main__':
     sm = standard_model_interactions()
 
     sm.ppgraph()
-
-    #sm.to_dot() # export in .dot graph format
-
-    #print("test: find Paths")
-    #for p in univ.findPaths("lead"): print(p)
 
 
 
