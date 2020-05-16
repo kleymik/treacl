@@ -125,16 +125,13 @@ class Treacl(object):
         resLst = []
         print('pathExpr', path_expression)
         if path_expression:
-            if '.' in path_expression: pathCar, pathCdr = path_expression.split('.', maxsplit=1) # excuse my lisp
-            else:                      pathCar, pathCdr = path_expression, None
-            print('pathCar', pathCar)
-            print('pathCdr', pathCdr)
-            includePartMatch = pathCdr!=None and greedyFlg
+            pathCar, _, pathCdr = path_expression.partition('.')
+            includePartMatch = pathCdr!='' and greedyFlg
             for at in self.attrs_list():
                 if pathCar=='*' \
                    or pathCar==at \
-                   or (pathCar.startsswith('*') and pathCar[1:]==at \
-                   or (pathCar.endswith('*')    and pathCar[:-1]==at:
+                   or (pathCar.startswith('*') and pathCar[1:]==at) \
+                   or (pathCar.endswith('*')    and pathCar[:-1]==at):
                     pth = f'{varName}.{at}'
                     if includePartMatch: resLst += [pth]
                     atv = getattr(self, at)
