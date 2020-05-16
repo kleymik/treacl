@@ -24,8 +24,12 @@ def sample_config():
     config.a.b.c.d1 = 42
     config.a.b.c.d2.e = 42
     config.a.b.c.d3 = 42
-    config.dag = config.bar  # this works, but creates a DAG
-    config.a.b.c.cyc = config
+    config.a.b.c2.d1 = 42
+    config.a.b.c2.d2 = 42
+    config.a.bb.c.d1 = 42
+    config.a.bbb.c.d1 = 42
+    # config.dag = config.bar      # this works, but creates a DAG
+    # config.a.b.c.cyc = config  # this works, but creates a Cyclic Graph
     return config
 
 if __name__ == '__main__':
@@ -34,12 +38,27 @@ if __name__ == '__main__':
     print("sample config:pretty print config tree")
     cfg.pptree()
 
-    #print("\nsample config: enumerated list of all paths")
-    #for p in cfg.pathsToList("config"): print(p)
+    print()
+    print("Sample config: enumerated list of all paths")
+    for p in cfg.tree_paths_to_list("cfg"): print(p) # "cfg"
 
-    print("Done")
+    print()
+    print("Sample config: filter list of paths")
+    for p in cfg.tree_find_paths("e", "cfg"): print(p)
 
-    f = open("./config.pk",'wb')
+    print()
+    print("Sample config: regex filter list of paths")
+    for p in cfg.tree_find_paths_regex(".+e.+", "cfg"): print(p)
+
+    print()
+    print("Sample config: path expression filter list of paths")
+    for p in cfg.tree_find_paths_pathex("a.*.c.*", "cfg"): print(p)
+
+    f = open("./tests/config.pk",'wb')
     pickle.dump(cfg, f)
     f.close()
+
+    print()
+    print("Done")
+
 

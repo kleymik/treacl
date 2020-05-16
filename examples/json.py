@@ -56,9 +56,11 @@ if __name__ == '__main__':
 
     person = sample_json()
     print("Sample person from TREACL:")
-    print()
     person.pptree()
 
+    print()
+    print("Sample person: regex filter '^.+e$' list of paths")
+    for p in person.tree_find_paths_regex("^.+e$"): print(p)
 
 
 
