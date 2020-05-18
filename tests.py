@@ -11,17 +11,15 @@ if __name__ == '__main__':
        "universe",
        "ssl_x509_cert",
        "standard_model",
-       "table"
+       "table",
+       "divide_by_7"
    ]
 
-# "divide_by_7"
-# "mini_backprop"
-# "quantlib_instruments_hierarchy"
+   checkOuputDiffs = False
 
-   redirect = True
    for ts in test_scripts:
        print(f"Executing {ts} test")
-       if redirect:
+       if checkOuputDiffs:
            with redirect_stdout(outfile := open(f"./tests/{ts}_test.out", 'w')):
                exec(open(f"./examples/{ts}.py").read())
            outfile.close()
