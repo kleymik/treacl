@@ -20,7 +20,7 @@ def standard_model_interactions():
     ep = t();           ep.addProp('name', "elementary particles");   ep.addProp('type', "grouping")
 
     # fermions
-    fm = t();           lp.addProp('name', "fermions");               lp.addProp('type', "grouping")
+    fm = t();           fm.addProp('name', "fermions");               fm.addProp('type', "grouping")
     # leptons
     lp = t();           lp.addProp('name', "leptons");                lp.addProp('type', "grouping")
     #  neutral leptons
@@ -57,7 +57,7 @@ def standard_model_interactions():
     fm.M = [lp, qk]
 
     # bosons
-    bn = t();           lp.addProp('name', "fermions");               lp.addProp('type', "grouping")
+    bn = t();           bn.addProp('name', "fermions");               bn.addProp('type', "grouping")
     # weak bosons
     wb = t();           wb.addProp('name', "weak bosons");            wb.addProp('type', "grouping")
     wp = t();           wp.addProp('name', "w-plus boson");           wp.addProp('type', "elementary")
@@ -113,6 +113,7 @@ if __name__ == '__main__':
     sm = standard_model_interactions()
 
     sm.ppgraph()
+    print()
 
 
 
