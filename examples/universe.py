@@ -30,11 +30,14 @@ def test_universe():
 
 if __name__ == '__main__':
 
-    test_universe()
+    univ = test_universe()
 
-    print("test: find Paths")
-    for p in univ.findPaths("lead"): print(p)
-
+    print("Universe: print tree")
+    univ.pptree()
+    print()
+    print("Universe: all paths")
+    for p in univ.tree_paths_to_list("univ"): print(p)
+    print()
 
 
 
