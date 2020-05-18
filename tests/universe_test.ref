@@ -1,0 +1,183 @@
+Universe: print tree
+
+virgoSuperCluster: 
+    localGroup: 
+        milkyWay: 
+            orionCygnusArm: 
+                sun: 
+                    earth: 
+                        europe: 
+                            uk: 
+                                england: 
+                                    london: 
+                                        marylebone: 
+                                            langhamHotel: 
+                                                bar: 
+                                                    pint: 
+                                                        londonPride: 
+                                                            head: 
+                                                                bubble: 
+                                                                    co2: 
+                                                                        oxygen: 
+                                                                            neutron: 
+                                                                                upQuark: None
+                                oxfordshire: 
+                                    oxford: None
+                            france: 
+                                languedoc: 
+                                    perpignan: 
+                                        gare: None
+                                paris: 
+                                    arrondisement5: 
+                                        placeDuPantheon: 
+                                            pantheon: 
+                                                dome: 
+                                                    focaulPendulum: 
+                                                        sphere: 
+                                                            lead: 
+                                                                faceCenteredCube: 
+                                                                    atomPb204: 
+                                                                        proton: 
+                                                                            quark: None
+                        us: 
+                            california: 
+                                inyoCounty: 
+                                    whitemountains: 
+                                        ancientBristleconePineForest: 
+                                            methuselahGrove: 
+                                                methuselah: 
+                                                    trunk: 
+                                                        branch: 
+                                                            fascile: 
+                                                                needle: 
+                                                                    stoma: 
+                                                                        parenchymaCell: None
+                            colorado: 
+                                gaithersburg: 
+                                    nist: 
+                                        nistF1Clock: 
+                                            fountain: 
+                                                opticalMolasses: 
+                                                    cesium133: 
+                                                        groundState: 
+                                                            hyperFineTransition: 
+                                                                fluorescentPhoton: 
+                                                                    frequency: None
+                    mars: 
+                        chrysePlanitia: 
+                            viking1Lander: 
+                                biologicalExperimentSystem: 
+                                    labeledRelease: 
+                                        c14DetectorAssembly: None
+                    jupiter: 
+                        ganymede: 
+                            crater1: None
+                        bigRedSpot: None
+            perseusArm: 
+                crabNebula: None
+            sirius: None
+        andromeda: 
+            mayaII: None
+            nucleues: 
+                p2: 
+                    blackHole: None
+        triangulum: 
+            inSpiral: None
+            isSpiral: None
+            ngc604: None
+        sextansA: None
+        sextansB: None
+    virgoA: 
+        messier87: None
+
+Universe: all paths
+univ.virgoSuperCluster
+univ.virgoSuperCluster.localGroup
+univ.virgoSuperCluster.localGroup.milkyWay
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.england
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.england.london
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.england.london.marylebone
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.england.london.marylebone.langhamHotel
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.england.london.marylebone.langhamHotel.bar
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.england.london.marylebone.langhamHotel.bar.pint
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.england.london.marylebone.langhamHotel.bar.pint.londonPride
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.england.london.marylebone.langhamHotel.bar.pint.londonPride.head
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.england.london.marylebone.langhamHotel.bar.pint.londonPride.head.bubble
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.england.london.marylebone.langhamHotel.bar.pint.londonPride.head.bubble.co2
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.england.london.marylebone.langhamHotel.bar.pint.londonPride.head.bubble.co2.oxygen
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.england.london.marylebone.langhamHotel.bar.pint.londonPride.head.bubble.co2.oxygen.neutron
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.england.london.marylebone.langhamHotel.bar.pint.londonPride.head.bubble.co2.oxygen.neutron.upQuark
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.oxfordshire
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.uk.oxfordshire.oxford
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.languedoc
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.languedoc.perpignan
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.languedoc.perpignan.gare
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.paris
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.paris.arrondisement5
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.paris.arrondisement5.placeDuPantheon
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.paris.arrondisement5.placeDuPantheon.pantheon
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.paris.arrondisement5.placeDuPantheon.pantheon.dome
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.paris.arrondisement5.placeDuPantheon.pantheon.dome.focaulPendulum
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.paris.arrondisement5.placeDuPantheon.pantheon.dome.focaulPendulum.sphere
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.paris.arrondisement5.placeDuPantheon.pantheon.dome.focaulPendulum.sphere.lead
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.paris.arrondisement5.placeDuPantheon.pantheon.dome.focaulPendulum.sphere.lead.faceCenteredCube
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.paris.arrondisement5.placeDuPantheon.pantheon.dome.focaulPendulum.sphere.lead.faceCenteredCube.atomPb204
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.paris.arrondisement5.placeDuPantheon.pantheon.dome.focaulPendulum.sphere.lead.faceCenteredCube.atomPb204.proton
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.europe.france.paris.arrondisement5.placeDuPantheon.pantheon.dome.focaulPendulum.sphere.lead.faceCenteredCube.atomPb204.proton.quark
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.california
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.california.inyoCounty
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.california.inyoCounty.whitemountains
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.california.inyoCounty.whitemountains.ancientBristleconePineForest
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.california.inyoCounty.whitemountains.ancientBristleconePineForest.methuselahGrove
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.california.inyoCounty.whitemountains.ancientBristleconePineForest.methuselahGrove.methuselah
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.california.inyoCounty.whitemountains.ancientBristleconePineForest.methuselahGrove.methuselah.trunk
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.california.inyoCounty.whitemountains.ancientBristleconePineForest.methuselahGrove.methuselah.trunk.branch
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.california.inyoCounty.whitemountains.ancientBristleconePineForest.methuselahGrove.methuselah.trunk.branch.fascile
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.california.inyoCounty.whitemountains.ancientBristleconePineForest.methuselahGrove.methuselah.trunk.branch.fascile.needle
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.california.inyoCounty.whitemountains.ancientBristleconePineForest.methuselahGrove.methuselah.trunk.branch.fascile.needle.stoma
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.california.inyoCounty.whitemountains.ancientBristleconePineForest.methuselahGrove.methuselah.trunk.branch.fascile.needle.stoma.parenchymaCell
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.colorado
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.colorado.gaithersburg
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.colorado.gaithersburg.nist
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.colorado.gaithersburg.nist.nistF1Clock
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.colorado.gaithersburg.nist.nistF1Clock.fountain
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.colorado.gaithersburg.nist.nistF1Clock.fountain.opticalMolasses
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.colorado.gaithersburg.nist.nistF1Clock.fountain.opticalMolasses.cesium133
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.colorado.gaithersburg.nist.nistF1Clock.fountain.opticalMolasses.cesium133.groundState
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.colorado.gaithersburg.nist.nistF1Clock.fountain.opticalMolasses.cesium133.groundState.hyperFineTransition
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.colorado.gaithersburg.nist.nistF1Clock.fountain.opticalMolasses.cesium133.groundState.hyperFineTransition.fluorescentPhoton
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.earth.us.colorado.gaithersburg.nist.nistF1Clock.fountain.opticalMolasses.cesium133.groundState.hyperFineTransition.fluorescentPhoton.frequency
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.mars
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.mars.chrysePlanitia
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.mars.chrysePlanitia.viking1Lander
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.mars.chrysePlanitia.viking1Lander.biologicalExperimentSystem
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.mars.chrysePlanitia.viking1Lander.biologicalExperimentSystem.labeledRelease
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.mars.chrysePlanitia.viking1Lander.biologicalExperimentSystem.labeledRelease.c14DetectorAssembly
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.jupiter
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.jupiter.ganymede
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.jupiter.ganymede.crater1
+univ.virgoSuperCluster.localGroup.milkyWay.orionCygnusArm.sun.jupiter.bigRedSpot
+univ.virgoSuperCluster.localGroup.milkyWay.perseusArm
+univ.virgoSuperCluster.localGroup.milkyWay.perseusArm.crabNebula
+univ.virgoSuperCluster.localGroup.milkyWay.sirius
+univ.virgoSuperCluster.localGroup.andromeda
+univ.virgoSuperCluster.localGroup.andromeda.mayaII
+univ.virgoSuperCluster.localGroup.andromeda.nucleues
+univ.virgoSuperCluster.localGroup.andromeda.nucleues.p2
+univ.virgoSuperCluster.localGroup.andromeda.nucleues.p2.blackHole
+univ.virgoSuperCluster.localGroup.triangulum
+univ.virgoSuperCluster.localGroup.triangulum.inSpiral
+univ.virgoSuperCluster.localGroup.triangulum.isSpiral
+univ.virgoSuperCluster.localGroup.triangulum.ngc604
+univ.virgoSuperCluster.localGroup.sextansA
+univ.virgoSuperCluster.localGroup.sextansB
+univ.virgoSuperCluster.virgoA
+univ.virgoSuperCluster.virgoA.messier87
+
