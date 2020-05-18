@@ -26,13 +26,22 @@ def divisible_by_7_graph():
     '''
     allNodes = { e: t() for e in "abcdefg" }                          # create 7 alphabetically labelled nodes
     #             Black Links                      White Links
-    allNodes['a'].B = allNodes['b']; allNodes['a'].W = allNodes['a'] ; allNodes['a'].v = 'a' # node a has a self loop
-    allNodes['b'].B = allNodes['c']; allNodes['b'].W = allNodes['f'] ; allNodes['b'].v = 'b'
-    allNodes['c'].B = allNodes['f']; allNodes['c'].W = allNodes['d'] ; allNodes['c'].v = 'c'
-    allNodes['d'].B = allNodes['a']; allNodes['d'].W = allNodes['g'] ; allNodes['d'].v = 'd'
-    allNodes['e'].B = allNodes['d']; allNodes['e'].W = allNodes['b'] ; allNodes['e'].v = 'e'
-    allNodes['f'].B = allNodes['g']; allNodes['f'].W = allNodes['c'] ; allNodes['f'].v = 'f'
-    allNodes['g'].B = allNodes['e']; allNodes['g'].W = allNodes['e'] ; allNodes['g'].v = 'g'  # same for Black and White ;
+    if True:
+        allNodes['a'].B = allNodes['b']; allNodes['a'].W = allNodes['a'] ; allNodes['a'].v = 'a' # node a has a self loop
+        allNodes['b'].B = allNodes['c']; allNodes['b'].W = allNodes['f'] ; allNodes['b'].v = 'b'
+        allNodes['c'].B = allNodes['f']; allNodes['c'].W = allNodes['d'] ; allNodes['c'].v = 'c'
+        allNodes['d'].B = allNodes['a']; allNodes['d'].W = allNodes['g'] ; allNodes['d'].v = 'd'
+        allNodes['e'].B = allNodes['d']; allNodes['e'].W = allNodes['b'] ; allNodes['e'].v = 'e'
+        allNodes['f'].B = allNodes['g']; allNodes['f'].W = allNodes['c'] ; allNodes['f'].v = 'f'
+        allNodes['g'].B = allNodes['e']; allNodes['g'].W = allNodes['e'] ; allNodes['g'].v = 'g'  # same for Black and White ;
+    else:
+        allNodes['a'].B = allNodes['b']; allNodes['a'].W = allNodes['a'] ; allNodes['a'].v = 'a' # node a has a self loop
+        allNodes['b'].B = allNodes['c']; allNodes['b'].W = allNodes['d'] ; allNodes['b'].v = 'b'
+        allNodes['c'].B = allNodes['d']; allNodes['c'].W = allNodes['g'] ; allNodes['c'].v = 'c'
+        allNodes['d'].B = allNodes['e']; allNodes['d'].W = allNodes['c'] ; allNodes['d'].v = 'd'
+        allNodes['e'].B = allNodes['f']; allNodes['e'].W = allNodes['f'] ; allNodes['e'].v = 'e'  # same for Black and White ;
+        allNodes['f'].B = allNodes['g']; allNodes['f'].W = allNodes['b'] ; allNodes['f'].v = 'f'
+        allNodes['g'].B = allNodes['a']; allNodes['g'].W = allNodes['e'] ; allNodes['g'].v = 'g'
 
     return allNodes['a']
 
@@ -51,34 +60,45 @@ def divisible_by_7_graph_compact():
     f = t(); f.v ='f'
     g = t(); g.v ='e'
 
-    g7 = a                     # the starting node of the graph
-    g7.W = g7                  #   i) self cycle  a->a White
-    g7.B = b
-    g7.B.B = c
-    g7.B.W = f
-    g7.B.B.B = f
-    g7.B.B.W = d
-    g7.B.B.B.B = g
-    g7.B.B.B.B.B = e
-    g7.B.B.B.B.W = e
-    g7.B.B.B.B.B.B = d
-    g7.B.B.B.B.B.W = b
+    if False:
+        g7 = a                     # the starting node of the graph
+        g7.W = g7                  #   i) self cycle  a->a White
+        g7.B = b
+        g7.B.B = c
+        g7.B.W = f
+        g7.B.B.B = f
+        g7.B.B.W = d
+        g7.B.B.B.B = g
+        g7.B.B.B.B.B = e
+        g7.B.B.B.B.W = e
+        g7.B.B.B.B.B.B = d
+        g7.B.B.B.B.B.W = b
+    elif True:
+        g7 = a
+        g7.B.B.B.B.B.B.B = g7
+        g7.W = g7                     # a
+        g7.B.W = g7.B.B.B             # b
+        g7.B.B.W = g7.B.B.B.B.B.B     # c
+        g7.B.B.B.W = g7.B.B           # d
+        g7.B.B.B.B.W = g7.B.B.B.B.B   # e
+        g7.B.B.B.B.B.W = g7.B         # f
+        g7.B.B.B.B.B.B.W = g7.B.B.B.B # g
 
-    g7.B.B.B.B.B.B.B = g7
-    g7.W = g7.B                 # a
-    g7.B.W = g7.B.B.B           # f
-    g7.B.B.W = g7.B.B.B.B.B.B   # d
-    g7.B.B.B.W = g7.B.B         # c
-    g7.B.B.B.B.W = g7.B.B.B.B.B # e
-    g7.B.B.B.B.B.W = g7.B       # b
-    g7.B.B.B.B.B.B.W = g7.B.B.B.B # g
-    # g7.B.B.W.B = g7            #  ii) outer cycle a->b->c->d->a Black
-    # g7.B.W. B.B.B = g7.B.B.W    # iii) inner cycle a->b->f->g->e->d Black
-    # g7.B.W.B.W.W = g7.B        #  iv) single link e->b White
-    # g7.B.B.B = g7.B.W          #   v) single link c->f Black
-    # g7.B.W.W = g7.B.B          #  vi) single link f->c White
-    # g7.B.W.B.B.B.W = g7.B.W.B  # vii) single link d->g White
-
+        g7.v = 'a'
+        g7.B.v = 'b'
+        g7.B.B.v = 'c'
+        g7.B.B.B.v = 'd'
+        g7.B.B.B.B.v = 'e'
+        g7.B.B.B.B.B.v = 'f'
+        g7.B.B.B.B.B.B.v = 'g'
+    else:
+        # g7.B.B.W.B = g7            #  ii) outer cycle a->b->c->d->a Black
+        # g7.B.W. B.B.B = g7.B.B.W    # iii) inner cycle a->b->f->g->e->d Black
+        # g7.B.W.B.W.W = g7.B        #  iv) single link e->b White
+        # g7.B.B.B = g7.B.W          #   v) single link c->f Black
+        # g7.B.W.W = g7.B.B          #  vi) single link f->c White
+        # g7.B.W.B.B.B.W = g7.B.W.B  # vii) single link d->g White
+        pass
     return g7
 
 def test_divisible_by_7(testNum, g7graph):            # is this divisible by 7?):
