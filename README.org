@@ -4,7 +4,7 @@
   Treacl - simple examples which exploit making class instance attributes' dynamic
 
 
-2020-05-16 published to github as a work in progress
+2020-05-18 published to github as a work in progress
 2018-06-02 Treacl - yet another variation on similar datatypes in various interpreted languages.
 2010-02-01 tdict.py python2 tree dict
 
@@ -122,11 +122,11 @@ default.
 
 - defaultdict: automatically intialises new key values in dicts, rather than instance attributes
 
-- autodict:
-             https://gist.github.com/sebclaeys/1227566
+- autodict:    very similar, but for dict&key instead of instance & attribute.
+               https://gist.github.com/sebclaeys/1227566
 
-- Javascript: In Javascript dot-path expressions are already used to access attributes,
-              From https://rosettacode.org/wiki/Add_a_variable_to_a_class_instance_at_runtime
+- Javascript:  In Javascript dot-path expressions are already used to access attributes,
+               From https://rosettacode.org/wiki/Add_a_variable_to_a_class_instance_at_runtime
                  This kind of thing is fundamental to JavaScript, as it's a
                  prototype-based language rather than a class-based one.
 
@@ -134,13 +134,13 @@ default.
                  e.foo = 1
                  e["bar"] = 2    // name specified at runtime"
 
-- Matlab:     In Matlab "structs" (and hence its weird cousin "struct Array"), and the effectively
-              "evaluating parentheses" (e.g. "foo.(bar)") provide dyanmic attributes.
+- Matlab:      In Matlab "structs" (and hence its weird cousin "struct Array"), and the effectively
+               "evaluating parentheses" (e.g. "foo.(bar)") provide dyanmic attributes.
 
               e  = struct();
               e.aa.bb.cc.dd = 1;
 
-- Perl:  yes, works out of the box, but does anyone still care?
+- Perl:  yes, works out of the box wish hashes, but does anyone still care?
 
 ** see also
 
