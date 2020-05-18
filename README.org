@@ -174,5 +174,5 @@ possible improvements:
   i.e. a one-statement way to do "foo = [t(), t()]; foo[0].bar = 1"
 - option for automatically including backpointers
 - export to standard graph format (see "Yed")
-
+- table elements swap using some kind of higher-order function?
 
