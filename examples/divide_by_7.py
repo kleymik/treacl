@@ -24,6 +24,7 @@ def divisible_by_7_graph():
     '''set up divisibe-by-y graph by declaration
        of named nodes
     '''
+
     allNodes = { e: t() for e in "abcdefg" }                                                # create 7 alphabetically labelled nodes
     #             Black Links                      White Links
     allNodes['a'].B = allNodes['b']; allNodes['a'].W = allNodes['a']; allNodes['a'].v = 'a' # node 'a' has a self loop
@@ -52,14 +53,6 @@ def divisible_by_7_graph_pathex():
     g7.B.B.B.B.W = g7.B.B.B.B.B   # e
     g7.B.B.B.B.B.W = g7.B         # f
     g7.B.B.B.B.B.B.W = g7.B.B.B.B # g
-
-    g7.v = 'a'
-    g7.B.v = 'b'
-    g7.B.B.v = 'c'
-    g7.B.B.B.v = 'd'
-    g7.B.B.B.B.v = 'e'
-    g7.B.B.B.B.B.v = 'f'
-    g7.B.B.B.B.B.B.v = 'g'
 
     return g7
 
