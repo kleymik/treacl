@@ -44,41 +44,41 @@ def divisible_by_7_graph_pathex():
        but expressed by decomposing it into a set of line path expressions
     '''
 
-    g7 = t()
-    g7.B.B.B.B.B.B.B = g7         # Black loop
-    g7.W = g7                     # a; White forward and backward jumps
-    g7.B.W = g7.B.B.B             # b
-    g7.B.B.W = g7.B.B.B.B.B.B     # c
-    g7.B.B.B.W = g7.B.B           # d
-    g7.B.B.B.B.W = g7.B.B.B.B.B   # e
-    g7.B.B.B.B.B.W = g7.B         # f
-    g7.B.B.B.B.B.B.W = g7.B.B.B.B # g
+    d7 = t()
+    d7.B.B.B.B.B.B.B = d7         # Black loop
+    d7.W = d7                     # a; White forward and backward jumps
+    d7.B.W = d7.B.B.B             # b
+    d7.B.B.W = d7.B.B.B.B.B.B     # c
+    d7.B.B.B.W = d7.B.B           # d
+    d7.B.B.B.B.W = d7.B.B.B.B.B   # e
+    d7.B.B.B.B.B.W = d7.B         # f
+    d7.B.B.B.B.B.B.W = d7.B.B.B.B # g
 
-    return g7
+    return d7
 
-def test_divisible_by_7(testNum, g7graph):
+def test_divisible_by_7(testNum, d7graph):
     '''traverse graph to test if divisible by 7'''
-    nxt = g7graph
+    nxt = d7graph
     for d in [int(d) for d in str(testNum)]:      # convert the integer to a list of digits
         for i in range(d): nxt = nxt.B            # for digits "d" times, move along BLACK edges; print(f"{d} {i}"); print("B",end='')
         nxt = nxt.W                               # then complete by one step along WHITE edge, repeat until all digits processed; print("W",end='')
-    return (nxt is g7graph)                       # is divisible by 7 if back at start
+    return (nxt is d7graph)                       # is divisible by 7 if back at start
 
 
 if __name__ == '__main__':
 
-    g7 = divisible_by_7_graph()
-    g7.ppgraph(sortedP=True)
+    d7 = divisible_by_7_graph()
+    d7.ppgraph(sortedP=True)
     for num in [5, 7, 77, 78, 37237366262681625, 37237366262681627]:
         print(f"\n{num}-----{num%7}")
-        if test_divisible_by_7(num, g7): print("Divisible by 7")
+        if test_divisible_by_7(num, d7): print("Divisible by 7")
         else:                            print("Not divisible by 7")
 
-    g7c = divisible_by_7_graph_pathex()
-    g7c.ppgraph(sortedP=True)
+    d7c = divisible_by_7_graph_pathex()
+    d7c.ppgraph(sortedP=True)
     for num in [5, 7, 77, 78, 37237366262681625, 37237366262681627]:
         print(f"\n\n{num}-----{num%7}")
-        if test_divisible_by_7(num, g7c): print("Divisible by 7")
+        if test_divisible_by_7(num, d7c): print("Divisible by 7")
         else:                             print("Not divisible by 7")
 
 
