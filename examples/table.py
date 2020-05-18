@@ -1,13 +1,15 @@
 from treacl import Treacl as t
+from string import ascii_lowercase
+import pickle
 
-# quirky use of a treacl dag to create a table
+# use of a treacl dag to create an indices-oriented table
+#
 
 def print_treacl_table(tbl):
     for ai,a in enumerate(tbl.rows):
         for bi,b in enumerate(tbl.cols): print(f"[{ai},{bi}]={tbl.rows[ai].s[bi].v} ", end='')
         print()
     print()
-
 
 def make_treacl_3x2_table():
     '''example 3x2 table
@@ -39,43 +41,46 @@ def make_treacl_table(nrows, ncols):
     for r in tbl.rows: r.s = [t() for x in tbl.cols]        # create series treacl instances for each row
     for ci,c in enumerate(tbl.cols): c.s = [r.s[ci] for r in tbl.rows] # cross-ref the instance into column series
 
+    i = 0
     for ri,r in enumerate(tbl.rows):
         for ci,c in enumerate(tbl.cols):
-            tbl.rows[ri].s[ci].v = (ri,ci)                  # give each element in the table a value attribute (e.g. ".v" )
+            tbl.rows[ri].s[ci].v = ascii_lowercase[i%26]  #(ri,ci)                  # give each element in the table a value attribute (e.g. ".v" )
+            i += 1
     return tbl
-
-
-def make_treacl_symmatrix(nrows, ncols):
-    '''a symmetric marix as a table: corresponding off-diagonal items
-       are not just equal "(m[i,j]==m[j,i])==True", they are the
-       same "(m[i,j] is m[j,i])==True".
-    '''
-    tbl = t()
-    tbl.rows = [t() for _ in range(nrows)]                  # list of row series
-    tbl.cols = [t() for _ in range(ncols)]                  # list of column series
-    for ri,r in tbl.rows:
-        for ci,c in enumerate(tbl.cols): tbl.rows[ri].s[ci] = tbl.cols[ci].s[ri] = t()
-    return tbl
-    # for r in tbl.rows: r.s = [t() for x in tbl.cols]
-    # for ci,c in enumerate(tbl.cols): c.s = [ t for t in tbl.rows[ci]]
 
 
 if __name__ == '__main__':
 
-    print("Samples tables using treacl:")
-
-    tb1 = make_treacl_3x2_table()
-    print_treacl_table(tb1)
+    print("Sample table using treacl:")
+    tbA = make_treacl_3x2_table()
+    print_treacl_table(tbA)
+    print()
 
     # transpose
-    tb1.rows, tb1.cols = tb1.cols, tb1.rows  # does what it says on the tin!
-    print("transposed")
-    print_treacl_table(tb1)
+    print("Sample table: transpose")
+    tbA.rows, tbA.cols = tbA.cols, tbA.rows                                  # does what it says on the tin!
+    print_treacl_table(tbA)
+    print()
 
     # n x m table
-    tb2 = make_treacl_table(5,3)
-    print_treacl_table(tb2)
-    # swap a pair of neighbouring column elements
-    # tbl.rows[0].s[1], tbl.cols[1].s[2] = tbl.rows[0].s[1], tbl.cols[0].s[2]
-    # swap a pair of neighbouring row  elements
+    print("Sample table: 5x3")
+    tbB = make_treacl_table(5,3)
+    print_treacl_table(tbB)
+    print()
 
+    print("Sample table: 5x3 - swap a pair of horizontal neighbours ")       # both swap lines are needed to avoid making table strcuture inconsistent
+    tbB.rows[1].s[1], tbB.rows[1].s[2] = tbB.rows[1].s[2], tbB.rows[1].s[1]  # swap in the one row    series
+    tbB.cols[1].s[1], tbB.cols[2].s[1] = tbB.cols[2].s[1], tbB.cols[1].s[1]  # swap in the two column series
+    print_treacl_table(tbB)
+    print()
+    print("Sample table: 5x3 - swap a pair of vertical neighbours ")         # both swap lines are needed to avoid making table strcuture inconsistent
+    tbB.rows[0].s[0], tbB.rows[1].s[0] = tbB.rows[1].s[0], tbB.rows[0].s[0]  # swap in the one row    series
+    tbB.cols[0].s[0], tbB.cols[0].s[1] = tbB.cols[0].s[1], tbB.cols[0].s[0]  # swap in the two column series
+    print_treacl_table(tbB)
+    print()
+
+    f = open("./tests/table.pk",'wb')
+    pickle.dump([tbA, tbB], f)
+    f.close()
+    print()
+    print("Done")
