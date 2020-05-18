@@ -4,7 +4,7 @@ from treacl import Treacl as t
 # graph traversal divisible-by-7 test
 # traversing this graph computes whether a number if divisble by 7
 #   i.e. f(n) = {n mod 7 == 0}
-# FROM: http://blog.tanyakhanova.com/2009/divisibilty-by-7-is-a-walk
+# FROM: http://blog.tanyakhovanova.com/2009/08/divisibility-by-7-is-a-walk-on-a-graph-by-david-wilson/
 #   T. Khovanova & D. Wilson
 #   Each node as two directed links: a "B" (Black) link and a "W" (White) link
 #   the recipe indicates whether and how many time to follow the B link or the W link,
