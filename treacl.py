@@ -154,7 +154,7 @@ class Treacl(object):
         occurDict[self] = True
         if depth < self.treeMaxDepth:
             print()
-            for at in self.attrs_list(sortedP=sortedP):                                                  # TBD: if singleton, don't print a CRLF
+            for at in self.attrs_list(sortedP=sortedP):                                   # TBD: if singleton, don't print a CRLF
                 print(nameStr := ' ' * self.depthIndent * depth + f'{at}: ', end='')
                 atv = getattr(self, at)                                                   # attribute value
                 if isinstance(atv, Treacl):

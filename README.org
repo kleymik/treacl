@@ -1,4 +1,4 @@
-(this README.org best viewed raw or in org-mode)
+(the README.org best viewed raw or in org-mode)
 
 
   Treacl - simple examples which exploit making class instance attributes' dynamic
@@ -19,6 +19,7 @@ class (e.g. "foo.aa = 1"), it will fail when attempting more than one level ("fo
 Treacl enables this by instantiating the intermediate attributes with an empty Treacl class instance
 by default:
 
+#+BEGIN_SRC python
     from treacl import Treacl
 
     foo = Treacl()                # an instance of the class Treacl
@@ -29,6 +30,7 @@ by default:
 
     foo.ppTree()                  # pretty print the tree
     foo.tree_paths_to_list()      # return all paths in the tree
+#+END_SRC
 
 By a simple tweak of one the class' dunder methods, it's possible to make object attributes
 on-the-fly. This enables tree creation that is declarative, dynamic, and concise.
@@ -43,6 +45,8 @@ of the approach here is that the natural and readable Python "."  dot operator f
 kept pre-eminent.
 
 ** yaml markdown equivalence example
+
+#+BEGIN_SRC
 
       YAML                                          Python- Treacl
       ====                                          ==============
@@ -73,7 +77,7 @@ kept pre-eminent.
                 image: nickchase/rss-php-nginx:v1
                 ports:
                   - containerPort: 88
-
+#+END_SRC
 
 * The Simple Essence
 
@@ -81,13 +85,15 @@ Treacl is a one-liner - implemented by overriding the __getattr__ class method i
 defaults to initialising a new attribute in the instance of the class (i.e. self) with a value that
 is a new empty instance of *this same class*.  In this sense, Treacl is "dynamically recursive".
 
+#+BEGIN_SRC python
     class Treacl(object):
-        ''' Treacl: a tree class'''
+        "Treacl: a tree class"
 
        def __getattr__(self, name):
-            '''only called for undefined attributes'''
+            "only called for undefined attributes"
             setattr(self, name, t := Treacl())             # I am the walrus
             return t
+#+END_SRC
 
 That's it!
 
