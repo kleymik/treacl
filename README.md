@@ -10,9 +10,12 @@
 
 (the README.org best viewed raw or in org-mode)
 
-Treacl - simple examples which exploit making class instance attributes' dynamic
+Treacl - simple examples which exploit making class instances' attributes dynamic
 
-2020-05-18 published to github as a work in progress 2018-06-02 Treacl - yet another variation on similar datatypes in various interpreted languages. 2010-02-01 tdict.py python2 tree dict
+
+-   2020-05-18 published to github as a work in progress
+-   2018-06-02 Treacl - yet another variation on similar datatypes in various interpreted languages.
+-   2010-02-01 tdict.py python2 tree dict
 
 # Introduction<a id="sec-1" name="sec-1"></a>
 
@@ -29,7 +32,7 @@ foo.aa.bb.cc.dd.ee = 1        # for each attribute down the dot-path expression 
                               # an instance of the Treacl class is dynamically created
 foo.aa.qq.rr = "Hello World"
 
-foo.ppTree()                  # pretty print the tree
+foo.pptree()                  # pretty print the tree
 foo.tree_paths_to_list()      # return all paths in the tree
 ```
 
@@ -53,14 +56,14 @@ metadata:                                     kubConfig.metadata.name = "rss-sit
   labels:                                     kubConfig.spec.replicas = 2
     app: web                                  kubConfig.spec.selector.matchLabels.app = "web"
 spec:                                         kubConfig.spec.template.metadata.labels.app = "web"
-  replicas: 2                                 kubConfig.spec.template.spec.containers = [Treacl(), Treacl()]
+  replicas: 2                                 kubConfig.spec.template.spec.containers = [Treacl()]
   selector:                                   kubConfig.spec.template.spec.containers[0].name  = "front-end"
     matchLabels:                              kubConfig.spec.template.spec.containers[0].image = "nginx"
       app: web                                kubConfig.spec.template.spec.containers[0].ports.containerPort = 80
-  template:                                   kubConfig.spec.template.spec.containers[1].name  = "rss-reader"
-    metadata:                                 kubConfig.spec.template.spec.containers[1].image = "nickchase/rss-php-nginx:v1"
-      labels:                                 kubConfig.spec.template.spec.containers[1].ports.containerPort = 88
-        app: web
+  template:                                   kubConfig.spec.template.spec.containers += [Treacl()]
+    metadata:                                 kubConfig.spec.template.spec.containers[1].name  = "rss-reader"
+      labels:                                 kubConfig.spec.template.spec.containers[1].image = "nickchase/rss-php-nginx:v1"
+        app: web                              kubConfig.spec.template.spec.containers[1].ports.containerPort = 88
     spec:
       containers:
         - name: front-end
@@ -100,7 +103,7 @@ That's it!
 -   ssl<sub>x509</sub><sub>cert</sub>.py - deconstruction of a TLS certificate
 
 -   divide<sub>by</sub><sub>7</sub>.py - traversal of small graph to determine if divisible by 7
--   table.py - quirky representation of a table/matrix as a DAG using treacle
+-   table.py - quirky representation of a table/matrix as a DAG using treacl
 
 -   standard<sub>model</sub>.py - particle physics, gluons, leptons, etc, a graph of how they group and interact illustrates using getProp and addProp so that attributes can be reserved to emphasize the main tree/graph structure
 -   universe.py - a start at spatial hierarchy of like, everything
