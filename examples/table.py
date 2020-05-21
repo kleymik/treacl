@@ -67,13 +67,20 @@ if __name__ == '__main__':
     tbB = make_treacl_table(5,3)
     print_treacl_table(tbB)
     print()
+    print("Sample table: 5x3 - pretty print as a graph")
+    tbB.ppgraph()
 
-    print("Sample table: 5x3 - swap a pair of horizontal neighbours ")       # both swap lines are needed to avoid making table strcuture inconsistent
+    print()
+    print("Sample table: 5x3 - swap a pair of horizontal neighbours ")
+    tbB.rows[1].s[1].v = tbB.rows[1].s[1].v.upper()                          # highlight the  items being swapped
+    tbB.rows[1].s[2].v = tbB.rows[1].s[2].v.upper()
+                                                                             # both of these 2 lines are needed to avoid making table structure inconsistent
     tbB.rows[1].s[1], tbB.rows[1].s[2] = tbB.rows[1].s[2], tbB.rows[1].s[1]  # swap in the one row    series
     tbB.cols[1].s[1], tbB.cols[2].s[1] = tbB.cols[2].s[1], tbB.cols[1].s[1]  # swap in the two column series
     print_treacl_table(tbB)
     print()
-    print("Sample table: 5x3 - swap a pair of vertical neighbours ")         # both swap lines are needed to avoid making table strcuture inconsistent
+
+    print("Sample table: 5x3 - swap a pair of vertical neighbours ")         # both swap lines are needed to avoid making table structure inconsistent
     tbB.rows[0].s[0], tbB.rows[1].s[0] = tbB.rows[1].s[0], tbB.rows[0].s[0]  # swap in the one row    series
     tbB.cols[0].s[0], tbB.cols[0].s[1] = tbB.cols[0].s[1], tbB.cols[0].s[0]  # swap in the two column series
     print_treacl_table(tbB)
