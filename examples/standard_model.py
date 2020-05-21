@@ -114,6 +114,8 @@ if __name__ == '__main__':
 
     sm.ppgraph()
     print()
+    for p in sm.graph_paths_to_list(varName="sm"): print(p)
+    print()
 
 
 
