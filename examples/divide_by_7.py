@@ -82,7 +82,7 @@ if __name__ == '__main__':
         else:                             print("Not divisible by 7")
 
 
-
+    for p in d7.graph_paths_to_list(varName="d7"): print(p)
 
 
 

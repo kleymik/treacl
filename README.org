@@ -32,7 +32,7 @@ by default:
     foo.tree_paths_to_list()      # return all paths in the tree
 #+END_SRC
 
-By a simple tweak of one the class' dunder methods, it's possible to make object attributes
+By a simple tweak of one of the class' dunder methods, it's possible to make object attributes
 on-the-fly. This enables tree creation that is declarative, dynamic, and concise.
 
 The ability to write such declarative code segments can often be preferable to the use of markdown
@@ -179,6 +179,6 @@ possible improvements:
 - a more cute/declarative way to do attributes values which are lists of treacl instances,
   i.e. a one-statement way to do "foo = [t(), t()]; foo[0].bar = 1"
 - option for automatically including backpointers
-- export to standard graph format (see "Yed")
+- export to standard (nestable?) graph format (see "Yed")
 - table elements swap using some kind of higher-order function?
-
+- link node-ifier: turn links into bin-ary nodes

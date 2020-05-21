@@ -58,8 +58,7 @@ class Treacl(object):
     valPrintMaxWidth = 40                                                                 # for pformat # width is max horizontal number of characters, e.g when printing a list
 
     def pformat_indented(self, v, indent=0):
-        '''use pprint pformat but then addtional indent for given depth
-        '''                                                                               # pprint module inserts one less whitespace for first line
+        '''use pprint pformat but then add additional indent for given depth'''           # pprint module inserts one less whitespace for first line
         pfStrings = pformat(v, width=self.valPrintMaxWidth).split('\n')
         return [('' if num==0 else ' ' * indent) + line for num, line in enumerate(pfStrings)]
 
@@ -67,9 +66,9 @@ class Treacl(object):
         '''print treacl tree recursively'''
         if depth < self.treeMaxDepth:
             print()                                                                       # TBD: if singleton, don't print a CRLF
-            for at in self.attrs_list(sortedP=sortedP):                                                  # same as self.__dict__:
+            for at in self.attrs_list(sortedP=sortedP):                                   # same as self.__dict__:
                 print(nameStr := ' ' * self.depthIndent * depth + f'{at}: ', end='')
-                atv = getattr(self, at)                                                   # attribute value
+                atv = getattr(self, at)                                                   # atv = attribute value
                 if isinstance(atv, Treacl): atv.pptree(depth + 1)                         # recurse
                 elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]): # recurse into lists only (not any other iterables), if case they contain at leat one Treacl
                     for e in atv:                                                         # note deeper nested lists are not checked
@@ -80,12 +79,6 @@ class Treacl(object):
                     for s in self.pformat_indented(atv, len(nameStr)): print(s)           # TBD: keep indent even if multi-line
         else:
             print(f"Max recursion depth reached {self.treeMaxDepth}")
-
-    def tprint(self, depth=0):
-        for at in self.attrs_list():                                                      # TBD: if singleton, don't print a CRLF
-            atv = getattr(self, at)                                                       # attribute value
-            print('\n'+' ' * self.depthIndent * depth, f'{at}: ', end='')
-            treacl_pprint(atv, depth + 1)                                                 # recurse
 
     def tree_paths_to_list(self, varName=""):                                             # list all paths in tree
         '''generate all paths to a given depth'''
@@ -150,32 +143,46 @@ class Treacl(object):
     def ppgraph(self, depth=0, occurDict={}, sortedP=False):
         '''print treacl graph recursively'''
 
-        #print(' ' * self.depthIndent * depth+self.getProp("name"))
+        print()
+        print(' ' * self.depthIndent * depth+self.getProp("name"))
         occurDict[self] = True
-        if depth < self.treeMaxDepth:
-            print()
-            for at in self.attrs_list(sortedP=sortedP):                                   # TBD: if singleton, don't print a CRLF
-                print(nameStr := ' ' * self.depthIndent * depth + f'{at}: ', end='')
-                atv = getattr(self, at)                                                   # attribute value
-                if isinstance(atv, Treacl):
-                    if atv not in occurDict: atv.ppgraph(depth + 1, occurDict=occurDict)  # recurse
-                elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]): # recurse into lists only (not any other iterables), if case they contain at leat one Treacl
-                    for e in atv:                                                         # note deeper nested lists are not checked
-                        if isinstance(e, Treacl):
-                            if e not in occurDict: e.ppgraph(depth + 1, occurDict=occurDict) # recurse
-                        else:
-                            for s in self.pformat_indented(e, depth=depth+1): print(s)    # use pretty print to print python base datatype
-                else:
-                    for s in self.pformat_indented(atv, len(nameStr)): print(s)           # TBD: keep indent even if multi-line
-        else:
-            print(f"Max recursion depth reached {treeMaxDepth}")
+        for at in self.attrs_list(sortedP=sortedP):                                   # TBD: if singleton, don't print a CRLF
+            print(nameStr := ' ' * self.depthIndent * depth + f'{at}: ', end='')
+            atv = getattr(self, at)                                                   # attribute value
+            if isinstance(atv, Treacl):
+                if atv not in occurDict: atv.ppgraph(depth + 1, occurDict=occurDict)  # recurse
+            elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]): # recurse into lists only (not any other iterables), if case they contain at leat one Treacl
+                for e in atv:                                                         # note deeper nested lists are not checked
+                    if isinstance(e, Treacl):
+                        if e not in occurDict: e.ppgraph(depth + 1, occurDict=occurDict) # recurse
+                    else:
+                        for s in self.pformat_indented(e, depth=depth+1): print(s)    # use pretty print to print python base datatype
+            else:
+                for s in self.pformat_indented(atv, len(nameStr)): print(s)           # TBD: keep indent even if multi-line
 
-    def graph_paths_to_list(self, varName="", resLst=[], curDepth=0, maxDepth=treeMaxDepth, showValP=False):                  # list all paths in tree
+    # def graph_paths_to_list(self, varName="", resLst=[], curDepth=0, maxDepth=treeMaxDepth, showValP=False):   # list all paths in tree
+    #     '''generate all paths to a given depth'''
+    #     for at in self.attrs_list():
+    #         resLst += [pth := varName+'.'+f'{at}']
+    #         if isinstance(atv := getattr(self, at), Treacl):
+    #             atv.tree_paths_to_list(pth, resLst, curDepth+1)                           # recurse
+    #     return resLst
+
+    def graph_paths_to_list(self, varName="", occurDict={}):                               # list all paths in tree
         '''generate all paths to a given depth'''
+        occurDict[self] = True
+        resLst = []
         for at in self.attrs_list():
-            resLst += [pth := varName+'.'+f'{at}']
-            if isinstance(atv := getattr(self, at), Treacl):
-                atv.tree_paths_to_list(pth, resLst, curDepth+1)                           # recurse
+            resLst += [pth := f'{varName}.{at}']
+            atv = getattr(self, at)
+            if isinstance(atv, Treacl):
+                if atv not in occurDict: resLst += atv.graph_paths_to_list(pth, occurDict) # recurse
+            elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):     # note deeper nested lists are not checked
+                for ei,e in enumerate(atv):
+                    resLst += [lpth := f'{varName}.{at}[{ei}]']
+                    if isinstance(e, Treacl):
+                        if e not in occurDict:
+                            resLst += e.graph_paths_to_list(lpth, occurDict) # recurse
         return resLst
 
     def graph_find_paths(self, pattrn, depth=0, showValP=False):                          # list paths that match a pattern
@@ -196,7 +203,7 @@ class Treacl(object):
 
     # import / export graphs
 
-    def paths_to_dot():
+    def paths_to_graphml():
         ''' export data as dot/dotty graph format file
             assumes all nodes are reachable from this point
         '''
