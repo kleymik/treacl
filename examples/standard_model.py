@@ -17,60 +17,60 @@ from treacl import Treacl as t
 def standard_model_interactions():
 
     # elementary particles and their groupings
-    ep = t();           ep.addProp('name', "elementary particles");   ep.addProp('type', "grouping")
+    ep = t();           ep.name = "elementary particles";   ep.addProp('type', "grouping")
 
     # fermions
-    fm = t();           fm.addProp('name', "fermions");               fm.addProp('type', "grouping")
+    fm = t();           fm.name = "fermions";               fm.addProp('type', "grouping")
     # leptons
-    lp = t();           lp.addProp('name', "leptons");                lp.addProp('type', "grouping")
+    lp = t();           lp.name = "leptons";                lp.addProp('type', "grouping")
     #  neutral leptons
-    lpn = t();         lpn.addProp('name', "neutral leptons");       lpn.addProp('type', "grouping")
-    en = t();           en.addProp('name', "electron neutrino");      en.addProp('type', "elementary")
-    tn = t();           tn.addProp('name', "tau neutrino");           tn.addProp('type', "elementary")
-    mnn = t();         mnn.addProp('name', "muon neutrino");         mnn.addProp('type', "elementary")
+    lpn = t();         lpn.name = "neutral leptons";       lpn.addProp('type', "grouping")
+    en = t();           en.name = "electron neutrino";      en.addProp('type', "elementary")
+    tn = t();           tn.name = "tau neutrino";           tn.addProp('type', "elementary")
+    mnn = t();         mnn.name = "muon neutrino";         mnn.addProp('type', "elementary")
     lpn.M = [en, tn, mnn]
     #  charged leptons
-    lpc = t();         lpc.addProp('name', "charged leptons");       lpc.addProp('type', "grouping")
-    el = t();           el.addProp('name', "electron");               el.addProp('type', "elementary")
-    tau = t();         tau.addProp('name', "tau");                   tau.addProp('type', "elementary")
-    mn = t();           mn.addProp('name', "muon");                   mn.addProp('type', "elementary")
+    lpc = t();         lpc.name = "charged leptons";       lpc.addProp('type', "grouping")
+    el = t();           el.name = "electron";               el.addProp('type', "elementary")
+    tau = t();         tau.name = "tau";                   tau.addProp('type', "elementary")
+    mn = t();           mn.name = "muon";                   mn.addProp('type', "elementary")
     lpc.M = [el, tau, mn]
     lp.M = [lpn, lpc]
     # quarks
-    qk = t();           qk.addProp('name', "quarks");                 qk.addProp('type', "grouping")
+    qk = t();           qk.name = "quarks";                 qk.addProp('type', "grouping")
     #  quarks up/down
-    qkud = t();       qkud.addProp('name', "up/down quarks");       qkud.addProp('type', "grouping")
-    qku = t();         qku.addProp('name', "up quark");              qku.addProp('type', "grouping")
-    qkd = t();         qkd.addProp('name', "down quark");            qkd.addProp('type', "grouping")
+    qkud = t();       qkud.name = "up/down quarks";       qkud.addProp('type', "grouping")
+    qku = t();         qku.name = "up quark";              qku.addProp('type', "grouping")
+    qkd = t();         qkd.name = "down quark";            qkd.addProp('type', "grouping")
     qkud.M = [qku, qkd]
     #  quarks charm/strange
-    qkcs = t();       qkcs.addProp('name', "charm strange quarks"); qkcs.addProp('type', "grouping")
-    qkc = t();         qkc.addProp('name', "charm quark");           qkc.addProp('type', "elementary")
-    qks = t();         qks.addProp('name', "strange quark");         qks.addProp('type', "elementary")
+    qkcs = t();       qkcs.name = "charm strange quarks"; qkcs.addProp('type', "grouping")
+    qkc = t();         qkc.name = "charm quark";           qkc.addProp('type', "elementary")
+    qks = t();         qks.name = "strange quark";         qks.addProp('type', "elementary")
     qkcs.M = [qkc, qks]
     #  quarks top/bottom
-    qktb = t();       qktb.addProp('name', "top/bottom quarks");   qktb.addProp('type', "grouping")
-    qkt = t();         qkt.addProp('name', "top quark");            qkt.addProp('type', "elementary")
-    qkb = t();         qkb.addProp('name', "bottom quark");         qkb.addProp('type', "elementary")
+    qktb = t();       qktb.name = "top/bottom quarks";   qktb.addProp('type', "grouping")
+    qkt = t();         qkt.name = "top quark";            qkt.addProp('type', "elementary")
+    qkb = t();         qkb.name = "bottom quark";         qkb.addProp('type', "elementary")
     qktb.M = [qkt, qkb]
     qk.M = [qkud, qkcs, qktb]
     fm.M = [lp, qk]
 
     # bosons
-    bn = t();           bn.addProp('name', "fermions");               bn.addProp('type', "grouping")
+    bn = t();           bn.name = "fermions";               bn.addProp('type', "grouping")
     # weak bosons
-    wb = t();           wb.addProp('name', "weak bosons");            wb.addProp('type', "grouping")
-    wp = t();           wp.addProp('name', "w-plus boson");           wp.addProp('type', "elementary")
-    wm = t();           wm.addProp('name', "w-minus boson");          wm.addProp('type', "elementary")
-    zb = t();           zb.addProp('name', "z boson");                zb.addProp('type', "elementary")
+    wb = t();           wb.name = "weak bosons";            wb.addProp('type', "grouping")
+    wp = t();           wp.name = "w-plus boson";           wp.addProp('type', "elementary")
+    wm = t();           wm.name = "w-minus boson";          wm.addProp('type', "elementary")
+    zb = t();           zb.name = "z boson";                zb.addProp('type', "elementary")
     wb.M = [wp, wm, zb]
 
     # gluon
-    gn = t();           gn.addProp('name', "gluon");                  gn.addProp('type', "elementary")
+    gn = t();           gn.name = "gluon";                  gn.addProp('type', "elementary")
     # photon
-    ph = t();           ph.addProp('name', "photon");                 ph.addProp('type', "elementary")
+    ph = t();           ph.name = "photon";                 ph.addProp('type', "elementary")
     # higgs boson
-    hg = t();           hg.addProp('name', "higgs");                  hg.addProp('type', "elementary")
+    hg = t();           hg.name = "higgs";                  hg.addProp('type', "elementary")
     bn.M = [wb, gn, ph, hg]
 
     ep.M = [fm, bn] # currently, it seems the universe consists of bosons and fermions
@@ -114,8 +114,9 @@ if __name__ == '__main__':
 
     sm.ppgraph()
     print()
-    for p in sm.graph_paths_to_list(varName="sm"): print(p)
-    print()
+
+    #for p in sm.graph_paths_to_list(varName="sm"): print(p)
+    #print()
 
 
 
