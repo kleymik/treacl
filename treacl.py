@@ -169,7 +169,7 @@ class Treacl(object):
             else:
                 for s in self.pformat_indented(atv, len(nameStr)): print(s,end='')    # TBD: keep indent even if multi-line
 
-    def graph_paths_to_list(self, varName="", occurDict={}):                          # list all paths in tree
+    def graph_paths_to_list(self, varName="", occurDict={}):                          # list all paths in graph
         '''generate all paths to a given depth'''
         occurDict[self] = True
         resLst = []
@@ -183,6 +183,20 @@ class Treacl(object):
                     resLst += [lpth := f'{varName}.{at}[{ei}]']
                     if isinstance(e, Treacl):
                         if e not in occurDict: resLst += e.graph_paths_to_list(lpth, occurDict) # recurse
+        return resLst
+
+    def graph_nodes_to_list(self, occurDict={}):                                     # list all paths in tree
+        '''return a list of all the nodes in the tree'''                             # tbd make into a generator
+        occurDict[self] = True                                                       # a bit redundant to have both occurDict and resLst
+        resLst = [self]
+        for at in self.attrs_list():
+            atv = getattr(self, at)
+            if isinstance(atv, Treacl):
+                if atv not in occurDict: resLst += atv.tree_nodes_to_list(occurDict) # recurse
+            elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
+                for e in atv:                                                        # note deeper nested lists are not checked
+                    if isinstance(e, Treacl):
+                        if e not in occurDict: resLst += e.tree_nodes_to_list(occurDict) # recurse
         return resLst
 
     def graph_find_paths(self, pattrn, depth=0, showValP=False):                           # list paths that match a pattern
