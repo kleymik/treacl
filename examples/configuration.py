@@ -1,5 +1,6 @@
 from treacl import Treacl as t
 import pickle
+import utils.util as ut
 
 # a plain simple configuration example
 
@@ -53,6 +54,9 @@ if __name__ == '__main__':
     print()
     print("Sample config: path expression filter list of paths")
     for p in cfg.tree_find_paths_pathex("a.*.c.*", "cfg"): print(p)
+
+    dotSpec = ut.paths_to_gml(cfg.tree_nodes_to_list())
+    print(dotSpec)
 
     f = open("./tests/config.pk",'wb')
     pickle.dump(cfg, f)
