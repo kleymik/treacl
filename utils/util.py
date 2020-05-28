@@ -1,39 +1,31 @@
 # supporting functions for treacl - which are not naturally methods
 from treacl import Treacl
 
-
 def paths_to_gml(nodes):
-    ''' export data as directed graph in dot/dotty/graphviz  graph format file
+    ''' export data as directed graph in .gml graph format file
+        https://gephi.org/users/supported-graph-formats/gml-format/
     nodes: the list of treacl objects to be included in the export
     '''
     nodeDict = {n:ni for ni,n in enumerate(nodes)}   # index the nodes
 
-    outStr =   ['graph [']
-    outStr +=  ['  comment "This is a sample graph"']
-    outStr +=  ['  directed 1']
-    outStr +=  ['  id 42']
-    outStr +=  ['  label "Hello, I am a graph"']
-    outStr +=  ['']
+    outStrG =   ['graph [']
+    outStrG +=  ['  comment "This is a sample graph"']
+    outStrG +=  ['  directed 1']
+    outStrG +=  ['  id 42']
+    outStrG +=  ['  label "Hello, I am a graph"']
 
+    outStrN = []
+    outStrE = []
     for ni,n in enumerate(nodes):
-        outStr +=  ['node [']
-        outStr +=  [f'   id {ni}']
-        outStr +=  [f'   label "node {ni}"']
-        outStr +=  ['   thisIsASampleAttribute "foobar"']
-        outStr +=  ['     ]']
+        outStrN +=  [f'node [id {ni}  label "node {ni}"  thisIsASampleAttribute "foobar" ]']
         for l in n.attrs_list():
-            tgt = getattr(n, l)
-            if isinstance(tgt, Treacl) and tgt in nodeDict:
-                outStr += ['edge [']
-                outStr += [f'    source {ni}']
-                outStr += [f'    target {nodeDict[tgt]}']
-                outStr += [f'    label "Edge from {ni} to {nodeDict[tgt]}"]']
-                outStr += [     ']']
-        outStr +=  ['']
-    outStr +=  [']']
+            if isinstance(tgt := getattr(n, l), Treacl) and tgt in nodeDict: outStrE += [f'edge [source {ni}  target {nodeDict[tgt]}  label "{ni}->{nodeDict[tgt]}" ]']
 
-    for l in outStr: print(l)
+    for l in outStrG: print(l); print('')
+    for l in outStrN: print(l); print('')
+    for l in outStrE: print(l); print(']')
 
+# GML format
 # graph [
 #   comment "This is a sample graph"
 #   directed 1
