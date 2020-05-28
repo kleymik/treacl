@@ -17,9 +17,9 @@ def paths_to_gml(nodes):
 
     for ni,n in enumerate(nodes):
         outStr +=  ['node [']
-        outStr +=  [f'   node {ni}']
+        outStr +=  [f'   id {ni}']
         outStr +=  [f'   label "node {ni}"']
-        outStr +=  ['   thisIsASampleAttribute foobar']
+        outStr +=  ['   thisIsASampleAttribute "foobar"']
         outStr +=  ['     ]']
         for l in n.attrs_list():
             tgt = getattr(n, l)
@@ -30,6 +30,7 @@ def paths_to_gml(nodes):
                 outStr += [f'    label "Edge from {ni} to {nodeDict[tgt]}"]']
                 outStr += [     ']']
         outStr +=  ['']
+    outStr +=  [']']
 
     for l in outStr: print(l)
 
