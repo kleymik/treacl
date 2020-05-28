@@ -1,4 +1,5 @@
 from treacl import Treacl as tcl
+import utils.util as ut
 
 # random snippet of YAML - equivalent representation using treacl
 
@@ -64,7 +65,13 @@ spec:
     print()
     treacl_kub.pptree()
 
+    with open("./tests/yaml.gml",'w') as f:
+        asGml = ut.paths_to_gml(treacl_kub.tree_nodes_to_list())
+        for l in asGml: print(l, file=f)
+
     print("Done")
+
+
 
 
 

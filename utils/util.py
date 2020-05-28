@@ -1,53 +1,57 @@
-# supporting functions for treacl - which are not naturally methods
+# supporting functions for treacl - things which are not naturally methods
 from treacl import Treacl
+import uuid import uuid1
 
 def paths_to_gml(nodes):
     ''' export data as directed graph in .gml graph format file
         https://gephi.org/users/supported-graph-formats/gml-format/
     nodes: the list of treacl objects to be included in the export
+    gml likes all nodes, then all edges
     '''
+
     nodeDict = {n:ni for ni,n in enumerate(nodes)}   # index the nodes
 
-    outStrG =   ['graph [']
-    outStrG +=  ['  comment "treacl tree converted to graph represented in gml"']
-    outStrG +=  ['  directed 1']
-    outStrG +=  ['  id 42']
-    outStrG +=  ['  label "Graph of Treacl objects"']
+    gmlLinesLstG =   ['']
+    gmlLinesLstG =   ['graph [']
+    gmlLinesLstG +=  ['  comment "treacl tree converted to graph represented in gml"']
+    gmlLinesLstG +=  ['  directed 1']
+    gmlLinesLstG +=  ['  id 42']
+    gmlLinesLstG +=  ['  label "Graph of Treacl objects"']
 
-    outStrN = []
-    outStrE = []
+    gmlLinesLstN = ['']
+    gmlLinesLstE = ['']
     for ni,n in enumerate(nodes):
-        outStrN +=  [f'node [id {ni}  label "node {ni}"  sampleAttrib "{str(n)}" ]']
+
+        gmlLinesLstN +=  [f'node [id {ni}  label "node {ni}"  sampleAttrib "{str(n)}" ]']
+
         for li,l in enumerate(n.attrs_list()):
             atv = getattr(n, l)
             if isinstance(atv, Treacl):
                 if atv in nodeDict:
-                    outStrE += [f'edge [source {ni}  target {nodeDict[atv]}  label "{l}" ]']
+                    gmlLinesLstE += [f'edge [source {ni}  target {nodeDict[atv]}  label "{l}" ]']
             elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
-                for e in atv:                                                         # note deeper nested lists are not checked
+                for ei,e in enumerate(atv):                                               # note deeper nested lists are not checked
                     if isinstance(e, Treacl):
-                        outStrE += [f'edge [source {ni}  target {nodeDict[e]}  label "{l}" ]']
-                    else:
-                        valId = (ni+1)*10000+(li+1)                          # not a treacl object
+                        gmlLinesLstE += [f'edge [source {ni}  target {nodeDict[e]}  label "{l}" ]']
+                    else:                                                                 # not a treacl object
+                        valId = uuid1().int>>64                                           # prefer to be less stateful than maintaing a counter
                         v = str(atv).replace("'","")
-                        outStrN += [f'node [id {valId}  label "v={v}" ]']    # extra node for the value
-                        outStrE += [f'edge [source {ni}  target {valId}  label "{l}" ]']
-
+                        gmlLinesLstN += [f'node [id {valId}  label "v={v}" ]']            # extra node for the value
+                        gmlLinesLstE += [f'edge [source {ni}  target {valId}  label "{l}" ]']
             else:
-                valId = (ni+1)*10000+(li+1)                                  # not a treacl object
+                valId = uuid1().int>>64                                                   # prefer to be less stateful than maintaing a counter
                 v = str(atv).replace("'","")
-                outStrN += [f'node [id {valId}  label "v={v}" ]']            # extra node for the value
-                outStrE += [f'edge [source {ni}  target {valId}  label "{l}" ]']
-    print('')
-    for l in outStrG: print(l)
-    print('')
-    for l in outStrN: print(l)
-    print('')
-    for l in outStrE: print(l)
-    print('')
-    print(']')
+                gmlLinesLstN += [f'node [id {valId}  label "v={v}" ]']                    # extra node for the value
+                gmlLinesLstE += [f'edge [source {ni}  target {valId}  label "{l}" ]']
 
-    return outStrG + outStrN + outStrE+[']']
+    return gmlLinesLstG + gmlLinesLstN + gmlLinesLstE + [']']
+
+# def paths_to_gml_value(atv, ni, l):                                                          # only
+#         valId = uuid1().int>>64                                                   # prefer to be less stateful than maintaing a counter
+#         v = str(atv).replace("'","")
+#         gmlLinesLstN += [f'node [id {valId}  label "v={v}" ]']                    # extra node for the value
+#         gmlLinesLstE += [f'edge [source {ni}  target {valId}  label "{l}" ]']
+#         return gmlLinesLstN, gmlLinesLstE
 
 # def treacl_nodeify_links(nodes, links):
 #     '''for each link of each node create a node'''
