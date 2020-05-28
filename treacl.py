@@ -53,9 +53,9 @@ class Treacl(object):
 
     # some basic traversal methods
 
-    treeMaxDepth = 100                                                                    # in case of cycles: to limit searches & traversals
-    depthIndent = 4                                                                       # indent for tree printing
-    valPrintMaxWidth = 40                                                                 # for pformat # width is max horizontal number of characters, e.g when printing a list
+    treeMaxDepth     = 100                                                                # in case of cycles: to limit searches & traversals
+    depthIndent      =   4                                                                # indent for tree printing
+    valPrintMaxWidth =  40                                                                # for pformat # width is max horizontal number of characters, e.g when printing a list
 
     def pformat_indented(self, v, indent=0):
         '''use pprint pformat but then add additional indent for given depth'''           # pprint module inserts one less whitespace for first line
@@ -91,6 +91,17 @@ class Treacl(object):
                 for ei,e in enumerate(atv):                                               # note deeper nested lists are not checked
                     resLst += [lpth := f'{varName}.{at}[{ei}]']
                     if isinstance(e, Treacl): resLst += e.tree_paths_to_list(lpth)        # recurse
+        return resLst
+
+    def tree_nodes_to_list(self):                                  # list all paths in tree
+        '''return a list of all the nodes in the tree'''           # tbd make into a generator
+        resLst = [self]
+        for at in self.attrs_list():
+            atv = getattr(self, at)
+            if isinstance(atv, Treacl): resLst += atv.tree_nodes_to_list()    # recurse
+            elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
+                for e in atv:                                       # note deeper nested lists are not checked
+                    if isinstance(e, Treacl): resLst += e.tree_nodes_to_list()            # recurse
         return resLst
 
     def tree_find_paths(self, pattrn, varName=''):                                        # list paths that match a pattern
