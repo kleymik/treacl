@@ -1,5 +1,5 @@
-----------------------------------------------------------------------------------------------------
-sample config:pretty print config tree
+REF sample config:pretty print config tree 
+
 boo: 1
 bar: 
     alpha: 11
@@ -9,20 +9,15 @@ bas:
     rock: 'bye'
     scissors: 'hello'
     paper: ['hh', 'ii', 'jj']
-cas: [[1, 2],
-      [3, 4],
-      [5, 6]]
-dct: {'aa': 11,
-      'bb': 22,
-      'cc': 33}
+cas: [[1, 2], [3, 4], [5, 6]]
+dct: {'aa': 11, 'bb': 22, 'cc': 33}
 a: 
     b: 
         c: 
             d: 
                 e: 
                     f: 
-                        mtx: [[42, 43, 44],
-                              [11, 22, 33]]
+                        mtx: [[42, 43, 44], [11, 22, 33]]
                         g: 
                             h: 
                                 i: 
@@ -32,33 +27,164 @@ a:
                 e: 42
             d3: 42
         c1: 42
+        c2: 
+            d1: 42
+            d2: 42
+    bb: 
+        c: 
+            d1: 42
+    bbb: 
+        c: 
+            d1: 42
 
-sample config: enumerated list of all paths
-config.boo
-config.bar
-config.bar.alpha
-config.bar.beta
-config.bar.gamma
-config.bas
-config.bas.rock
-config.bas.scissors
-config.bas.paper
-config.cas
-config.dct
-config.a
-config.a.b
-config.a.b.c
-config.a.b.c.d
-config.a.b.c.d.e
-config.a.b.c.d.e.f
-config.a.b.c.d.e.f.mtx
-config.a.b.c.d.e.f.g
-config.a.b.c.d.e.f.g.h
-config.a.b.c.d.e.f.g.h.i
-config.a.b.c.d.e.f.g.h.i.j
-config.a.b.c.d1
-config.a.b.c.d2
-config.a.b.c.d2.e
-config.a.b.c.d3
-config.a.b.c1
-Done
+Sample config: enumerated list of all paths
+cfg.boo
+cfg.bar
+cfg.bar.alpha
+cfg.bar.beta
+cfg.bar.gamma
+cfg.bas
+cfg.bas.rock
+cfg.bas.scissors
+cfg.bas.paper
+cfg.cas
+cfg.dct
+cfg.a
+cfg.a.b
+cfg.a.b.c
+cfg.a.b.c.d
+cfg.a.b.c.d.e
+cfg.a.b.c.d.e.f
+cfg.a.b.c.d.e.f.mtx
+cfg.a.b.c.d.e.f.g
+cfg.a.b.c.d.e.f.g.h
+cfg.a.b.c.d.e.f.g.h.i
+cfg.a.b.c.d.e.f.g.h.i.j
+cfg.a.b.c.d1
+cfg.a.b.c.d2
+cfg.a.b.c.d2.e
+cfg.a.b.c.d3
+cfg.a.b.c1
+cfg.a.b.c2
+cfg.a.b.c2.d1
+cfg.a.b.c2.d2
+cfg.a.bb
+cfg.a.bb.c
+cfg.a.bb.c.d1
+cfg.a.bbb
+cfg.a.bbb.c
+cfg.a.bbb.c.d1
+
+Sample config: filter list of paths
+cfg.a.b.c.d.e
+cfg.a.b.c.d.e.f
+cfg.a.b.c.d.e.f.mtx
+cfg.a.b.c.d.e.f.g
+cfg.a.b.c.d.e.f.g.h
+cfg.a.b.c.d.e.f.g.h.i
+cfg.a.b.c.d.e.f.g.h.i.j
+cfg.a.b.c.d2.e
+
+Sample config: regex filter list of paths
+cfg.bar.beta
+cfg.bas.paper
+cfg.a.b.c.d.e.f
+cfg.a.b.c.d.e.f.mtx
+cfg.a.b.c.d.e.f.g
+cfg.a.b.c.d.e.f.g.h
+cfg.a.b.c.d.e.f.g.h.i
+cfg.a.b.c.d.e.f.g.h.i.j
+
+Sample config: path expression filter list of paths
+pathExpr a.*.c.*
+pathExpr *.c.*
+pathExpr c.*
+pathExpr *
+pathExpr 
+pathExpr 
+pathExpr c.*
+pathExpr *
+pathExpr c.*
+pathExpr *
+graph [
+  comment "treacl tree converted to graph represented in gml"
+  directed 1
+  id 42
+  label "Graph of Treacl objects"
+
+node [id 0  label "node 0"  sampleAttrib "<treacl.Tr" ]
+node [id 10001  label "v=1" ]
+node [id 10002  label "v=[[1, 2], [3, 4], [5, 6]]" ]
+node [id 10003  label "v={aa: 11, bb: 22, cc: 33}" ]
+node [id 1  label "node 1"  sampleAttrib "<treacl.Tr" ]
+node [id 10004  label "v=11" ]
+node [id 10005  label "v=22" ]
+node [id 10006  label "v=hello" ]
+node [id 2  label "node 2"  sampleAttrib "<treacl.Tr" ]
+node [id 10007  label "v=bye" ]
+node [id 10008  label "v=hello" ]
+node [id 10009  label "v=[hh, ii, jj]" ]
+node [id 3  label "node 3"  sampleAttrib "<treacl.Tr" ]
+node [id 4  label "node 4"  sampleAttrib "<treacl.Tr" ]
+node [id 10010  label "v=42" ]
+node [id 5  label "node 5"  sampleAttrib "<treacl.Tr" ]
+node [id 10011  label "v=42" ]
+node [id 10012  label "v=42" ]
+node [id 6  label "node 6"  sampleAttrib "<treacl.Tr" ]
+node [id 7  label "node 7"  sampleAttrib "<treacl.Tr" ]
+node [id 8  label "node 8"  sampleAttrib "<treacl.Tr" ]
+node [id 10013  label "v=[[42, 43, 44], [11, 22, 33]]" ]
+node [id 9  label "node 9"  sampleAttrib "<treacl.Tr" ]
+node [id 10  label "node 10"  sampleAttrib "<treacl.Tr" ]
+node [id 11  label "node 11"  sampleAttrib "<treacl.Tr" ]
+node [id 10014  label "v=42" ]
+node [id 12  label "node 12"  sampleAttrib "<treacl.Tr" ]
+node [id 10015  label "v=42" ]
+node [id 13  label "node 13"  sampleAttrib "<treacl.Tr" ]
+node [id 10016  label "v=42" ]
+node [id 10017  label "v=42" ]
+node [id 14  label "node 14"  sampleAttrib "<treacl.Tr" ]
+node [id 15  label "node 15"  sampleAttrib "<treacl.Tr" ]
+node [id 10018  label "v=42" ]
+node [id 16  label "node 16"  sampleAttrib "<treacl.Tr" ]
+node [id 17  label "node 17"  sampleAttrib "<treacl.Tr" ]
+node [id 10019  label "v=42" ]
+
+edge [source 0  target 10001  label "boo" ]
+edge [source 0  target 1  label "bar" ]
+edge [source 0  target 2  label "bas" ]
+edge [source 0  target 10002  label "cas" ]
+edge [source 0  target 10003  label "dct" ]
+edge [source 0  target 3  label "a" ]
+edge [source 1  target 10004  label "alpha" ]
+edge [source 1  target 10005  label "beta" ]
+edge [source 1  target 10006  label "gamma" ]
+edge [source 2  target 10007  label "rock" ]
+edge [source 2  target 10008  label "scissors" ]
+edge [source 2  target 10009  label "paper" ]
+edge [source 3  target 4  label "b" ]
+edge [source 3  target 14  label "bb" ]
+edge [source 3  target 16  label "bbb" ]
+edge [source 4  target 5  label "c" ]
+edge [source 4  target 10010  label "c1" ]
+edge [source 4  target 13  label "c2" ]
+edge [source 5  target 6  label "d" ]
+edge [source 5  target 10011  label "d1" ]
+edge [source 5  target 12  label "d2" ]
+edge [source 5  target 10012  label "d3" ]
+edge [source 6  target 7  label "e" ]
+edge [source 7  target 8  label "f" ]
+edge [source 8  target 10013  label "mtx" ]
+edge [source 8  target 9  label "g" ]
+edge [source 9  target 10  label "h" ]
+edge [source 10  target 11  label "i" ]
+edge [source 11  target 10014  label "j" ]
+edge [source 12  target 10015  label "e" ]
+edge [source 13  target 10016  label "d1" ]
+edge [source 13  target 10017  label "d2" ]
+edge [source 14  target 15  label "c" ]
+edge [source 15  target 10018  label "d1" ]
+edge [source 16  target 17  label "c" ]
+edge [source 17  target 10019  label "d1" ]
+]
+

@@ -10,22 +10,24 @@ sample person in XML:
 </person>
 
 
-sample person in TREACL:
+sample person from TREACL:
+
 
 firstName: 'John'
 lastName: 'Smith'
 age: 25
-address:
+address: 
     streetAddress: '21 2nd Street'
     city: 'New York'
     state: 'NY'
     postalCode: '10021'
-phoneNumbers:
+phoneNumbers: 
     type: 'home'
     number: '212 555-1234'
+
     type: 'fax'
     number: '646 555-4567'
-sex:
+sex: 
     type: 'male'
 
 Done

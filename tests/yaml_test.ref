@@ -1,5 +1,4 @@
-----------------------------------------------------------------------------------------------------
-Sample person in YAML:
+REF Sample person in YAML:
 
 apiVersion: apps/v1
 kind: Deployment
@@ -29,6 +28,7 @@ spec:
 
 Sample person from TREACL:
 
+
 apiVersion: 'apps/v1'
 kind: 'Deployment'
 metadata: 
@@ -50,6 +50,7 @@ spec:
                 image: 'nginx'
                 ports: 
                     containerPort: 80
+
                 name: 'rss-reader'
                 image: 'johnsmith/rss-php-nginx:v1'
                 ports: 
