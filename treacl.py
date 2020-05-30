@@ -93,6 +93,13 @@ class Treacl(object):
                     if isinstance(e, Treacl): resLst += e.tree_paths_to_list(lpth)        # recurse
         return resLst
 
+    def tree_nodes_to_list(self):                                                         # list all paths in tree
+        '''return a list of all the nodes in the tree'''                                  # tbd make into a generator
+        resLst = [self]
+        for atv in [ getattr(self, at) for at in self.attrs_list() ]:                     # iterate over attribute values
+            if isinstance(atvL := [atv] if isinstance(atv, Treacl) else atv, list):       # ok yes slighlty cryptic - put it in a list if it's a singleton Treacl object
+                resLst += [y for e in atvL if isinstance(e, Treacl) for y in e.tree_nodes_to_list()]  # flatened list of lists
+        return resLst
 
     def tree_nodes_to_list0(self):                                                        # list all paths in tree
         '''return a list of all the nodes in the tree'''                                  # tbd make into a generator
