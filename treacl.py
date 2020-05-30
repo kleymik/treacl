@@ -33,8 +33,8 @@ class Treacl(object):
     __props = {}
 
     def __init__(self):
-        self.__props = {"long_name": None,
-                        "type"     : None }
+        self.__props = {"name": None,                                                     # making assumption that having at least "name" seems sensible, so ok to have core code that references it
+                        "type": None }
 
     def addProp(self, pName, value):
         self.__props[pName] = value
@@ -53,9 +53,9 @@ class Treacl(object):
 
     # some basic traversal methods
 
-    treeMaxDepth     = 100                                                                # in case of cycles: to limit searches & traversals
-    depthIndent      =   4                                                                # indent for tree printing
-    valPrintMaxWidth =  40                                                                # for pformat # width is max horizontal number of characters, e.g when printing a list
+    treeMaxDepth     = 1000                                                               # in case of cycles: to limit searches & traversals
+    depthIndent      =    4                                                               # number of spaces indent for tree printing
+    valPrintMaxWidth =   40                                                               # for pformat # width is max horizontal number of characters, e.g when printing a list
 
     def pformat_indented(self, v, indent=0):
         '''use pprint pformat but then add additional indent for given depth'''           # pprint module inserts one less whitespace for first line
@@ -93,18 +93,49 @@ class Treacl(object):
                     if isinstance(e, Treacl): resLst += e.tree_paths_to_list(lpth)        # recurse
         return resLst
 
-    def tree_nodes_to_list(self):                                  # list all paths in tree
-        '''return a list of all the nodes in the tree'''           # tbd make into a generator
+
+    def tree_nodes_to_list0(self):                                                        # list all paths in tree
+        '''return a list of all the nodes in the tree'''                                  # tbd make into a generator
+        resLst = [self]
+        for atv in [ getattr(self, at) for at in self.attrs_list() ]:                     # iterate over attribute values
+            if isinstance(atvL := [atv] if isinstance(atv, Treacl) else atv, list):       # ok yes slighlty cryptic - put it in a list if it's a singleton Treacl object
+                for e in atvL:
+                    if isinstance(e, Treacl): resLst += e.tree_nodes_to_list0()           # recurse doesn't work as a comprehension?
+        return resLst
+
+    def tree_nodes_to_list1(self):                                                        # list all paths in tree
+        '''return a list of all the nodes in the tree'''                                  # tbd make into a generator
+        resLst = [self]
+        for at in self.attrs_list():
+            if isinstance(atvL := [atv] if isinstance(atv := getattr(self, at), Treacl) else atv, list):  # ok yes slighlty cryptic - put it in a list if it's a singleton Treacl object
+                for e in atvL:
+                    if isinstance(e, Treacl): resLst += e.tree_nodes_to_list1()           # recurse doesn't work as a comprehension?
+        return resLst
+
+    def tree_nodes_to_list2(self):                                                        # list all paths in tree
+        '''return a list of all the nodes in the tree'''                                  # tbd make into a generator
         resLst = [self]
         for at in self.attrs_list():
             atv = getattr(self, at)
-            if isinstance(atv, Treacl): resLst += atv.tree_nodes_to_list()    # recurse
+            if isinstance(atv, Treacl): resLst += atv.tree_nodes_to_list2()               # recurse
             elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
-                for e in atv:                                       # note deeper nested lists are not checked
-                    if isinstance(e, Treacl): resLst += e.tree_nodes_to_list()            # recurse
+                for e in atv:                                                             # note deeper nested lists are not checked
+                    if isinstance(e, Treacl): resLst += e.tree_nodes_to_list2()           # recurse
         return resLst
 
-    def tree_find_paths(self, pattrn, varName=''):                                        # list paths that match a pattern
+    def tree_nodes_to_list3(self):                                                         # list all paths in tree
+        '''return a list of all the nodes in the tree'''                                  # tbd make into a generator
+        resLst = [self]
+
+        for at in self.attrs_list():
+            atv = getattr(self, at)
+            atvL = [atv] if isinstance(atv, Treacl) else atv                                # ok yes, slighlty cryptic - put it in a list if it's a singleton Treacl object
+            if isinstance(atvL, list):
+                resLst += [ e.tree_nodes_to_list3() for e in atvL if isinstance(e, Treacl) ]    # recurse
+        return resLst
+
+
+    def tree_find_paths(self, pattrn, varName=''):                                        # list paths that with a simple pattern match
         '''search tree depth first to find all paths with pattern matching
            attribute anywhere in the path
         '''
@@ -117,7 +148,7 @@ class Treacl(object):
         lineRePat = re.compile(regexPattrn, reFlags)
         return [ p for p in self.tree_paths_to_list(varName) if lineRePat.search(p)]
 
-    def tree_find_paths_pathex(self, path_expression, varName="", greedyFlg=False):        # list paths that match a path-expression pattern
+    def tree_find_paths_pathex(self, path_expression, varName="", greedyFlg=False):       # list paths that match a path-expression pattern
         '''search tree depth first to find all paths with simple glob-like pattern matching path-expression
              e.g in path-expression "xx.*yy",  the "*yy" => any attribute ending in "yy"
              e.g in path-expression "xx.yy*",  the "yy*" => any attribute beginning with "yy"
@@ -147,7 +178,6 @@ class Treacl(object):
         return resLst
 
     # def tree_find_paths_pathexex # TBD extended path-expressions
-
 
     # graph functions
 
@@ -214,15 +244,6 @@ class Treacl(object):
         lineRePat = re.compile(regexPattrn, re.I)
         return [ p for p in self.graph_paths_to_list() if lineRePat.search(p)]
 
-
-    # import / export graphs
-
-    def paths_to_graphml():
-        ''' export data as dot/dotty graph format file
-            assumes all nodes are reachable from this point
-        '''
-
-        # TBD
 
         return None
 
