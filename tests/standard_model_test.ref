@@ -1,44 +1,49 @@
---------------------------------------------
-photon
-I:
-    charged leptons
-    M:
-        electron
-        tau
-        muon
-    I:
-        higgs
-        I:
-            weak bosons
-            M:
-                w-plus boson
-                I:
-                w-minus boson
-                z boson
-            I:
-                leptons
-                M:
-                    neutral leptons
-                    M:
-                        electron neutrino
-                        tau neutrino
-                        muon neutrino
-                I:
-                quarks
-                M:
-                    up/down quarks
-                    M:
-                        up quark
-                        down quark
-                    charm strange quarks
-                    M:
-                        charm quark
-                        strange quark
-                    top/bottom quarks
-                    M:
-                        top quark
-                        bottom quark
-                I:
-                    gluon
-                    I:
 
+name: 'elementary particles'
+M: 
+    name: 'fermions'
+    M: 
+        name: 'leptons'
+        M: 
+            name: 'neutral leptons'
+            M: 
+                name: 'electron neutrino'
+                name: 'tau neutrino'
+                name: 'muon neutrino'
+            name: 'charged leptons'
+            M: 
+                name: 'electron'
+                name: 'tau'
+                name: 'muon'
+            I: 
+                name: 'photon'
+                I: 
+                    name: 'w-plus boson'
+                    I: 
+                    name: 'w-minus boson'
+                    name: 'quarks'
+                    M: 
+                        name: 'up/down quarks'
+                        M: 
+                            name: 'up quark'
+                            name: 'down quark'
+                        name: 'charm strange quarks'
+                        M: 
+                            name: 'charm quark'
+                            name: 'strange quark'
+                        name: 'top/bottom quarks'
+                        M: 
+                            name: 'top quark'
+                            name: 'bottom quark'
+                    I: 
+                        name: 'gluon'
+                        I: 
+                        name: 'higgs'
+                        I: 
+                            name: 'weak bosons'
+                            M: 
+                                name: 'z boson'
+                            I: 
+        I: 
+    name: 'fermions'
+    M: 

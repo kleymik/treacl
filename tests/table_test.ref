@@ -1,15 +1,64 @@
-Samples tables using treacl:
+Sample table using treacl:
 [0,0]=a [0,1]=b 
 [1,0]=c [1,1]=d 
 [2,0]=e [2,1]=f 
 
-transposed
+
+Sample table: transpose
 [0,0]=a [0,1]=c [0,2]=e 
 [1,0]=b [1,1]=d [1,2]=f 
 
-[0,0]=(0, 0) [0,1]=(0, 1) [0,2]=(0, 2) 
-[1,0]=(1, 0) [1,1]=(1, 1) [1,2]=(1, 2) 
-[2,0]=(2, 0) [2,1]=(2, 1) [2,2]=(2, 2) 
-[3,0]=(3, 0) [3,1]=(3, 1) [3,2]=(3, 2) 
-[4,0]=(4, 0) [4,1]=(4, 1) [4,2]=(4, 2) 
 
+Sample table: 5x3
+[0,0]=a [0,1]=b [0,2]=c 
+[1,0]=d [1,1]=e [1,2]=f 
+[2,0]=g [2,1]=h [2,2]=i 
+[3,0]=j [3,1]=k [3,2]=l 
+[4,0]=m [4,1]=n [4,2]=o 
+
+
+Sample table: 5x3 - pretty print as a graph
+
+rows: 
+    s: 
+        v: 'a'
+        v: 'b'
+        v: 'c'
+    s: 
+        v: 'd'
+        v: 'e'
+        v: 'f'
+    s: 
+        v: 'g'
+        v: 'h'
+        v: 'i'
+    s: 
+        v: 'j'
+        v: 'k'
+        v: 'l'
+    s: 
+        v: 'm'
+        v: 'n'
+        v: 'o'
+cols: 
+    s: 
+    s: 
+    s: 
+Sample table: 5x3 - swap a pair of horizontal neighbours 
+[0,0]=a [0,1]=b [0,2]=c 
+[1,0]=d [1,1]=F [1,2]=E 
+[2,0]=g [2,1]=h [2,2]=i 
+[3,0]=j [3,1]=k [3,2]=l 
+[4,0]=m [4,1]=n [4,2]=o 
+
+
+Sample table: 5x3 - swap a pair of vertical neighbours 
+[0,0]=d [0,1]=b [0,2]=c 
+[1,0]=a [1,1]=F [1,2]=E 
+[2,0]=g [2,1]=h [2,2]=i 
+[3,0]=j [3,1]=k [3,2]=l 
+[4,0]=m [4,1]=n [4,2]=o 
+
+
+
+Done
