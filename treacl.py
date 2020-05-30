@@ -96,51 +96,10 @@ class Treacl(object):
     def tree_nodes_to_list(self):                                                         # list all paths in tree
         '''return a list of all the nodes in the tree'''                                  # tbd make into a generator
         resLst = [self]
-        for atv in [ getattr(self, at) for at in self.attrs_list() ]:                     # iterate over attribute values
+        for atv in [ getattr(self, at) for at in self.attrs_list() ]:                     # iterate over attribute values: which could be (i) a Treacl instance, a list with maybe Treacl Instances, (iii) neither
             if isinstance(atvL := [atv] if isinstance(atv, Treacl) else atv, list):       # ok yes slighlty cryptic - put it in a list if it's a singleton Treacl object
-                resLst += [y for e in atvL if isinstance(e, Treacl) for y in e.tree_nodes_to_list()]  # flatened list of lists
+                resLst += [t for v in atvL if isinstance(v, Treacl) for t in v.tree_nodes_to_list()]  # flatened list of lists
         return resLst
-
-    def tree_nodes_to_list0(self):                                                        # list all paths in tree
-        '''return a list of all the nodes in the tree'''                                  # tbd make into a generator
-        resLst = [self]
-        for atv in [ getattr(self, at) for at in self.attrs_list() ]:                     # iterate over attribute values
-            if isinstance(atvL := [atv] if isinstance(atv, Treacl) else atv, list):       # ok yes slighlty cryptic - put it in a list if it's a singleton Treacl object
-                for e in atvL:
-                    if isinstance(e, Treacl): resLst += e.tree_nodes_to_list0()           # recurse doesn't work as a comprehension?
-        return resLst
-
-    def tree_nodes_to_list1(self):                                                        # list all paths in tree
-        '''return a list of all the nodes in the tree'''                                  # tbd make into a generator
-        resLst = [self]
-        for at in self.attrs_list():
-            if isinstance(atvL := [atv] if isinstance(atv := getattr(self, at), Treacl) else atv, list):  # ok yes slighlty cryptic - put it in a list if it's a singleton Treacl object
-                for e in atvL:
-                    if isinstance(e, Treacl): resLst += e.tree_nodes_to_list1()           # recurse doesn't work as a comprehension?
-        return resLst
-
-    def tree_nodes_to_list2(self):                                                        # list all paths in tree
-        '''return a list of all the nodes in the tree'''                                  # tbd make into a generator
-        resLst = [self]
-        for at in self.attrs_list():
-            atv = getattr(self, at)
-            if isinstance(atv, Treacl): resLst += atv.tree_nodes_to_list2()               # recurse
-            elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
-                for e in atv:                                                             # note deeper nested lists are not checked
-                    if isinstance(e, Treacl): resLst += e.tree_nodes_to_list2()           # recurse
-        return resLst
-
-    def tree_nodes_to_list3(self):                                                         # list all paths in tree
-        '''return a list of all the nodes in the tree'''                                  # tbd make into a generator
-        resLst = [self]
-
-        for at in self.attrs_list():
-            atv = getattr(self, at)
-            atvL = [atv] if isinstance(atv, Treacl) else atv                                # ok yes, slighlty cryptic - put it in a list if it's a singleton Treacl object
-            if isinstance(atvL, list):
-                resLst += [ e.tree_nodes_to_list3() for e in atvL if isinstance(e, Treacl) ]    # recurse
-        return resLst
-
 
     def tree_find_paths(self, pattrn, varName=''):                                        # list paths that with a simple pattern match
         '''search tree depth first to find all paths with pattern matching
@@ -234,6 +193,14 @@ class Treacl(object):
                 for e in atv:                                                        # note deeper nested lists are not checked
                     if isinstance(e, Treacl):
                         if e not in occurDict: resLst += e.tree_nodes_to_list(occurDict) # recurse
+        return resLst
+
+    def graph_nodes_to_list1(self):                                                         # list all paths in tree
+        '''return a list of all the nodes in the tree'''                                  # tbd make into a generator
+        resLst = [self]
+        for atv in [ getattr(self, at) for at in self.attrs_list() ]:                     # iterate over attribute values: which could be (i) a Treacl instance, a list with maybe Treacl Instances, (iii) neither
+            if isinstance(atvL := [atv] if isinstance(atv, Treacl) else atv, list):       # ok yes slighlty cryptic - put it in a list if it's a singleton Treacl object
+                resLst += [t for v in atvL if isinstance(v, Treacl) for t in v.graph_nodes_to_list1()]  # flatened list of lists
         return resLst
 
     def graph_find_paths(self, pattrn, depth=0, showValP=False):                           # list paths that match a pattern
