@@ -1,6 +1,6 @@
 # supporting functions for treacl - things which are not naturally methods
 from treacl import Treacl
-import uuid import uuid1
+from uuid import uuid1
 
 def paths_to_gml(nodes):
     ''' export data as directed graph in .gml graph format file
@@ -20,9 +20,10 @@ def paths_to_gml(nodes):
 
     gmlLinesLstN = ['']
     gmlLinesLstE = ['']
+    valId = 10000
     for ni,n in enumerate(nodes):
 
-        gmlLinesLstN +=  [f'node [id {ni}  label "node {ni}"  sampleAttrib "{str(n)}" ]']
+        gmlLinesLstN +=  [f'node [id {ni}  label "node {ni}"  sampleAttrib "{str(n)[:10]}" ]']
 
         for li,l in enumerate(n.attrs_list()):
             atv = getattr(n, l)
@@ -34,12 +35,12 @@ def paths_to_gml(nodes):
                     if isinstance(e, Treacl):
                         gmlLinesLstE += [f'edge [source {ni}  target {nodeDict[e]}  label "{l}" ]']
                     else:                                                                 # not a treacl object
-                        valId = uuid1().int>>64                                           # prefer to be less stateful than maintaing a counter
+                        valId += 1 #uuid1().int>>96                                           # prefer to be less stateful than maintaing a counter
                         v = str(atv).replace("'","")
                         gmlLinesLstN += [f'node [id {valId}  label "v={v}" ]']            # extra node for the value
                         gmlLinesLstE += [f'edge [source {ni}  target {valId}  label "{l}" ]']
             else:
-                valId = uuid1().int>>64                                                   # prefer to be less stateful than maintaing a counter
+                valId += 1 # uuid1().int>>96                                           # prefer to be less stateful than maintaing a counter
                 v = str(atv).replace("'","")
                 gmlLinesLstN += [f'node [id {valId}  label "v={v}" ]']                    # extra node for the value
                 gmlLinesLstE += [f'edge [source {ni}  target {valId}  label "{l}" ]']
