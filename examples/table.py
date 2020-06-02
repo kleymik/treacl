@@ -86,6 +86,8 @@ if __name__ == '__main__':
     print_treacl_table(tbB)
     print()
 
+    for n in tbB.graph_nodes_to_list1(): print(str(n)[:27])
+
     f = open("./tests/table.pk",'wb')
     pickle.dump([tbA, tbB], f)
     f.close()
