@@ -79,7 +79,7 @@ kept pre-eminent.
                   - containerPort: 88
 #+END_SRC
 
-* The Simple Essence
+* The Gist
 
 Treacl is a one-liner - implemented by overriding the __getattr__ class method in Python so that it
 defaults to initialising a new attribute in the instance of the class (i.e. self) with a value that
