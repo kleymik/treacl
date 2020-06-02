@@ -28,16 +28,10 @@ class Treacl(object):
         if sortedP==True: return sorted(attrs)
         else:             return attrs
 
-    def attr_getl(self, at):                                                              # return value, if its singleton Treacl instance, return as a one-item list
-        if isinstance(atv := getattr(self, at), Treacl): return [atv]                     # this simplifies higher-up logic
-        else:                                            return atv
-
-    def attr_get_aslist(self, at):                                                          # return value, if its singleton Treacl instance, return as a one-item list
+    def attr_get_aslist(self, at):                                                        # return value, if its singleton Treacl instance, return as a one-item list
         atv = getattr(self, at)
-        if isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
-            return atv
-        else:
-            return [atv]
+        if isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]): return atv
+        else:                                                                   return [atv]
 
     # Treacl "user" properties                                                            # as an alternative to attributes in the dunder .__dict__
                                                                                           # see README explanation
@@ -78,14 +72,10 @@ class Treacl(object):
         print()                                                                           # TBD: if singleton, don't print a CRLF
         for at in self.attrs_list(sortedP=sortedP):                                       # same as self.__dict__:
             print(nameStr := ' ' * self.depthIndent * depth + f'{at}: ', end='')
-            atvL = [atv] if isinstance(atv := getattr(self, at), Treacl) else atv
-            if isinstance(atvL, list) and any([isinstance(e, Treacl) for e in atvL]):     # recurse into lists only (not any other iterables), if list contains at leat one Treacl object
-                for e in atvL:                                                            # note deeper nested lists are not checked
-                    if isinstance(e, Treacl): e.pptree(depth + 1)                         # recurse
-                    else:
-                        for s in self.pformat_indented(e, depth=depth + 1): print(s)      # use pretty print to print python base datatype
-            else:
-                for s in self.pformat_indented(atvL, len(nameStr)): print(s)              # TBD: keep indent even if multi-line
+            for e in self.attr_get_aslist(at):                                            # deeper nested lists are not checked
+                if isinstance(e, Treacl): e.pptree(depth + 1)                             # recurse
+                else:
+                    for s in self.pformat_indented(e, len(nameStr)): print(s)             # use pretty print to print python base datatype
 
     def tree_paths_to_list(self, varName=""):                                             # list all paths in tree
         '''generate all paths to a given depth'''
@@ -95,7 +85,7 @@ class Treacl(object):
             atv = getattr(self, at)
             if isinstance(atv, Treacl): resLst += atv.tree_paths_to_list(pth)             # recurse
             elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
-                for ei,e in enumerate(atv):                                               # note deeper nested lists are not checked
+                for ei,e in enumerate(atv):                                               # deeper nested lists are not checked
                     resLst += [lpth := f'{varName}.{at}[{ei}]']
                     if isinstance(e, Treacl): resLst += e.tree_paths_to_list(lpth)        # recurse
         return resLst
@@ -107,7 +97,7 @@ class Treacl(object):
             resLst += [pth := f'{varName}.{at}']                                          # even if it constains a list, include the path without the list item selection ([] square brackets)
             atvL = [atv] if isinstance(atv := getattr(self, at), Treacl) else atv
             if isinstance(atvL, list) and any([isinstance(e, Treacl) for e in atvL]):
-                for ei,e in enumerate(atvL):                                              # note deeper nested lists are not checked
+                for ei,e in enumerate(atvL):                                              # deeper nested lists are not checked
                     if len(atvL)==1: lpth = pth
                     else:            resLst += [lpth := pth+f'[{ei}]']
                     if isinstance(e, Treacl): resLst += e.tree_paths_to_list2(lpth)       # recurse
@@ -120,6 +110,13 @@ class Treacl(object):
             atvL = [atv] if isinstance(atv, Treacl) else atv
             if isinstance(atvL, list):                                                    # ok yes slighlty cryptic - put it in a list if it's a singleton Treacl object
                 resLst += [t for v in atvL if isinstance(v, Treacl) for t in v.tree_nodes_to_list()]  # flatened list of lists
+        return resLst
+
+    def tree_nodes_to_list2(self):                                                        # list all paths in tree
+        '''return a list of all the nodes in the tree'''                                  # tbd make into a generator
+        resLst = [self]
+        for atvL in [ self.attr_get_list(at) for at in self.attrs_list() ]:               # iterate over attribute values: which could be a list one or more Treacl Instances, or other
+            resLst += [t for v in atvL if isinstance(v, Treacl) for t in v.tree_nodes_to_list2()]  # flatened list of lists
         return resLst
 
     def tree_find_paths(self, pattrn, varName=''):                                        # list paths that with a simple pattern match
@@ -157,7 +154,7 @@ class Treacl(object):
                     if includePartMatch: resLst += [pth]
                     atv = getattr(self, at)
                     if isinstance(atv, Treacl): resLst += atv.tree_find_paths_pathex(pathCdr, pth)       # recurse
-                    elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):            # note deeper nested lists are not checked
+                    elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):            # deeper nested lists are not checked
                         for ei,e in enumerate(atv):
                             lpth = f'{varName}.{at}[{ei}]'
                             if includePartMatch: resLst += [lpth]
@@ -176,7 +173,7 @@ class Treacl(object):
             print(nameStr := ' ' * self.depthIndent * depth + f'{at}: ', end='')
             atvL = [atv] if isinstance(atv := getattr(self, at), Treacl) else atv         # attribute value, make it a list if it ins't already
             if isinstance(atvL, list) and any([isinstance(e, Treacl) for e in atvL]):     # recurse into lists only (not any other iterables), if case they contain at leat one Treacl
-                for e in atvL:                                                            # note deeper nested lists are not checked
+                for e in atvL:                                                            # deeper nested lists are not checked
                     if isinstance(e, Treacl):
                         if e not in occurDict: e.ppgraph(depth + 1, occurDict=occurDict)  # recurse
                     else:
