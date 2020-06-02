@@ -55,14 +55,14 @@ if __name__ == '__main__':
     print("Sample config: path expression filter list of paths")
     for p in cfg.tree_find_paths_pathex("a.*.c.*", "cfg"): print(p)
 
-    with open("./tests/config.gml",'w') as f:
+    with open("./tests/configuration.gml",'w') as f:
         asGml = ut.paths_to_gml(cfg.tree_nodes_to_list())
         for l in asGml: print(l, file=f)
+    for l in asGml: print(l)
 
-    with open("./tests/config.pk",'wb') as f:
+    with open("./tests/configuration.pk",'wb') as f:
         pickle.dump(cfg, f)
 
     print()
-    print("Done")
 
 
