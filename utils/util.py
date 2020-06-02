@@ -26,18 +26,17 @@ def paths_to_gml(nodes):
         gmlLinesLst['N'] +=  [f'node [id {ni}  label "node {ni}"  sampleAttrib "{str(n)[:10]}" ]']
 
         for l in n.attrs_list():
-            for e in n.attr_get_aslist(l):
-                if isinstance(e, Treacl): gmlLinesLst['E'] += [f'edge [source {ni}  target {nodeDict[e]}  label "{l}" ]']
-                else: valId, gmlLinesLst = paths_to_gml_value(e, ni, l, valId, gmlLinesLst)      # not a treacl object
+            for e in n.attr_get_aslist(l):                                                                          #  return value as a singleton list, unless it already a list (of Treacl objects)
+                if isinstance(e, Treacl):
+                    gmlLinesLst['E'] += [f'edge [source {ni}  target {nodeDict[e]}  label "{l}" ]']
+                else:
+                    valId += 1                                                                                      # uuid1().int>>96 # prefer to be less stateful than maintaing a counter
+                    v = str(e).replace("'","")
+                    gmlLinesLst['N'] += [f'node [id {valId}  label "v={v}" ]']                                      # extra node for the value
+                    gmlLinesLst['E'] += [f'edge [source {ni}  target {valId}  label "{l}" ]']
+
 
     return gmlLinesLst['G'] + gmlLinesLst['N'] + gmlLinesLst['E'] + [']']
-
-def paths_to_gml_value(e, ni, l, valId, linesLst):                                               # only
-    valId += 1                                                                                   # uuid1().int>>96 # prefer to be less stateful than maintaing a counter
-    v = str(e).replace("'","")
-    linesLst['N'] += [f'node [id {valId}  label "v={v}" ]']                                      # extra node for the value
-    linesLst['E'] += [f'edge [source {ni}  target {valId}  label "{l}" ]']
-    return valId, linesLst
 
 # def treacl_nodeify_links(nodes, links):
 #     '''for each link of each node create a node'''
