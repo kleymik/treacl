@@ -25,34 +25,31 @@ def paths_to_gml(nodes):
 
         gmlLinesLstN +=  [f'node [id {ni}  label "node {ni}"  sampleAttrib "{str(n)[:10]}" ]']
 
-        for li,l in enumerate(n.attrs_list()):
-            atv = getattr(n, l)
-            if isinstance(atv, Treacl):
-                if atv in nodeDict:
-                    gmlLinesLstE += [f'edge [source {ni}  target {nodeDict[atv]}  label "{l}" ]']
-            elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
-                for ei,e in enumerate(atv):                                               # note deeper nested lists are not checked
+        for l in n.attrs_list():
+            atvL = [atv] if isinstance(atv := getattr(n, l), Treacl) else atv
+            if isinstance(atvL, list) and any([isinstance(e, Treacl) for e in atvL]):
+                for e in atvL:                                                            # n.b. deeper nested lists are not checked
                     if isinstance(e, Treacl):
                         gmlLinesLstE += [f'edge [source {ni}  target {nodeDict[e]}  label "{l}" ]']
                     else:                                                                 # not a treacl object
-                        valId += 1 #uuid1().int>>96                                           # prefer to be less stateful than maintaing a counter
-                        v = str(atv).replace("'","")
+                        valId += 1                                                        # uuid1().int>>96 # prefer to be less stateful than maintaining a counter?
+                        v = str(e).replace("'","")                                        # gml can't handle nested quoting
                         gmlLinesLstN += [f'node [id {valId}  label "v={v}" ]']            # extra node for the value
                         gmlLinesLstE += [f'edge [source {ni}  target {valId}  label "{l}" ]']
             else:
-                valId += 1 # uuid1().int>>96                                           # prefer to be less stateful than maintaing a counter
-                v = str(atv).replace("'","")
+                valId += 1                                                                # uuid1().int>>96; # prefer to be less stateful than maintaining a counter
+                v = str(atvL).replace("'","")                                             # gml can't handle nested quoting
                 gmlLinesLstN += [f'node [id {valId}  label "v={v}" ]']                    # extra node for the value
                 gmlLinesLstE += [f'edge [source {ni}  target {valId}  label "{l}" ]']
 
     return gmlLinesLstG + gmlLinesLstN + gmlLinesLstE + [']']
 
-# def paths_to_gml_value(atv, ni, l):                                                          # only
-#         valId = uuid1().int>>64                                                   # prefer to be less stateful than maintaing a counter
-#         v = str(atv).replace("'","")
-#         gmlLinesLstN += [f'node [id {valId}  label "v={v}" ]']                    # extra node for the value
-#         gmlLinesLstE += [f'edge [source {ni}  target {valId}  label "{l}" ]']
-#         return gmlLinesLstN, gmlLinesLstE
+def paths_to_gml_value(e, ni, l):                                                          # only
+    valId = valId += 1                                                        # uuid1().int>>64 # prefer to be less stateful than maintaing a counter
+    v = str(atv).replace("'","")
+    gmlLinesLstN += [f'node [id {valId}  label "v={v}" ]']                    # extra node for the value
+    gmlLinesLstE += [f'edge [source {ni}  target {valId}  label "{l}" ]']
+    return valId, gmlLinesLstN, gmlLinesLstE
 
 # def treacl_nodeify_links(nodes, links):
 #     '''for each link of each node create a node'''
