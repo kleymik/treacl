@@ -1,6 +1,6 @@
 # supporting functions for treacl - things which are not naturally methods
 from treacl import Treacl
-from uuid import uuid1
+# from uuid import uuid1
 
 def paths_to_gml(nodes):
     ''' export data as directed graph in .gml graph format file
@@ -26,9 +26,8 @@ def paths_to_gml(nodes):
         gmlLinesLst['N'] +=  [f'node [id {ni}  label "node {ni}"  sampleAttrib "{str(n)[:10]}" ]']
 
         for l in n.attrs_list():
-            atvL = [atv] if isinstance(atv := getattr(n, l), Treacl) else atv
-            if isinstance(atvL, list) and any([isinstance(e, Treacl) for e in atvL]):
-                for e in atvL:                                                                   # n.b. deeper nested lists are not checked
+            if isinstance(atvL := n.attr_getl(l), list) and any([isinstance(e, Treacl) for e in atvL]): # n.b. deeper nested lists are not checked
+                for e in atvL:
                     if isinstance(e, Treacl): gmlLinesLst['E'] += [f'edge [source {ni}  target {nodeDict[e]}  label "{l}" ]']
                     else: valId, gmlLinesLst = paths_to_gml_value(e, ni, l, valId, gmlLinesLst)  # not a treacl object
             else: valId, gmlLinesLst = paths_to_gml_value(atvL, ni, l, valId, gmlLinesLst)       # not a treacl object

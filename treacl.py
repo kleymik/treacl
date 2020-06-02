@@ -28,6 +28,10 @@ class Treacl(object):
         if sortedP==True: return sorted(attrs)
         else:             return attrs
 
+    def attr_getl(self, at):                                                              # return value, if its singleton Treacl instance, return as a one-item list
+        if isinstance(atv := getattr(self, at), Treacl): return [atv]                     # this simplifies higher-up logic
+        else:                                            return atv
+
     # Treacl "user" properties                                                            # as an alternative to attributes in the dunder .__dict__
                                                                                           # see README explanation
     __props = {}
