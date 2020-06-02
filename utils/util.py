@@ -26,11 +26,9 @@ def paths_to_gml(nodes):
         gmlLinesLst['N'] +=  [f'node [id {ni}  label "node {ni}"  sampleAttrib "{str(n)[:10]}" ]']
 
         for l in n.attrs_list():
-            if isinstance(atvL := n.attr_getl(l), list) and any([isinstance(e, Treacl) for e in atvL]): # n.b. deeper nested lists are not checked
-                for e in atvL:
-                    if isinstance(e, Treacl): gmlLinesLst['E'] += [f'edge [source {ni}  target {nodeDict[e]}  label "{l}" ]']
-                    else: valId, gmlLinesLst = paths_to_gml_value(e, ni, l, valId, gmlLinesLst)  # not a treacl object
-            else: valId, gmlLinesLst = paths_to_gml_value(atvL, ni, l, valId, gmlLinesLst)       # not a treacl object
+            for e in n.attr_get_aslist(l):
+                if isinstance(e, Treacl): gmlLinesLst['E'] += [f'edge [source {ni}  target {nodeDict[e]}  label "{l}" ]']
+                else: valId, gmlLinesLst = paths_to_gml_value(e, ni, l, valId, gmlLinesLst)      # not a treacl object
 
     return gmlLinesLst['G'] + gmlLinesLst['N'] + gmlLinesLst['E'] + [']']
 

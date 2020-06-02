@@ -32,6 +32,13 @@ class Treacl(object):
         if isinstance(atv := getattr(self, at), Treacl): return [atv]                     # this simplifies higher-up logic
         else:                                            return atv
 
+    def attr_get_aslist(self, at):                                                          # return value, if its singleton Treacl instance, return as a one-item list
+        atv = getattr(self, at)
+        if isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
+            return atv
+        else:
+            return [atv]
+
     # Treacl "user" properties                                                            # as an alternative to attributes in the dunder .__dict__
                                                                                           # see README explanation
     __props = {}
