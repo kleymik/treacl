@@ -1,0 +1,105 @@
+
+B: 
+    B: 
+        B: 
+            B: 
+                B: 
+                    B: 
+                        B: 
+                        W: 
+                        v: 'g'
+                    W: 
+                    v: 'f'
+                W: 
+                v: 'e'
+            W: 
+            v: 'd'
+        W: 
+        v: 'c'
+    W: 
+    v: 'b'
+W: 
+v: 'a'
+5-----5
+Not divisible by 7
+
+7-----0
+Divisible by 7
+
+77-----0
+Divisible by 7
+
+78-----1
+Not divisible by 7
+
+37237366262681625-----5
+Not divisible by 7
+
+37237366262681627-----0
+Divisible by 7
+
+B: 
+    B: 
+        B: 
+            B: 
+                B: 
+                    B: 
+                        B: 
+                        W: 
+                    W: 
+                W: 
+            W: 
+        W: 
+    W: 
+W: 
+
+5-----5
+Not divisible by 7
+
+
+7-----0
+Divisible by 7
+
+
+77-----0
+Divisible by 7
+
+
+78-----1
+Not divisible by 7
+
+
+37237366262681625-----5
+Not divisible by 7
+
+
+37237366262681627-----0
+Divisible by 7
+d7.B
+d7.B.B
+d7.B.B.B
+d7.B.B.B.B
+d7.B.B.B.B.B
+d7.B.B.B.B.B.B
+d7.B.B.B.B.B.B.B
+d7.B.B.B.B.B.B.W
+d7.B.B.B.B.B.B.v
+d7.B.B.B.B.B.W
+d7.B.B.B.B.B.v
+d7.B.B.B.B.W
+d7.B.B.B.B.v
+d7.B.B.B.W
+d7.B.B.B.v
+d7.B.B.W
+d7.B.B.v
+d7.B.W
+d7.B.v
+d7.W
+d7.v
+<treacl.Treacl object at 0x
+<treacl.Treacl object at 0x
+<treacl.Treacl object at 0x
+<treacl.Treacl object at 0x
+<treacl.Treacl object at 0x
+<treacl.Treacl object at 0x
+<treacl.Treacl object at 0x
