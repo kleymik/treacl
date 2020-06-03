@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
     for p in d7.graph_paths_to_list(varName="d7"): print(p)
 
-    for n in d7.graph_nodes_to_list1(): print(str(n)[:27])
+    for n in d7.graph_nodes_to_list(): print(str(n)[:27])
 
 
 
