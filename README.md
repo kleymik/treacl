@@ -1,36 +1,32 @@
 
 # Table of Contents
 
--   [Introduction](#org24be5af)
-    -   [yaml markdown equivalence example](#org7cdb8f9)
--   [The Gist](#org0eb0c4b)
--   [Examples](#orgd085908)
--   [Acknowledgements / Related](#orgb188fae)
-    -   [see also](#org4bb144d)
--   [Requires](#orgaf2a062)
--   [Notes](#org336db71)
--   [TBD](#org9c5849e)
+-   [introduction](#org85f1c15)
+    -   [yaml markdown equivalence example](#org84b0b1f)
+-   [the gist](#orgba25810)
+-   [examples](#org50ccbd0)
+-   [acknowledgements / related](#org5ac9db4)
+    -   [see also](#orgb085b91)
+-   [Requires](#orgae81aab)
+-   [Notes](#orge71c885)
+-   [TBD](#orgf225bdf)
 
 (the README.org best viewed raw or in org-mode)
 
 Treacl - simple examples which exploit making class instances' attributes dynamic
 
--   2020-05-18 published to github as a work in progress
--   2018-06-02 Treacl - yet another variation on similar datatypes in various interpreted languages.
--   2010-02-01 tdict.py python2 tree dict
 
+<a id="org85f1c15"></a>
 
-<a id="org24be5af"></a>
-
-# Introduction
+# introduction
 
 Treacl is a versatile but very simple Python class which supports exploiting dynamic attributes for
 creating trees and directed graphs.
 
-In regular Python, though a **first** level attribute will be dynamically added to an instance of a
+In regular Python, though a *first* level attribute will be dynamically added to an instance of a
 class (e.g. "foo.aa = 1"), it will fail when attempting more than one level ("foo.aa.bb.cc = 1").
-Treacl enables this by instantiating the intermediate attributes with an empty Treacl class instance
-by default:
+Treacl enables this by defaulting to automatically assign the intermediate attributes with a new empty
+Treacl class instance as value:
 
     from treacl import Treacl
 
@@ -56,49 +52,78 @@ of the approach here is that the natural and readable Python "."  dot operator f
 kept pre-eminent.
 
 
-<a id="org7cdb8f9"></a>
+<a id="org84b0b1f"></a>
 
 ## yaml markdown equivalence example
 
 
-    YAML                                          Python- Treacl
-    ====                                          ==============
+          YAML                                          Python- Treacl
+          ====                                          ==============
 
-                                                  kubConfig = Treacl()
-    apiVersion: apps/v1                           kubConfig.apiVersion = "apps/v1"
-    kind: Deployment                              kubConfig.kind       = "Deployment"
-    metadata:                                     kubConfig.metadata.name = "rss-site"
-      name: rss-site                              kubConfig.metadata.labels.app = "web"
-      labels:                                     kubConfig.spec.replicas = 2
-        app: web                                  kubConfig.spec.selector.matchLabels.app = "web"
-    spec:                                         kubConfig.spec.template.metadata.labels.app = "web"
-      replicas: 2                                 kubConfig.spec.template.spec.containers = [Treacl()]
-      selector:                                   kubConfig.spec.template.spec.containers[0].name  = "front-end"
-        matchLabels:                              kubConfig.spec.template.spec.containers[0].image = "nginx"
-          app: web                                kubConfig.spec.template.spec.containers[0].ports.containerPort = 80
-      template:                                   kubConfig.spec.template.spec.containers += [Treacl()]
-        metadata:                                 kubConfig.spec.template.spec.containers[1].name  = "rss-reader"
-          labels:                                 kubConfig.spec.template.spec.containers[1].image = "nickchase/rss-php-nginx:v1"
-            app: web                              kubConfig.spec.template.spec.containers[1].ports.containerPort = 88
-        spec:
-          containers:
-            - name: front-end
-              image: nginx
-              ports:
-                - containerPort: 80
-            - name: rss-reader
-              image: nickchase/rss-php-nginx:v1
-              ports:
-                - containerPort: 88
+                                                        kubConfig = Treacl()
+          apiVersion: apps/v1                           kubConfig.apiVersion = "apps/v1"
+          kind: Deployment                              kubConfig.kind       = "Deployment"
+          metadata:                                     kubConfig.metadata.name = "rss-site"
+            name: rss-site                              kubConfig.metadata.labels.app = "web"
+            labels:                                     kubConfig.spec.replicas = 2
+              app: web                                  kubConfig.spec.selector.matchLabels.app = "web"
+          spec:                                         kubConfig.spec.template.metadata.labels.app = "web"
+            replicas: 2                                 kubConfig.spec.template.spec.containers = [Treacl()]
+            selector:                                   kubConfig.spec.template.spec.containers[0].name  = "front-end"
+              matchLabels:                              kubConfig.spec.template.spec.containers[0].image = "nginx"
+                app: web                                kubConfig.spec.template.spec.containers[0].ports.containerPort = 80
+            template:                                   kubConfig.spec.template.spec.containers += [Treacl()]
+              metadata:                                 kubConfig.spec.template.spec.containers[1].name  = "rss-reader"
+                labels:                                 kubConfig.spec.template.spec.containers[1].image = "nickchase/rss-php-nginx:v1"
+                  app: web                              kubConfig.spec.template.spec.containers[1].ports.containerPort = 88
+              spec:
+                containers:
+                  - name: front-end
+                    image: nginx
+                    ports:
+                      - containerPort: 80
+                  - name: rss-reader
+                    image: nickchase/rss-php-nginx:v1
+                    ports:
+                      - containerPort: 88
+
+    >>> kubConfig.pptree()
+
+    apiVersion: 'apps/v1'
+    kind: 'Deployment'
+    metadata:
+        name: 'rss-site'
+        labels:
+            app: 'web'
+    spec:
+        replicas: 2
+        selector:
+            matchLabels:
+                app: 'web'
+        template:
+            metadata:
+                labels:
+                    app: 'web'
+            spec:
+                containers:
+                    name: 'front-end'
+                    image: 'nginx'
+                    ports:
+                        containerPort: 80
+
+                    name: 'rss-reader'
+                    image: 'johnsmith/rss-php-nginx:v1'
+                    ports:
+                        containerPort: 88
 
 
-<a id="org0eb0c4b"></a>
+<a id="orgba25810"></a>
 
-# The Gist
+# the gist
 
 Treacl is a one-liner - implemented by overriding the <span class="underline"><span class="underline">getattr</span></span> class method in Python so that it
 defaults to initialising a new attribute in the instance of the class (i.e. self) with a value that
-is a new empty instance of **this same class**.  In this sense, Treacl is "dynamically recursive".
+is a new empty instance of *this same class*.  In this sense, Treacl is "dynamically recursive".
 
     class Treacl(object):
         "Treacl: a tree class"
@@ -108,33 +133,33 @@ is a new empty instance of **this same class**.  In this sense, Treacl is "dynam
             setattr(self, name, t := Treacl())             # I am the walrus
             return t
 
-That's it!
+That's it.
 
 
-<a id="orgd085908"></a>
+<a id="org50ccbd0"></a>
 
-# Examples
+# examples
 
 ./treacl/examples:
 
--   configuration.py  - just a simple sample configuration expressed using treacl
--   yaml.py           - sample yaml converted to equivalent treacl
--   xml.py            - sample xml converted to equivalent treacl
--   json.py           - sample json converted to equivalent treacl
--   ssl<sub>x509</sub><sub>cert.py</sub>  - deconstruction of a TLS certificate
+-   `configuration.py`  - just a simple sample configuration expressed using treacl
+-   `yaml.py`           - sample yaml converted to equivalent treacl
+-   `xml.py`            - sample xml converted to equivalent treacl
+-   `json.py`           - sample json converted to equivalent treacl
+-   `ssl_x509_cert.py`  - deconstruction of a TLS certificate
 
--   divide<sub>by</sub><sub>7.py</sub>    - traversal of small graph to determine if divisible by 7
--   table.py          - quirky representation of a table/matrix as a DAG using treacl
+-   `divide_by_7.py`    - traversal of small graph to determine if divisible by 7
+-   `table.py`          - quirky representation of a table/matrix as a DAG using treacl
 
--   standard<sub>model.py</sub> - particle physics, gluons, leptons, etc, a graph of how they group and interact
+-   `standard_model.py` - particle physics, gluons, leptons, etc, a graph of how they group and interact
     illustrates using getProp and addProp so that attributes
     can be reserved to emphasize the main tree/graph structure
--   universe.py       - a start at spatial hierarchy of like, everything
+-   `universe.py`       - a start at spatial hierarchy of like, everything
 
 
-<a id="orgb188fae"></a>
+<a id="org5ac9db4"></a>
 
-# Acknowledgements / Related
+# acknowledgements / related
 
 This idiom/construct isn't new. Getting new behaviour using the dunder methods setattr, getattr, or
 delattr is widespread.  Other dynamic languages may or may not support such dynamic attributes by
@@ -147,25 +172,25 @@ default.
 -   autodict:    very similar, but for dict&key instead of instance & attribute.
     <https://gist.github.com/sebclaeys/1227566>
 
--   Javascript:  In Javascript dot-path expressions are already used to access attributes,
+-   Javascript:  Yes, In Javascript dot-path expressions are already used to access attributes,
     From <https://rosettacode.org/wiki/Add_a_variable_to_a_class_instance_at_runtime>
-      This kind of thing is fundamental to JavaScript, as it's a
-      prototype-based language rather than a class-based one.
+    This kind of thing is fundamental to JavaScript, as it's a
+    prototype-based language rather than a class-based one.
 
     e = {}          // generic object
     e.foo = 1
     e["bar"] = 2    // name specified at runtime"
 
--   Matlab:      In Matlab "structs" (and hence its weird cousin "struct Array"), and the effectively
+-   Matlab:     Yes, In Matlab "structs" (and hence its weird cousin "struct Array"), and the effectively
     "evaluating parentheses" (e.g. "foo.(bar)") provide dyanmic attributes.
 
     e  = struct();
     e.aa.bb.cc.dd = 1;
 
--   Perl:  yes, works out of the box wish hashes, but does anyone still care?
+-   Perl:  Yes, works out of the box with hashes, but does anyone still care?
 
 
-<a id="org4bb144d"></a>
+<a id="orgb085b91"></a>
 
 ## see also
 
@@ -176,25 +201,30 @@ default.
 -   other xmls <https://insights.dice.com/2018/01/05/5-xml-alternatives-to-consider/>
 
 
-<a id="orgaf2a062"></a>
+<a id="orgae81aab"></a>
 
 # Requires
 
 Python 3.8 - for the walrus operator
 
 
-<a id="org336db71"></a>
+<a id="orge71c885"></a>
 
 # Notes
 
-Treacl is a slight misnomer, in that it works fine for making directed graphs as well as trees.
+Treacl, pronounced as in "treacle pudding". "Tree Class" is a slight misnomer, in that it works fine for making directed graphs as well as trees.
 
 Access to methods by the dot operator is unaffected, but it is sometimes preferable to have a
 separate set of attributes (called, say, "properties") maintained in a separate dict (as illustrated
 in the code) to keep properties associated with the nodes or links in the graph.
 
+-   2020-06-03 tweaked/condensed recursive functions
+-   2020-05-18 published to github as a work in progress
+-   2018-06-02 Treacl - yet another variation on similar datatypes in various interpreted languages.
+-   2010-02-01 tdict.py python2 tree dict
 
-<a id="org9c5849e"></a>
+
+<a id="orgf225bdf"></a>
 
 # TBD
 
@@ -204,7 +234,7 @@ possible improvements:
 -   a more cute/declarative way to do attributes values which are lists of treacl instances,
     i.e. a one-statement way to do "foo = [t(), t()]; foo[0].bar = 1"
 -   option for automatically including backpointers
--   export to standard (nestable?) graph format (see "Yed")
+-   export to standard (nestable?) graph format like .gml (see "Yed")
 -   table elements swap using some kind of higher-order function?
 -   link node-ifier: turn links into bin-ary nodes
 
