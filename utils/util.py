@@ -9,11 +9,11 @@ def paths_to_gml(nodes):
       nodes: the list of treacl objects to be included in the export
     '''
 
-    nodeDict = {n:ni for ni,n in enumerate(nodes)}                                               # index the nodes
+    nodeDict = {n:ni for ni,n in enumerate(nodes)}                                        # index the nodes
 
-    gmlLinesLst  =   {'G':['graph ['],
-                      'N':[''],
-                      'E':['']}
+    gmlLinesLst  =   {'G':['graph ['],                                                    # gml graph pre-amble: properties of the graph
+                      'N':[''],                                                           # gml nodes section: properties of the graph
+                      'E':['']}                                                           # gml edges section: properties of the edges
     gmlLinesLst['G'] +=  ['  comment "treacl tree converted to graph represented in gml"']
     gmlLinesLst['G'] +=  ['  directed 1']
     gmlLinesLst['G'] +=  ['  id 42']
@@ -26,13 +26,13 @@ def paths_to_gml(nodes):
         gmlLinesLst['N'] +=  [f'node [id {ni}  label "node {ni}"  sampleAttrib "{str(n)[:10]}" ]']
 
         for l in n.attrs_list():
-            for e in n.attr_get_aslist(l):                                                                          #  return value as a singleton list, unless it already a list (of Treacl objects)
+            for e in n.attr_get_aslist(l):                                                # return value as a singleton list, unless it already a list (of Treacl objects)
                 if isinstance(e, Treacl):
                     gmlLinesLst['E'] += [f'edge [source {ni}  target {nodeDict[e]}  label "{l}" ]']
                 else:
-                    valId += 1                                                                                      # uuid1().int>>96 # prefer to be less stateful than maintaing a counter
+                    valId += 1                                                            # uuid1().int>>96 # prefer to be less stateful than maintaing a counter
                     v = str(e).replace("'","")
-                    gmlLinesLst['N'] += [f'node [id {valId}  label "v={v}" ]']                                      # extra node for the value
+                    gmlLinesLst['N'] += [f'node [id {valId}  label "{v}" ]']              # extra node for the value
                     gmlLinesLst['E'] += [f'edge [source {ni}  target {valId}  label "{l}" ]']
 
 
