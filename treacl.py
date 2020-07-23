@@ -6,6 +6,7 @@
 # 2018-06-02 kleymik  - yet another small tree/graph datatype
 
 import re
+import sys
 from pprint import pformat
 
 class Treacl(object):
@@ -24,22 +25,27 @@ class Treacl(object):
     def __setstate__(self, state): vars(self).update(state)
 
     def attrs_list(self, sortedP=False):
-        attrs = [k for k in vars(self).keys() if not k.startswith('_')]
-        if sortedP==True: return sorted(attrs)
-        else:             return attrs
+        attrs = [ k for k in vars(self).keys() if not k.startswith('_') ]
+        if sortedP==True:
+            return sorted(attrs)
+        else:
+            return attrs
 
     def attr_get_aslist(self, at):                                                        # return value, if its singleton Treacl instance, return as a one-item list
         atv = getattr(self, at)
-        if isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]): return atv
-        else:                                                                   return [atv]
+        if isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
+            return atv
+        else:
+            return [atv]
 
     # Treacl "user" properties                                                            # as an alternative to attributes in the dunder .__dict__
                                                                                           # see README explanation
     __props = {}
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.__props = {"name": None,                                                     # making assumption that having at least "name" seems sensible, so ok to have core code that references it
                         "type": None }
+        for k,v in kwargs.items(): setattr(self, k, v)
 
     def addProp(self, pName, value):
         self.__props[pName] = value
@@ -64,18 +70,26 @@ class Treacl(object):
     def pformat_indented(self, v, indent=0):
         '''use pprint pformat but then add additional indent for given depth'''           # pprint module inserts one less whitespace for first line
         pfStrings = pformat(v, width=self.valPrintMaxWidth).split('\n')
-        return [('' if num==0 else ' ' * indent) + line for num, line in enumerate(pfStrings)]
+        return [ ('' if num==0 else ' ' * indent) + line for num, line in enumerate(pfStrings) ]
 
-    def pptree(self, depth=0, sortedP=False):
-        '''print treacl tree recursively'''
-        print()                                                                           # TBD: if singleton, don't print a CRLF
+    def ppattrs(self, sortedP=False, file=sys.stdout):
+        '''print treacl object attributes'''
+        print(file=file)                                                                  # TBD: if singleton, don't print a CRLF
         for at in self.attrs_list(sortedP=sortedP):                                       # same as self.__dict__:
-            print(nameStr := ' ' * self.depthIndent * depth + f'{at}: ', end='')
+            print(nameStr := ' ' * self.depthIndent * 0 + f'{at}: ', end='', file=file)
+            for atv in self.attr_get_aslist(at):                                          # deeper nested lists are not checked
+                for s in self.pformat_indented(atv, len(nameStr)): print(s, file=file)    # use pretty print to print python base datatype
+
+    def pptree(self, depth=0, sortedP=False, file=sys.stdout):
+        '''print treacl tree recursively'''
+        print(file=file)                                                                  # TBD: if singleton, don't print a CRLF
+        for at in self.attrs_list(sortedP=sortedP):                                       # same as self.__dict__:
+            print(nameStr := ' ' * self.depthIndent * depth + f'{at}: ', end='', file=file)
             for atv in self.attr_get_aslist(at):                                          # deeper nested lists are not checked
                 if isinstance(atv, Treacl):
-                    atv.pptree(depth + 1)                                                 # recurse
+                    atv.pptree(depth + 1, file=file)                                      # recurse
                 else:
-                    for s in self.pformat_indented(atv, len(nameStr)): print(s)           # use pretty print to print python base datatype
+                    for s in self.pformat_indented(atv, len(nameStr)): print(s, file=file)# use pretty print to print python base datatype
 
     def tree_paths_to_list(self, varName=""):                                             # list all paths in tree
         '''generate all paths to a given depth'''
@@ -94,8 +108,8 @@ class Treacl(object):
         '''return a list of all the nodes in the tree'''                                  # tbd make into a generator
         resLst = [self]
         for atvL in [ self.attr_get_aslist(at) for at in self.attrs_list() ]:             # iterate over attribute values: which could be a list one or more Treacl Instances, or other
-            resLst += [t for v in atvL if isinstance(v, Treacl)                           # flattened list of lists
-                            for t in v.tree_nodes_to_list()]
+            resLst += [ t for v in atvL if isinstance(v, Treacl)                          # flattened list of lists
+                            for t in v.tree_nodes_to_list() ]
         return resLst
 
     def tree_find_paths(self, pattrn, varName=''):                                        # list paths that with a simple pattern match
@@ -132,8 +146,8 @@ class Treacl(object):
                     pth = f'{varName}.{at}'
                     if includePartMatch: resLst += [pth]
                     if isinstance(atv := getattr(self, at), Treacl):
-                        resLst += atv.tree_find_paths_pathex(pathCdr, pth)                # recurse
-                    elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):            # deeper nested lists are not checked
+                        resLst += atv.tree_find_paths_pathex(pathCdr, pth)                    # recurse
+                    elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]): # deeper nested lists are not checked
                         for ei,e in enumerate(atv):
                             lpth = f'{varName}.{at}[{ei}]'
                             if includePartMatch: resLst += [lpth]
@@ -177,8 +191,8 @@ class Treacl(object):
         resLst = [self]
         occurDict[self] = True                                                            # a bit redundant to have both occurDict and resLstw
         for atvL in [ self.attr_get_aslist(at) for at in self.attrs_list() ]:             # iterate over attribute values: which could be (i) a Treacl instance, a list with maybe Treacl Instances, (iii) neither
-            resLst += [t for v in atvL if isinstance(v, Treacl) and v not in occurDict    # flattened list of lists
-                            for t in v.graph_nodes_to_list(occurDict)]
+            resLst += [ t for v in atvL if isinstance(v, Treacl) and v not in occurDict   # flattened list of lists
+                             for t in v.graph_nodes_to_list(occurDict) ]
         return resLst
 
     def graph_find_paths(self, pattrn, depth=0, showValP=False):                          # list paths that match a pattern
@@ -186,7 +200,7 @@ class Treacl(object):
            find all paths with pattern matching
            anywhere in the path
         '''
-        return [ p for p in self.graph_paths_to_list() if pattrn in p.split('.')]
+        return [ p for p in self.graph_paths_to_list() if pattrn in p.split('.') ]
 
     def graph_find_paths_regex(self, regexPattrn, caseSensitive=re.I, depth=0, showValP=False):   # list paths that match a regex pattern
         '''search graph recursively depth first
@@ -194,6 +208,6 @@ class Treacl(object):
            anywhere in the path
         '''
         lineRePat = re.compile(regexPattrn, re.I)
-        return [ p for p in self.graph_paths_to_list() if lineRePat.search(p)]
+        return [ p for p in self.graph_paths_to_list() if lineRePat.search(p) ]
 
 
