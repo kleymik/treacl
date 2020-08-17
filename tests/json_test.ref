@@ -29,19 +29,40 @@ Sample person from TREACL:
 firstName: 'John'
 lastName: 'Smith'
 age: 25
-address: 
+address:
     streetAddress: '21 2nd Street'
     city: 'New York'
     state: 'NY'
     postalCode: '10021'
-phoneNumbers: 
+phoneNumbers:
     type: 'home'
     number: '212 555-1234'
 
     type: 'fax'
     number: '646 555-4567'
-sex: 
+sex:
     type: 'male'
+
+Sample person from TREACL exported as JSON:
+{
+ "firstName": "John",
+ "lastName": "Smith",
+ "age": 25,
+ "address": {
+     "streetAddress": "21 2nd Street",
+     "city": "New York",
+     "state": "NY",
+     "postalCode": "10021"},
+ "phoneNumbers": [
+{
+     "type": "home",
+     "number": "212 555-1234"},
+{
+     "type": "fax",
+     "number": "646 555-4567"}]
+,
+ "sex": {
+     "type": "male"}}
 
 Sample person: regex filter '^.+e$' list of paths
 .firstName

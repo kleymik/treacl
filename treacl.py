@@ -160,24 +160,32 @@ class Treacl(object):
         return resLst
 
     def tree_to_json(self, depth=0, file=sys.stdout, maxDepth=ppMaxDepth):
-        '''generate json version of the treacl struture
-           delegating to json.dumps() where possible'''
+        '''generate json version of the treacl structure
+           delegating other datatypes to json.dumps() where possible'''
         if depth<maxDepth:
             print("{", file=file)
-            for ai,at in enumerate(atL := self.attrs_list()):                                 # same as self.__dict__:
+            for at in (atL := self.attrs_list()):                                             # same as self.__dict__:
                 print(nameStr := (' ' * self.depthIndent * depth) + f' "{at}": ', end='', file=file)
-                for atv in (atvl := self.attr_get_aslist(at)):                                # deeper nested lists are not checked
-                    if isinstance(atv, Treacl): atv.tree_to_json(depth + 1, file=file, maxDepth=maxDepth)         # recurse
-                    else:
-                        try:    print(json.dumps(atv, indent=self.depthIndent * (depth+1)), file=file, end='')        # use a to_json method if the datatype has one?
-                        except: print(f'"{type(atv)}"', file=file, end='')
-                if ai!=len(atL)-1: print(",", file=file)                                      # in json, no comma allowed after last item in dict or list
+                if isinstance(atv := getattr(self, at), Treacl):
+                    atv.tree_to_json(depth + 1, file=file, maxDepth=maxDepth)                 # recurse
+                elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):     # deeper nested lists are not checked
+                    print("[", file=file)
+                    for ate in atv:
+                        ate.tree_to_json(depth + 1, file=file, maxDepth=maxDepth)             # recurse
+                        if ate is not atv[-1]: print(",", file=file)
+                    print("]", file=file)
+                else:
+                    try:    print(json.dumps(atv, indent=self.depthIndent * (depth+1)), file=file, end='') # use a to_json method if the datatype has one?
+                    except: print(f'"{type(atv)}"', file=file, end='')
+                if at is not atL[-1]: print(",", file=file)                                   # in json, no comma allowed after last item in dict or list
             print('}', file=file, end='')
         else:
-            print('"elided..."')
-        if depth==0: print()
+            print('"elided..."', file=file)
+        if depth==0: print(file=file)
 
-    # def tree_find_paths_pathexex # TBD extended path-expressions
+    # def tree_find_paths_pathexex  # TBD extended path-expressions
+    # def tree_diff(self, rhTree):  # compute difference between trees
+
     # graph functions
 
     def ppgraph(self, depth=0, occurDict={}, sortedP=False, maxDepth=ppMaxDepth):
