@@ -3,7 +3,7 @@ from treacl import Treacl as t
 # interactions of Physics' itty-bitty field-particles
 # taken from (see the diagrams)
 #  https://www.wikiwand.com/en/Standard_Model
-#  https://www.theatlantic.com/technology/archive/2012/07/still-confused-about-the-higgs-boson-read-this/259472/
+#  https://www.theatlantic.com/technology/archive/2012/07/still-confused-about-the-BEH-boson-read-this/259472/
 #  https://en.wikipedia.org/wiki/Spin_(physics)#/media/File:Standard_Model_of_Elementary_Particles.svg
 
 # here the dot attributes are used to declare/encode two
@@ -69,8 +69,8 @@ def standard_model_interactions():
     gn = t();           gn.addProp('name', "gluon");                  gn.addProp('type', "elementary")
     # photon
     ph = t();           ph.addProp('name', "photon");                 ph.addProp('type', "elementary")
-    # higgs boson
-    hg = t();           hg.addProp('name', "higgs");                  hg.addProp('type', "elementary")
+    # BEH boson
+    hg = t();           hg.addProp('name', "BEH");                    hg.addProp('type', "elementary")
     bn.M = [wb, gn, ph, hg]
 
     ep.M = [fm, bn] # currently, it seems the universe consists of bosons and fermions
