@@ -24,19 +24,26 @@ class Treacl(object):
 
     def __setstate__(self, state): vars(self).update(state)
 
+
+    # def __getstate__(self):      # https://docs.python.org/3/library/pickle.html#handling-stateful-objects
+    #     """Return state values to be pickled."""
+    #     f = self.logfile
+    #     return (self.value, f.name, f.tell())
+
+    # def __setstate__(self, state):
+    #     """Restore state from the unpickled state values."""
+    #     self.value, name, position = state
+    #     f = file(name, 'w')
+    #     f.seek(position)
+    #     self.logfile = f
+
     def attrs_list(self, sortedP=False):
         attrs = [ k for k in vars(self).keys() if not k.startswith('_') ]
-        if sortedP==True:
-            return sorted(attrs)
-        else:
-            return attrs
+        return sorted(attrs) if sortedP==True else attrs
 
     def attr_get_aslist(self, at):                                                        # return value, if its singleton Treacl instance, return as a one-item list
         atv = getattr(self, at)
-        if isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
-            return atv
-        else:
-            return [atv]
+        return atv if isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]) else [atv]
 
     # Treacl "user" properties                                                            # as an alternative to attributes in the dunder .__dict__
                                                                                           # see README explanation
@@ -210,4 +217,61 @@ class Treacl(object):
         lineRePat = re.compile(regexPattrn, re.I)
         return [ p for p in self.graph_paths_to_list() if lineRePat.search(p) ]
 
+    def graph_copy():  # create a copy of just the treacl tree
+        pass
+
+    def graph_save(self, fPath):
+        '''super simple - save treacl graph/tree and all attached data using pickle'''
+        with open(fPath,'wb') as f: pickle.dump(self, f)
+
+    def graph_save_selective(self, fDirPath, saveDispatch={}, occurDict={}):
+        '''save treacl in pickle, but any types in leaves are
+           saved in neigbouring file with unique id, using type-based dispatch
+           saveDispatch = {'pandas.dataframe': 'pd.save_to_csv'}
+        '''
+        occurDict[self] = True
+        resLst = []
+        saveObjs = {obj:None, place:}  # same object and where it's kept                  # keep list of objects to save via dispatch
+        for at in self.attrs_list():
+            resLst += [pth := f'{varName}.{at}']
+            atv = getattr(self, at)
+            if isinstance(atv, Treacl):
+                if atv not in occurDict: resLst += atv.graph_paths_to_list(pth, occurDict)# recurse
+            elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):     # n.b. more deeply nested lists are not checked
+                for ei,e in enumerate(atv):
+                    resLst += [lpth := f'{varName}.{at}[{ei}]']
+                    if isinstance(e, Treacl):
+                        if e not in occurDict: resLst += e.graph_paths_to_list(lpth, occurDict) # recurse
+
+        for o in saveObjs:                                                               # save object in it's own file, name with id
+            unique_id = gensym()
+            apply(saveDispatch(type(o)), o, filestem=unique_id)
+
+        with open("fDirPath",'wb') as f:
+            pickle.dump(cfg, f)
+
+        self.pickle
+        return resLst
+
+
+def treacl_graph_load(fileDirPath):
+    '''load treacl in pickle, patch in any types in leaves that
+       have been saved in neigbouring file with unique id
+       not a method since there are not
+        treacl objects are create
+       thoug
+    '''
+    occurDict[self] = True
+    resLst = []
+    for at in self.attrs_list():
+        resLst += [pth := f'{varName}.{at}']
+        atv = getattr(self, at)
+        if isinstance(atv, Treacl):
+            if atv not in occurDict: resLst += atv.graph_paths_to_list(pth, occurDict)# recurse
+        elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):     # n.b. more deeply nested lists are not checked
+            for ei,e in enumerate(atv):
+                resLst += [lpth := f'{varName}.{at}[{ei}]']
+                if isinstance(e, Treacl):
+                    if e not in occurDict: resLst += e.graph_paths_to_list(lpth, occurDict) # recurse
+    return resLst
 
