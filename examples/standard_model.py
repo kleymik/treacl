@@ -1,9 +1,10 @@
 from treacl import Treacl as t
+import utils.util as ut
 
 # interactions of Physics' itty-bitty field-particles
 # taken from (see the diagrams)
 #  https://www.wikiwand.com/en/Standard_Model
-#  https://www.theatlantic.com/technology/archive/2012/07/still-confused-about-the-higgs-boson-read-this/259472/
+#  https://www.theatlantic.com/technology/archive/2012/07/still-confused-about-the-BEH-boson-read-this/259472/
 #  https://en.wikipedia.org/wiki/Spin_(physics)#/media/File:Standard_Model_of_Elementary_Particles.svg
 
 # here the dot attributes are used to declare/encode two
@@ -69,8 +70,8 @@ def standard_model_interactions():
     gn = t();           gn.name = "gluon";                  gn.addProp('type', "elementary")
     # photon
     ph = t();           ph.name = "photon";                 ph.addProp('type', "elementary")
-    # higgs boson
-    hg = t();           hg.name = "higgs";                  hg.addProp('type', "elementary")
+    # BEH boson
+    hg = t();           hg.name = "BEH";                    hg.addProp('type', "elementary")
     bn.M = [wb, gn, ph, hg]
 
     ep.M = [fm, bn] # currently, it seems the universe consists of bosons and fermions
@@ -112,11 +113,14 @@ if __name__ == '__main__':
 
     sm = standard_model_interactions()
 
-    sm.ppgraph()
     print()
+    sm.ppgraph()
 
-    #for p in sm.graph_paths_to_list(varName="sm"): print(p)
-    #print()
+    print()
+    with open("./tests/standard_model.gml",'w') as f:
+        asGml = ut.paths_to_gml(sm.graph_nodes_to_list())
+        for l in asGml: print(l, file=f)
+    for l in asGml: print(l)
 
 
 
