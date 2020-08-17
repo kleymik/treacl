@@ -1,24 +1,25 @@
-from treacl import Treacl as t
-
 # a directed graph example
 # graph traversal divisible-by-7 test
 # traversing this graph computes whether a number if divisble by 7
 #   i.e. f(n) = {n mod 7 == 0}
 # FROM: http://blog.tanyakhovanova.com/2009/08/divisibility-by-7-is-a-walk-on-a-graph-by-david-wilson/
 #   T. Khovanova & D. Wilson
+#
 #   Each node as two directed links: a "B" (Black) link and a "W" (White) link
 #   the recipe indicates whether and how many time to follow the B link or the W link,
 #   depending on the given digit in the number. If traversal returns to initial
 #   node after traversing the graph with all the digits in the number, then
 #   the number is divisble by 7.
 #
-#   The 1st function (divisible_by_7_graph) creates the graph by naming each node and
+#   The 1st function "divisible_by_7_graph" creates the graph by naming each node and
 #   using these node name to specifiy the "B" and "W" links between them
 #
-#   The 2nd function divisible_by_7_graph_pathex) creates the graph wiithout needing
+#   The 2nd function "divisible_by_7_graph_pathex" creates the graph without needing
 #   to name the nodes, the various paths are declared until all the links in the
 #   graph have been specified. Though it is only a bit more succinct, it demonstrates
 #   specifying a graph without having to resort to exogenous naming of the nodes.
+
+from treacl import Treacl as t
 
 def divisible_by_7_graph():
     '''set up divisibe-by-y graph by declaration

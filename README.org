@@ -104,6 +104,7 @@ spec:
 
 #+END_SRC
 
+
 * the gist
 
 Treacl is a one-liner - implemented by overriding the __getattr__ class method in Python so that it
@@ -139,7 +140,7 @@ That's it.
 -  =standard_model.py= - particle physics, gluons, leptons, etc, a graph of how they group and interact
                          illustrates using getProp and addProp so that attributes
                          can be reserved to emphasize the main tree/graph structure
--  =universe.py=       - a start at spatial hierarchy of like, everything
+-  =universe.py=       - a start at a spatial hierarchy of like, everything
 
 
 
@@ -184,12 +185,12 @@ default.
 - other xmls https://insights.dice.com/2018/01/05/5-xml-alternatives-to-consider/
 
 
-* Requires
+* requires
 
 Python 3.8 - for the walrus operator
 
 
-* Notes
+* notes
 
 Treacl, pronounced as in "treacle pudding". "Tree Class" is a slight misnomer, in that it works fine for making directed graphs as well as trees.
 
@@ -202,6 +203,7 @@ in the code) to keep properties associated with the nodes or links in the graph.
 - 2018-06-02 Treacl - yet another variation on similar datatypes in various interpreted languages.
 - 2010-02-01 tdict.py python2 tree dict
 
+
 * TBD
 
 possible improvements:
@@ -210,6 +212,7 @@ possible improvements:
 - a more cute/declarative way to do attributes values which are lists of treacl instances,
   i.e. a one-statement way to do "foo = [t(), t()]; foo[0].bar = 1"
 - option for automatically including backpointers
-- export to standard (nestable?) graph format like .gml (see "Yed")
+- export to nestable graph format
 - table elements swap using some kind of higher-order function?
 - link node-ifier: turn links into bin-ary nodes
+- some query syntax - c.f json's "jq"?
