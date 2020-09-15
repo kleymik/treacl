@@ -168,7 +168,7 @@ default.
 #+END_SRC
 
 - Matlab:     Yes, In Matlab "structs" (and hence its weird cousin "struct Array"), and the effectively
-              "evaluating BBBBBB parentheses" (e.g. "foo.(bar)") provide dyanmic attributes.
+              "evaluating parentheses" (e.g. "foo.(bar)") provide dynamic attributes.
 #+BEGIN_SRC matlab
               e  = struct();
               e.aa.bb.cc.dd = 1;
@@ -183,7 +183,7 @@ default.
 - long discussion on nested dicts: https://stackoverflow.com/questions/635483/what-is-the-best-way-to-implement-nested-dictionaries/19829714#19829714
 - getattr-setattr https://chase-seibert.github.io/blog/2013/04/12/getattr-setattr.html
 - other xmls https://insights.dice.com/2018/01/05/5-xml-alternatives-to-consider/
-
+- Yml: executable yaml https://cloud.google.com/workflows/docs/reference/syntax
 
 * requires
 
@@ -198,6 +198,8 @@ Access to methods by the dot operator is unaffected, but it is sometimes prefera
 separate set of attributes (called, say, "properties") maintained in a separate dict (as illustrated
 in the code) to keep properties associated with the nodes or links in the graph.
 
+- 2020-08-10 added simple json exporter
+- 2020-07-20 pass in new attribus via kwargs in constructor
 - 2020-06-03 tweaked/condensed recursive functions
 - 2020-05-18 published to github as a work in progress
 - 2018-06-02 Treacl - yet another variation on similar datatypes in various interpreted languages.
@@ -208,7 +210,6 @@ in the code) to keep properties associated with the nodes or links in the graph.
 
 possible improvements:
 
-- pass in props via constructor
 - a more cute/declarative way to do attributes values which are lists of treacl instances,
   i.e. a one-statement way to do "foo = [t(), t()]; foo[0].bar = 1"
 - option for automatically including backpointers

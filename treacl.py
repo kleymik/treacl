@@ -17,7 +17,7 @@ class Treacl(object):
 
     # attribute manipulation
 
-    def __getattr__(self, name):                                                          # dunder method that get's called when in the attributes
+    def __getattr__(self, name):                                                          # the dunder method that get's called when attribute
         '''only called for undefined attributes'''                                        # does not (yet) exist in the object (__dict__)
         setattr(self, name, t := Treacl())                                                # I am the walrus
         return t
@@ -45,8 +45,8 @@ class Treacl(object):
     __props = {}
 
     def __init__(self, **kwargs):
-        self.__props = {"name": None,                                                     # making assumption that having at least "name" seems sensible, so ok to have core code that references it
-                        "type": None }
+        self.__props = {"name": None,                                                     # making assumption that having at least "name", and "type" seems useful,
+                        "type": None }                                                    # so ok to have core code that references it
         for k,v in kwargs.items(): setattr(self, k, v)
 
     def addProp(self, pName, value):
@@ -144,8 +144,8 @@ class Treacl(object):
             pathCar, _, pathCdr = path_expression.partition('.')
             includePartMatch = pathCdr!='' and greedyFlg
             for at in self.attrs_list():
-                if pathCar=='*' \
-                   or pathCar==at \
+                if     pathCar=='*' \
+                   or  pathCar==at \
                    or (pathCar.startswith('*') and pathCar[1:]==at) \
                    or (pathCar.endswith('*')   and pathCar[:-1]==at):
                     pth = f'{varName}.{at}'
@@ -244,7 +244,7 @@ class Treacl(object):
         '''super simple - save treacl graph/tree and all attached data using pickle'''
         with open(fPath,'wb') as f: pickle.dump(self, f)
 
-def treacl_load(fPath):                                                                   # not a class method since it creates treacl instances
+def treacl_load(fPath):                                                                   # module function rather than class method, since it creates treacl instances
     '''super simple - laod treacl graph/tree and all attached data using pickle'''
     with open(fPath, 'rb') as fb: return pickle.load(fb)
 
