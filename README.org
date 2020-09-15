@@ -168,7 +168,7 @@ default.
 #+END_SRC
 
 - Matlab:     Yes, In Matlab "structs" (and hence its weird cousin "struct Array"), and the effectively
-              "evaluating parentheses" (e.g. "foo.(bar)") provide dyanmic attributes.
+              "evaluating BBBBBB parentheses" (e.g. "foo.(bar)") provide dyanmic attributes.
 #+BEGIN_SRC matlab
               e  = struct();
               e.aa.bb.cc.dd = 1;
