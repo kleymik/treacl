@@ -1,6 +1,6 @@
 # supporting functions for treacl - things which are not naturally methods
 from treacl import Treacl
-# from uuid import uuid1
+# from uuid import uuid1                                                                 # use instead of a counter based valId for a more stateless version
 
 def paths_to_gml(nodes):
     ''' export data as directed graph in .gml graph format file
@@ -38,12 +38,15 @@ def paths_to_gml(nodes):
 
     return gmlLinesLst['G'] + gmlLinesLst['N'] + gmlLinesLst['E'] + [']']
 
-# def treacl_nodeify_links(nodes, links):
-#     '''for each link of each node create a node'''
-#     for n in nodes:
-#         for l in n.attrs_list():
-#             linkNode = t()
-#             n.l = newNode
-#             newNode.(l) = newNode
-#
-#
+ def nodeify_links(nodes):
+     '''example simple graph-grammar rule:
+        for each link create a node
+        and replace the existing link with a node
+        with a link on either side
+    '''
+     for n in nodes:
+         for l in n.attrs_list():
+             nn = Treacl()                            # create a new node for reach link
+             nn.(l), n.l = n.(l), nn                  # swaperooni
+             eval("nn."+l+", n."+l+" = n."+l+", nn")  # swaperooni
+
