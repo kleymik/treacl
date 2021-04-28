@@ -17,7 +17,7 @@ class Treacl(object):
 
     # attribute manipulation
 
-    def __getattr__(self, name):                                                          # the dunder method that get's called when attribute
+    def __getattr__(self, name):                                                          # the dunder method that gets called when attribute
         '''only called for undefined attributes'''                                        # does not (yet) exist in the object (__dict__)
         setattr(self, name, t := Treacl())                                                # I am the walrus
         return t
@@ -76,7 +76,7 @@ class Treacl(object):
         return [ ('' if num==0 else ' ' * indent) + line for num, line in enumerate(pfStrings) ]
 
     def ppattrs(self, sortedP=False, file=sys.stdout):
-        '''print treacl object attributes'''
+        '''pretty print one level: treacl object attributes and their values'''
         print(file=file)                                                                  # TBD: if singleton, don't print a CRLF
         for at in self.attrs_list(sortedP=sortedP):                                       # same as self.__dict__:
             print(nameStr := ' ' * self.depthIndent * 0 + f'{at}: ', end='', file=file)
@@ -85,7 +85,7 @@ class Treacl(object):
 
                                                                                           # TBD: add justShow = type|size|subnodes|·..
     def pptree(self, depth=0, sortedP=False, file=sys.stdout, maxDepth=ppMaxDepth):
-        '''print treacl tree recursively'''
+        '''pretty print many levels: treacl object attributes and their values'''
         print(file=file)                                                                  # TBD: if singleton, don't print a CRLF
         if depth<maxDepth:
             for at in self.attrs_list(sortedP=sortedP):                                   # same as self.__dict__:
@@ -96,16 +96,16 @@ class Treacl(object):
                     else:
                         for s in self.pformat_indented(atv, len(nameStr)): print(s, file=file)# use pretty print to print python base datatype
 
-    def tree_paths_to_list(self, varName=""):                                             # list all paths in tree
+    def tree_paths_to_list(self, cpth=""):                                                # list all paths in tree
         '''generate all paths to a given depth'''
         resLst = []
         for at in self.attrs_list():
-            resLst += [pth := f'{varName}.{at}']
+            resLst += [pth := f'{cpth}.{at}']
             if isinstance(atv := getattr(self, at), Treacl):
                 resLst += atv.tree_paths_to_list(pth)                                     # recurse
             elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
                 for ei,e in enumerate(atv):                                               # deeper nested lists are not checked
-                    resLst += [lpth := f'{varName}.{at}[{ei}]']
+                    resLst += [lpth := f'{cpth}.{at}[{ei}]']
                     if isinstance(e, Treacl): resLst += e.tree_paths_to_list(lpth)        # recurse
         return resLst
 
@@ -245,6 +245,6 @@ class Treacl(object):
         with open(fPath,'wb') as f: pickle.dump(self, f)
 
 def treacl_load(fPath):                                                                   # module function rather than class method, since it creates treacl instances
-    '''super simple - laod treacl graph/tree and all attached data using pickle'''
+    '''super simple - load treacl graph/tree and all attached data using pickle'''
     with open(fPath, 'rb') as fb: return pickle.load(fb)
 
