@@ -40,7 +40,7 @@ class Treacl(object):
         else:
             return [atv]
 
-    # Treacl "user" properties                                                            # as an alternative to attributes in the dunder .__dict__
+    # "user" properties                                                                   # as an alternative to attributes in the dunder .__dict__
                                                                                           # see README explanation
     __props = {}
 
@@ -109,8 +109,18 @@ class Treacl(object):
                     if isinstance(e, Treacl): resLst += e.tree_paths_to_list(lpth)        # recurse
         return resLst
 
-    def tree_nodes_to_list(self):                                                         # list all paths in tree
-        '''return a list of all the nodes in the tree'''                                  # tbd make into a generator
+    def tree_leaf_paths_to_list(self, cpth=""):                                           # list all leaf paths in tree (no intermediate paths)
+        '''generate all leaf paths'''
+        resLst = []
+        for at in self.attrs_list():
+            if   isinstance(atv := getattr(self, at), Treacl): resLst += atv.tree_leaf_paths_to_list(f'{cpth}.{at}')  # recurse
+            elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
+                for pth in [ e.tree_leaf_paths_to_list(f'{cpth}.{at}[{ei}]') for ei,e in enumerate(atv) if isinstance(e, Treacl) ]: resLst += pth # keep collated list flat
+            else: resLst += [f'{cpth}.{at}']
+        return resLst
+
+    def tree_nodes_to_list(self):                                                         # list all treacl nodes in tree
+        '''return a list of all the treacl nodes in the tree'''                           # tbd make into a generator
         resLst = [self]
         for atvL in [ self.attr_get_aslist(at) for at in self.attrs_list() ]:             # iterate over attribute values: which could be a list one or more Treacl Instances, or other
             resLst += [ t for v in atvL if isinstance(v, Treacl)                          # flattened list of lists
