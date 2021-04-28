@@ -10,6 +10,8 @@ import sys
 from pprint import pformat
 import pickle
 import json
+import fnmatch
+import pudb; bp = pudb.set_trace
 
 class Treacl(object):
     ''' Treacl: a tree class'''
@@ -168,6 +170,71 @@ class Treacl(object):
                             if includePartMatch: resLst += [lpth]
                             if isinstance(e, Treacl): resLst += e.tree_find_paths_pathex(pathCdr, lpth)  # recurse
         return resLst
+
+
+    def pathRecurse(pthExpr):
+        for at in self.attrs_list():
+            resLst += [pth := f'{cpth}.{at}']                                         # all paths including sub paths, or just maximal paths
+            if isinstance(atv := getattr(self, at), Treacl):
+                resLst += atv.pathRecurse(pthExpr, pth)                   # recurse
+            elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
+                for ei,e in enumerate(atv):                                           # deeper nested lists are not checked
+                    resLst += [lpth := f'{cpth}.{at}[{ei}]']
+                    if isinstance(e, Treacl): resLst += e.pathRecurse(pthExpr, lpth)     # recurse
+
+    def tree_paths_pathexpr_dfs(self, pthExpr="..", cpth=""):                             # list all paths in tree
+        '''generate all paths mathcing path expression pthExpr, by ordered depth first traversal
+              e.g in path-expression "..",                => all paths
+              e.g in path-expression "..xyz..",           => all paths containing "xyx" as a path member
+              e.g in path-expression "..xpz",             => all paths with leaves xyz
+              e.g in path-expression "xx.*yy",  the "*yy" => any attribute ending in "yy"
+              e.g in path-expression "xx.yy*",  the "yy*" => any attribute beginning with "yy"
+              e.g in path-expression "xx.*.yy", the "*"   => any attribute or list element
+        '''
+
+        # ..
+        # ..st*
+        # ..a*bc..
+        # ..a*bc..p*qr
+        # ..a*bcp*qr
+        # a*bc
+        # a*bc..
+
+        resLst = []
+        car, *cdr = re.split('\.\.', pthExpr)
+        # bp()
+        if   pthExpr=='..':
+            mtchStr, nxtPthExpr = "*",    pthExpr                      # 1) path expr is just the wildcard = keep recursing unconditionaly to all leaves no change!#  car==".." and cdr==[]:
+        elif pthExpr[:2]==".." and cdr!=[]:
+            if len([x for x in self.attrs_list() if fnmatch.fnmatch(x, cdr[0])])>0: # hasMatches
+                mtchStr, nxtPthExpr = cdr[0], pthExpr[2+len(cdr[0]):]  # 2)
+            else:
+                mtchStr, nxtPthExpr = "*",    pthExpr                  # 1) path expr is just the wildcard = keep recursing unconditionaly to all leaves no change!#  car==".." and cdr==[]:
+        elif car!='..' and pthExpr!='':
+            mtchStr, nxtPthExpr = car,    pthExpr[len(car):]       # 2) i.e. the car is an attribute pattern to glob match on
+
+        mtchLst = [x for x in self.attrs_list() if fnmatch.fnmatch(x, mtchStr)]
+        bp()
+        if len(mtchLst) > 0:
+            for at in mtchLst:
+                if   isinstance(atv := getattr(self, at), Treacl): resLst += atv.tree_paths_pathexpr_dfs(pthExpr, f'{cpth}.{at}')                   # recurse
+                elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
+                    for ei,e in enumerate(atv):                                           # deeper nested lists are not checked
+                        if isinstance(e, Treacl): resLst += e.tree_paths_pathexpr_dfs(pthExpr, f'{cpth}.{at}[{ei}]')     # recurse
+                else: resLst += [cpth]
+        else:
+            resLst = [cpth]
+
+        return resLst
+
+
+    # for at in self.attrs_list():                        # 3)
+    #     if isinstance(atv := getattr(self, at), Treacl):
+    #         resLst += atv.tree_paths_pathexpr_dfs(pthExpr, f'{cpth}.{at}')                   # recurse
+    #     elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
+    #         for ei,e in enumerate(atv):                                           # deeper nested lists are not checked
+    #             if isinstance(e, Treacl): resLst += e.tree_paths_pathexpr_dfs(pthExpr, f'{cpth}.{at}[{ei}]')     # recurse
+
 
     def tree_to_json(self, depth=0, file=sys.stdout, maxDepth=ppMaxDepth):
         '''generate json version of the treacl structure
