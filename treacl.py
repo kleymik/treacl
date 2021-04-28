@@ -241,7 +241,7 @@ class Treacl(object):
            delegating other datatypes to json.dumps() where possible'''
         if depth<maxDepth:
             print("{", file=file)
-            for at in (atL := self.attrs_list()):                                             # same as self.__dict__:
+            for ai,at in enumerate(atL := self.attrs_list()):                                 # same as self.__dict__:
                 print(nameStr := (' ' * self.depthIndent * depth) + f' "{at}": ', end='', file=file)
                 if isinstance(atv := getattr(self, at), Treacl):
                     atv.tree_to_json(depth + 1, file=file, maxDepth=maxDepth)                 # recurse
