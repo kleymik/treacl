@@ -173,14 +173,12 @@ class Treacl(object):
 
 
     def pathRecurse(pthExpr):
+        resLst = []
         for at in self.attrs_list():
-            resLst += [pth := f'{cpth}.{at}']                                         # all paths including sub paths, or just maximal paths
-            if isinstance(atv := getattr(self, at), Treacl):
-                resLst += atv.pathRecurse(pthExpr, pth)                   # recurse
+            if   isinstance(atv := getattr(self, at), Treacl): resLst += atv.pathRecurse(pthExpr, f'{cpth}.{at}')                   # recurse
             elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
-                for ei,e in enumerate(atv):                                           # deeper nested lists are not checked
-                    resLst += [lpth := f'{cpth}.{at}[{ei}]']
-                    if isinstance(e, Treacl): resLst += e.pathRecurse(pthExpr, lpth)     # recurse
+                for pth in [ e.pathRecurse(pthExpr, f'{cpth}.{at}[{ei}]') for ei,e in enumerate(atv) if isinstance(e, Treacl) ]: resLst += pth # keep collated list flat
+            else: resLst += [f'{cpth}.{at}']
 
     def tree_paths_pathexpr_dfs(self, pthExpr="..", cpth=""):                             # list all paths in tree
         '''generate all paths mathcing path expression pthExpr, by ordered depth first traversal
@@ -202,29 +200,33 @@ class Treacl(object):
 
         resLst = []
         car, *cdr = re.split('\.\.', pthExpr)
-        # bp()
-        if   pthExpr=='..':
-            mtchStr, nxtPthExpr = "*",    pthExpr                      # 1) path expr is just the wildcard = keep recursing unconditionaly to all leaves no change!#  car==".." and cdr==[]:
-        elif pthExpr[:2]==".." and cdr!=[]:
-            if len([x for x in self.attrs_list() if fnmatch.fnmatch(x, cdr[0])])>0: # hasMatches
-                mtchStr, nxtPthExpr = cdr[0], pthExpr[2+len(cdr[0]):]  # 2)
-            else:
-                mtchStr, nxtPthExpr = "*",    pthExpr                  # 1) path expr is just the wildcard = keep recursing unconditionaly to all leaves no change!#  car==".." and cdr==[]:
-        elif car!='..' and pthExpr!='':
-            mtchStr, nxtPthExpr = car,    pthExpr[len(car):]       # 2) i.e. the car is an attribute pattern to glob match on
-
-        mtchLst = [x for x in self.attrs_list() if fnmatch.fnmatch(x, mtchStr)]
         bp()
-        if len(mtchLst) > 0:
-            for at in mtchLst:
-                if   isinstance(atv := getattr(self, at), Treacl): resLst += atv.tree_paths_pathexpr_dfs(pthExpr, f'{cpth}.{at}')                   # recurse
+        if pthExpr=='..':
+            nxtPthExpr, mtchStr = '..',  "*"                          # 1) path expr is just the wildcard = keep recursing unconditionaly to all leaves no change!#  car==".." and cdr==[]:
+            for at in [x for x in self.attrs_list() if fnmatch.fnmatch(x, mtchStr)]:
+                if   isinstance(atv := getattr(self, at), Treacl): resLst += atv.tree_paths_pathexpr_dfs(nxtPthExpr, f'{cpth}.{at}')                   # recurse
                 elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
-                    for ei,e in enumerate(atv):                                           # deeper nested lists are not checked
-                        if isinstance(e, Treacl): resLst += e.tree_paths_pathexpr_dfs(pthExpr, f'{cpth}.{at}[{ei}]')     # recurse
-                else: resLst += [cpth]
-        else:
-            resLst = [cpth]
-
+                    for pth in [ e.tree_paths_pathexpr_dfs(nxtPthExpr, f'{cpth}.{at}[{ei}]') for ei,e in enumerate(atv) if isinstance(e, Treacl) ]: resLst += pth # keep collated list flat
+                else: resLst += [f'{cpth}.{at}']
+        elif pthExpr[:2]==".." and cdr!=[]:                           # 2)
+            if len([x for x in self.attrs_list() if fnmatch.fnmatch(x, cdr[0])])>0: # hasMatches, consume this piece of the path expression
+                # nxtPthExpr, mtchStr = pthExpr[2+len(cdr[0]):], cdr[0]
+                nxtPthExpr, mtchStr = '..', cdr[0]
+            else:
+                nxtPthExpr, mtchStr = pthExpr, "*"
+            for at in [x for x in self.attrs_list() if fnmatch.fnmatch(x, mtchStr)]:
+                if   isinstance(atv := getattr(self, at), Treacl): resLst += atv.tree_paths_pathexpr_dfs(nxtPthExpr, f'{cpth}.{at}')                   # recurse
+                elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
+                    for pth in [ e.tree_paths_pathexpr_dfs(nxtPthExpr, f'{cpth}.{at}[{ei}]') for ei,e in enumerate(atv) if isinstance(e, Treacl) ]: resLst += pth # keep collated list flat
+                else: resLst += [f'{cpth}.{at}']
+        elif car!='..' and pthExpr!='':
+            nxtPthExpr, mtchStr = pthExpr[len(car):], car           #  3) i.e. the car is an attribute pattern to glob match on
+            for at in [x for x in self.attrs_list() if fnmatch.fnmatch(x, mtchStr)]:
+                if   isinstance(atv := getattr(self, at), Treacl): resLst += atv.tree_paths_pathexpr_dfs(nxtPthExpr, f'{cpth}.{at}')                   # recurse
+                elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
+                    for pth in [ e.tree_paths_pathexpr_dfs(nxtPthExpr, f'{cpth}.{at}[{ei}]') for ei,e in enumerate(atv) if isinstance(e, Treacl) ]: resLst += pth # keep collated list flat
+                else: resLst += [f'{cpth}.{at}']
+        #else: resLst = [cpth]
         return resLst
 
 
