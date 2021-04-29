@@ -11,7 +11,6 @@ from pprint import pformat
 import pickle
 import json
 import fnmatch
-import pudb; bp = pudb.set_trace
 
 class Treacl(object):
     ''' Treacl: a tree class'''
@@ -92,7 +91,7 @@ class Treacl(object):
         if depth<maxDepth:
             for at in self.attrs_list(sortedP=sortedP):                                   # same as self.__dict__:
                 print(nameStr := ' ' * self.depthIndent * depth + f'{at}: ', end='', file=file)
-                for atv in self.attr_get_aslist(at):                                      # deeper nested lists are not checked
+                for atv in self.attr_get_aslist(at):                                      # more deeply nested lists are not checked
                     if isinstance(atv, Treacl):
                         atv.pptree(depth + 1, file=file, maxDepth=maxDepth)               # recurse
                     else:
@@ -129,11 +128,11 @@ class Treacl(object):
                             for t in v.tree_nodes_to_list() ]
         return resLst
 
-    def tree_find_paths(self, pattrn, varName=''):                                        # list paths that with a simple pattern match
+    def tree_find_paths(self, pthElem, varName=''):                                       # list paths that with a simple string equality match
         '''search tree depth first to find all paths with pattern matching
            attribute anywhere in the path
         '''
-        return [ p for p in self.tree_paths_to_list(varName) if pattrn in p.split('.')]
+        return [ p for p in self.tree_paths_to_list(varName) if pthElem in p.split('.')]
 
     def tree_find_paths_regex(self, regexPattrn, varName="", reFlags=re.I):               # list paths that match a regex pattern
         '''search tree depth first to find all paths with regular-expression pattern matching
@@ -142,35 +141,35 @@ class Treacl(object):
         lineRePat = re.compile(regexPattrn, reFlags)
         return [ p for p in self.tree_paths_to_list(varName) if lineRePat.search(p)]
 
-    def tree_find_paths_pathex(self, path_expression, varName="", greedyFlg=False):       # list paths that match a path-expression pattern
-        '''search tree depth first to find all paths with simple glob-like pattern matching path-expression
-             e.g in path-expression "xx.*yy",  the "*yy" => any attribute ending in "yy"
-             e.g in path-expression "xx.yy*",  the "yy*" => any attribute beginning with "yy"
-             e.g in path-expression "xx.*.yy", the "*"   => any attribute or list element
-             greedyFlg==True => include paths that only match any initial part of the path-expression
-             greedyFlg==False => exclude paths that only match any initial part of the path-expression
+    def tree_find_paths_pathex(self, pthXpr, leavesOnly=False):                # list paths that match a path-expression pattern
+        '''generate all paths matching path expression pthXpr, by ordered depth first traversal
+             e.g. in path-expression "..",                     => all paths
+             e.g. in path-expression "..xyz..",                => all paths containing "xyx" as a path member
+             e.g. in path-expression "..xpz",                  => all paths with leaves xyz
+             e.g. in path-expression "xx..*yy",      the "*yy" => any attribute ending in "yy"
+             e.g. in path-expression "xx..yy*",      the "yy*" => any attribute beginning with "yy"
+             e.g. in path-expression "xx..*..yy",    the "*"   => any attribute or list element
+             e.g. in path-expression "..=*xvy*",     the "="   => any leaf value whose string repr matches (TBD)
+             e.g. in path-expression "..abc*|*xyz.." the "|"   => alternation path matches abc* OR *xyz    (TBD)
         '''
-        resLst = []
-        print('pathExpr', path_expression)
-        if path_expression:
-            pathCar, _, pathCdr = path_expression.partition('.')
-            includePartMatch = pathCdr!='' and greedyFlg
-            for at in self.attrs_list():
-                if     pathCar=='*' \
-                   or  pathCar==at \
-                   or (pathCar.startswith('*') and pathCar[1:]==at) \
-                   or (pathCar.endswith('*')   and pathCar[:-1]==at):
-                    pth = f'{varName}.{at}'
-                    if includePartMatch: resLst += [pth]
-                    if isinstance(atv := getattr(self, at), Treacl):
-                        resLst += atv.tree_find_paths_pathex(pathCdr, pth)                    # recurse
-                    elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]): # deeper nested lists are not checked
-                        for ei,e in enumerate(atv):
-                            lpth = f'{varName}.{at}[{ei}]'
-                            if includePartMatch: resLst += [lpth]
-                            if isinstance(e, Treacl): resLst += e.tree_find_paths_pathex(pathCdr, lpth)  # recurse
-        return resLst
 
+        pthLst = self.tree_leaf_paths_to_list()       # start with all paths, then exclude during path expression traversal
+
+        while pthXpr!='':
+            if  pthXpr.startswith('..'):              # match all     => keeping going, no paths filtered out
+                pthXpr = pthXpr[2:]
+            else:                                     # match string  => no paths filtered out
+                if '.' in pthXpr:
+                    splitPoint = pthXpr.index('.')
+                    mtchElm, pthXpr = pthXpr[:splitPoint], pthXpr[splitPoint:]
+                    pthLst = [ p for p in pthLst if any([ fnmatch(e, mtchElm) for e in p.split('.') ]) ]
+                else:
+                    mtchElm, pthXpr = pthXpr, ''
+                    pthLst = [ p for p in pthLst if fnmatch(p.split('.')[-1], mtchElm) ] # match path leaf
+        return pthLst
+
+    # def tree_find_paths_pathexex  # TBD extended path-expressions
+    # def tree_diff(self, rhTree):  # compute difference between trees
 
     def pathRecurse(pthExpr):
         resLst = []
