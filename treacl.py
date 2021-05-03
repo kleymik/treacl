@@ -234,14 +234,6 @@ class Treacl(object):
         return resLst
 
 
-    # for at in self.attrs_list():                        # 3)
-    #     if isinstance(atv := getattr(self, at), Treacl):
-    #         resLst += atv.tree_paths_pathexpr_dfs(pthExpr, f'{cpth}.{at}')                   # recurse
-    #     elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
-    #         for ei,e in enumerate(atv):                                           # deeper nested lists are not checked
-    #             if isinstance(e, Treacl): resLst += e.tree_paths_pathexpr_dfs(pthExpr, f'{cpth}.{at}[{ei}]')     # recurse
-
-
     def tree_to_json(self, depth=0, file=sys.stdout, maxDepth=ppMaxDepth):
         '''generate json version of the treacl structure
            delegating other datatypes to json.dumps() where possible'''
