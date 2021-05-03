@@ -64,7 +64,9 @@ class Treacl(object):
     def listProps(self):
         return [ k for k in self.__props.keys() ]
 
-
+    def evalPath(self, pth):
+        ''' return value or node at end of given path'''
+        return eval(f"self.{pth}")
     # some basic traversal methods
 
     depthIndent      =    4                                                               # number of spaces indent for tree printing
@@ -105,7 +107,7 @@ class Treacl(object):
             if isinstance(atv := getattr(self, at), Treacl):
                 resLst += atv.tree_paths_to_list(pth)                                     # recurse
             elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
-                for ei,e in enumerate(atv):                                               # deeper nested lists are not checked
+                for ei,e in enumerate(atv):                                               # more deeply nested lists are not scanned for Treacl nodes
                     resLst += [lpth := f'{cpth}.{at}[{ei}]']
                     if isinstance(e, Treacl): resLst += e.tree_paths_to_list(lpth)        # recurse
         return resLst
@@ -141,14 +143,13 @@ class Treacl(object):
         lineRePat = re.compile(regexPattrn, reFlags)
         return [ p for p in self.tree_paths_to_list(varName) if lineRePat.search(p)]
 
-    def tree_find_paths_pathex(self, pthXpr, leavesOnly=False):                # list paths that match a path-expression pattern
+    def tree_find_paths_pathex(self, pthXpr, printValP=False):                # leavesOnly=Falselist paths that match a path-expression pattern
         '''generate all paths matching path expression pthXpr, by ordered depth first traversal
              e.g. in path-expression "..",                     => all paths
-             e.g. in path-expression "..xyz..",                => all paths containing "xyx" as a path member
-             e.g. in path-expression "..xpz",                  => all paths with leaves xyz
-             e.g. in path-expression "xx..*yy",      the "*yy" => any attribute ending in "yy"
-             e.g. in path-expression "xx..yy*",      the "yy*" => any attribute beginning with "yy"
-             e.g. in path-expression "xx..*..yy",    the "*"   => any attribute or list element
+             e.g. in path-expression "..xyz..",                => all paths containing "xyx" as attribute (= path member)
+             e.g. in path-expression "..xyz",                  => all paths with leaf attribute xyz
+             e.g. in path-expression "xx..*yy",      the "*yy" => all paths with leaf  attribute ending in "yy"
+             e.g. in path-expression "xx..yy*",      the "yy*" => all paths beginning with attribute xx and ending with attribute "yy"
              e.g. in path-expression "..=*xvy*",     the "="   => any leaf value whose string repr matches (TBD)
              e.g. in path-expression "..abc*|*xyz.." the "|"   => alternation path matches abc* OR *xyz    (TBD)
         '''
@@ -165,8 +166,12 @@ class Treacl(object):
                     pthLst = [ p for p in pthLst if any([ fnmatch(e, mtchElm) for e in p.split('.') ]) ]
                 else:
                     mtchElm, pthXpr = pthXpr, ''
-                    pthLst = [ p for p in pthLst if fnmatch(p.split('.')[-1], mtchElm) ] # match path leaf
-        return pthLst
+                    pthLst = [ p for p in pthLst if fnmatch(p.split('.')[-1], mtchElm) ] # match path leaf # use fnmatch.filter?
+        if printValP:
+            # return [(p, eval(f"self{p}") for p in pthLst]
+            pass
+        else:
+            return pthLst
 
     # def tree_find_paths_pathexex  # TBD extended path-expressions
     # def tree_diff(self, rhTree):  # compute difference between trees
