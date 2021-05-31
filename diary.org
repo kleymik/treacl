@@ -2,27 +2,35 @@
 #+BEGIN_SRC elisp :session                  :REM set venv
 (shell-command-to-string  "ls -l /home/kleyn/projects/pyvenvs")
 ;(pyvenv-deactivate)
-(pyvenv-activate  "/home/kleyn/projects/pyvenvs/envB-py38-all")
-(shell-command-to-string "echo VIRTUAL_ENV=$VIRTUAL_ENV")
+;(pyvenv-activate  "/home/kleyn/projects/pyvenvs/envB-py38-all")
+;(shell-command-to-string "echo VIRTUAL_ENV=$VIRTUAL_ENV")
 ;(shell-command-to-string "which python")
 ;(shell-command-to-string "printenv")
 ;;(pyvenv-workon "scratchenv-SNmPgRMB")
 #+END_SRC
 
 #+RESULTS:
-: VIRTUAL_ENV=/home/kleyn/projects/pyvenvs/envB-py38-all
+: total 28
+: drwxrwxr-x 7 kleyn kleyn 4096 Mar 18 18:26 envA.A-py38-ml
+: drwxrwxr-x 6 kleyn kleyn 4096 Dec  2  2019 envA-py38
+: drwxrwxr-x 7 kleyn kleyn 4096 Dec  2  2019 envB-py38-all
+: drwxrwxr-x 7 kleyn kleyn 4096 Dec  2  2019 envC-py37
+: drwxrwxr-x 6 kleyn kleyn 4096 Apr 12 13:55 envD.D-py39-ml
+: drwxrwxr-x 5 kleyn kleyn 4096 Dec 23 22:31 envD-py39-clean
+: drwxrwxr-x 7 kleyn kleyn 4096 Dec 26 18:25 envE-py39-all
 
 * Try Treacl Stuff
  :PROPERTIES:
  :header-args: :cache no  :session jupy-treacl :exports results
  :END:
 
-#+begin_src
+#+begin_src jupyter-python   :REM data-gen functions
 import sys
-from treacl_tattrs import Treacl, tree_diff
+from treacl import Treacl, tree_diff
+#from treacl_tattrs import Treacl, tree_diff
 #from treacl import Treacl, tree_diff
 from see import see
-import pudb; bp = pudb.set_trace
+#import pudb; bp = pudb.set_trace
 
 # 1) Example data
 
@@ -99,16 +107,11 @@ def personExample1(v=21):
 
     return person
 
-print("ARGV:",sys.argv)
-argv1 = '..'
-argv2 = False
-argv3 = False
-if len(sys.argv)>=2: argv1 = sys.argv[1]
-if len(sys.argv)>=3: argv2 = bool(int(sys.argv[2]))
-if len(sys.argv)>=4: argv3 = bool(int(sys.argv[3]))
+#+end_src
+#+RESULTS:
 
-person = personExample()
-
+#+begin_src jupyter-python   :REM 
+person = personExample1()
 #person.pptree()                  # no result, formatted print
 for p in person.tree_paths_to_list(): print(p)
 
@@ -127,6 +130,80 @@ if False:
 if False:
     person2 = personExample(2)
     tree_diff(person, person2)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  .age
+  .name
+  .name.first
+  .name.last
+  .address
+  .address.street
+  .address.street.name
+  .address.street.number
+  .address.city
+  .address.state
+  .address.state.name
+  .address.state.abbreviation
+  .address.state.flower
+  .address.state.capital
+  .address.state.neighbour
+  .address.state.neighbour[0]
+  .address.state.neighbour[0].name
+  .address.state.neighbour[0].abbreviation
+  .address.state.neighbour[0].type
+  .address.state.neighbour[1]
+  .address.state.neighbour[1].name
+  .address.state.neighbour[1].abbreviation
+  .address.state.neighbour[1].type
+  .address.state.neighbour[2]
+  .address.state.neighbour[2].name
+  .address.state.neighbour[2].abbreviation
+  .address.state.neighbour[2].type
+  .address.state.neighbour[3]
+  .address.state.neighbour[3].name
+  .address.state.neighbour[3].abbreviation
+  .address.state.neighbour[3].type
+  .address.state.neighbour[4]
+  .address.state.neighbour[4].name
+  .address.state.neighbour[4].abbreviation
+  .address.state.neighbour[4].type
+  .address.postalCode
+  .phoneNumbers
+  .phoneNumbers[0]
+  .phoneNumbers[0].type
+  .phoneNumbers[0].number
+  .phoneNumbers[1]
+  .phoneNumbers[1].type
+  .phoneNumbers[1].number
+  .phoneNumbers[2]
+  .phoneNumbers[2].type
+  .phoneNumbers[2].number
+  .cars
+  .cars[0]
+  .cars[0].make
+  .cars[0].model
+  .cars[1]
+  .cars[1].make
+  .cars[1].model
+  .cars[2]
+  .cars[2].make
+  .cars[2].model
+  .sex
+  .sex.type
+  .status
+#+end_example
+
+print("ARGV:",sys.argv)
+argv1 = '..'
+argv2 = False
+argv3 = False
+if len(sys.argv)>=2: argv1 = sys.argv[1]
+if len(sys.argv)>=3: argv2 = bool(int(sys.argv[2]))
+if len(sys.argv)>=4: argv3 = bool(int(sys.argv[3]))
+
+
 
 #pexpr = "phoneNumbers[0].number"
 #print(f"EVALP person.{pexpr} =", person.eval_path(pexpr))
@@ -168,11 +245,6 @@ if False:
 #print()
 
 #ss
-
-
-
-
-#+end_src
 
 * from setuptools import setup
 
