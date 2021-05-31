@@ -10,10 +10,15 @@ import sys
 from pprint import pformat
 import pickle
 import json
+from fnmatch import fnmatch
 
 class Treacl(object):
     ''' Treacl: a tree class'''
 
+    def __init__(self, **kwargs):
+        self._props = {"name": None,                                                     # making assumption that having at least "name", and "type" seems useful,
+                       "type": None }                                                    # so ok to have core code that references it
+        for k,v in kwargs.items(): setattr(self, k, v)
 
     # attribute manipulation
 
@@ -27,7 +32,7 @@ class Treacl(object):
     def __setstate__(self, state): vars(self).update(state)
 
     def attrs_list(self, sortedP=False):
-        attrs = [ k for k in vars(self).keys() if not k.startswith('_') ]
+        attrs = [ k for k in vars(self).keys() if not k.startswith('_') ]                 # maybe better have attrs recorded in a separate private dict
         if sortedP==True:
             return sorted(attrs)
         else:
@@ -146,34 +151,96 @@ class Treacl(object):
         lineRePat = re.compile(regexPattrn, reFlags)
         return [ p for p in self.tree_paths_to_list(varName) if lineRePat.search(p)]
 
-    def tree_find_paths_pathex(self, path_expression, varName="", greedyFlg=False):       # list paths that match a path-expression pattern
-        '''search tree depth first to find all paths with simple glob-like pattern matching path-expression
-             e.g in path-expression "xx.*yy",  the "*yy" => any attribute ending in "yy"
-             e.g in path-expression "xx.yy*",  the "yy*" => any attribute beginning with "yy"
-             e.g in path-expression "xx.*.yy", the "*"   => any attribute or list element
-             greedyFlg==True => include paths that only match any initial part of the path-expression
-             greedyFlg==False => exclude paths that only match any initial part of the path-expression
+    def tree_find_paths_pathex(self, pthXpr, valP=False, printP=False, caseFoldP=False):  # leavesOnly=False list paths that match a path-expression pattern
+        '''generate all paths matching path expression pthXpr:
+             e.g. in path expression "..",                     => all paths
+             e.g. in path expression "..xyz..",                => all paths containing "xyx" as attribute (= path member) anywhere in path
+             e.g. in path expression "..xyz",                  => all paths with leaf attribute equal to xyz (i.e end of path)
+             e.g. in path expression "xx..*yy",      the "*yy" => all paths containg "xx" as attribute, with leaf attribute ending in "yy"
+             e.g. in path expression "xx..yy*",      the "yy*" => all paths beginning with attribute "xx" and ending with attribute "yy"
+             e.g. in path expression "..~*xyz*",     the "~"   => complmentary set: all paths that do not match with attribute "*xyz*"
+             e.g. in path expression "..=*xvy*",     the "="   => any leaf value whose string repr matches
+             e.g. in path expression "..=~*xvy*",    the "="   => any leaf value whose string repr matches
+         TBD e.g. in path expression "..abc*|*xyz.." the "|"   => alternation path matches abc* OR *xyz
+         TBD e.g. in path expression ".*abc*"        the "."   => only first level attributes matching "abc"
+         TBD e.g. in path expression ".*abc*.."      the "."   => all paths under first level attributes matching "abc"
+
+          attribute matching is based on "glob" style matching typically used on unix path names
+          the python library module "fnmatch" is used for this (even though it's
+          not file paths that we are attempting to match). glob style matching
+          is simpler than regex:
+                Pattern   Meaning
+                *         matches everything
+                ?         matches any single character
+                [seq]     matches any character in seq
+                [!seq]    matches any character not in seq
+          The glob style matching is applied to the attributes of a path, not the the path as a whole
         '''
+
+        if caseFoldP:
+            pthLst = [p.lower() for p in self.tree_leaf_paths_to_list()]                 # start with all paths, then exclude during path expression traversal
+            pthXpr = pthXpr.lower()
+        else:
+            pthLst = self.tree_leaf_paths_to_list()                                      # start with all paths, then exclude during path expression traversal
+
+        selPthLst = self.tree_find_paths_pathex_filter(pthLst, pthXpr)                   # leavesOnly=Falselist paths that match a path-expression pattern
+
+        if printP:
+            if valP:
+                for p in selPthLst: print(p, '=', self.eval_path(p))
+            else:
+                for p in selPthLst: print(p)
+
+        if valP:
+            return dict([ (p, self.eval_path(p)) for p in selPthLst ])
+        else:
+            return selPthLst
+
+    def tree_find_paths_pathex_filter(self, pthLst, pthXpr): # leavesOnly=Falselist paths that match a path-expression pattern
+
+        while pthXpr!='':                             # traverse path expression, filtering the list of all paths by the current component of the path expression
+
+            if  pthXpr.startswith('..'):              # match all => keeping going, no paths filtered out
+
+                pthXpr = pthXpr[2:]
+
+            else:                                     # match string => no paths filtered out
+
+                if '.' in pthXpr:                     # keep traversing path expression
+                    splitPoint = pthXpr.index('.')
+                    mtchElm, pthXpr = pthXpr[:splitPoint], pthXpr[splitPoint:]
+                    if mtchElm.startswith('~'):
+                        pthLst = [ p for p in pthLst if not any([ fnmatch(e, mtchElm[1:]) for e in p.split('.') ]) ]
+                    else:
+                        pthLst = [ p for p in pthLst if     any([ fnmatch(e, mtchElm)     for e in p.split('.') ]) ]
+
+                elif pthXpr.startswith('='):          # path expression ends with a value-match predicate
+                    mtchElm, pthXpr = pthXpr, ''
+                    if mtchElm[1:].startswith('~'):
+                        pthLst = [ p for p in pthLst if not fnmatch(str(self.eval_path(p)), mtchElm[2:]) ] # match path leaf value# use fnmatch.filter?
+                    else:
+                        pthLst = [ p for p in pthLst if     fnmatch(str(self.eval_path(p)), mtchElm[1:]) ] # match path leaf value# use fnmatch.filter?
+
+                else:                                 # path expression ends with a value-match predicate
+                    mtchElm, pthXpr = pthXpr, ''
+                    if mtchElm.startswith('~'):
+                        pthLst = [ p for p in pthLst if not fnmatch(p.split('.')[-1], mtchElm[1:]) ] # match path leaf # use fnmatch.filter?
+                    else:
+                        pthLst = [ p for p in pthLst if     fnmatch(p.split('.')[-1], mtchElm) ]     # match path leaf # use fnmatch.filter?
+
+        return pthLst
+
+    # def tree_find_paths_pathexex  # TBD extended path-expressions
+    # def tree_diff(self, rhTree):  # compute difference between trees
+
+    def pathRecurse(pthExpr):
         resLst = []
-        print('pathExpr', path_expression)
-        if path_expression:
-            pathCar, _, pathCdr = path_expression.partition('.')
-            includePartMatch = pathCdr!='' and greedyFlg
-            for at in self.attrs_list():
-                if     pathCar=='*' \
-                   or  pathCar==at \
-                   or (pathCar.startswith('*') and pathCar[1:]==at) \
-                   or (pathCar.endswith('*')   and pathCar[:-1]==at):
-                    pth = f'{varName}.{at}'
-                    if includePartMatch: resLst += [pth]
-                    if isinstance(atv := getattr(self, at), Treacl):
-                        resLst += atv.tree_find_paths_pathex(pathCdr, pth)                    # recurse
-                    elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]): # deeper nested lists are not checked
-                        for ei,e in enumerate(atv):
-                            lpth = f'{varName}.{at}[{ei}]'
-                            if includePartMatch: resLst += [lpth]
-                            if isinstance(e, Treacl): resLst += e.tree_find_paths_pathex(pathCdr, lpth)  # recurse
-        return resLst
+        for at in self.attrs_list():
+            if   isinstance(atv := self.gav(at), Treacl): resLst += atv.pathRecurse(pthExpr, f'{cpth}.{at}')                   # recurse
+            elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
+                for pth in [ e.pathRecurse(pthExpr, f'{cpth}.{at}[{ei}]') for ei,e in enumerate(atv) if isinstance(e, Treacl) ]: resLst += pth # keep collated list flat
+            else: resLst += [f'{cpth}.{at}']
+
 
     def tree_to_json(self, depth=0, file=sys.stdout, maxDepth=ppMaxDepth):
         '''generate json version of the treacl structure
