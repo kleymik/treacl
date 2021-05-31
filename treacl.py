@@ -89,7 +89,6 @@ class Treacl(object):
             print(nameStr := ' ' * self.depthIndent * 0 + f'{at}: ', end='', file=file)
             for atv in self.attr_get_aslist(at):                                          # deeper nested lists are not checked
                 for s in self.pformat_indented(atv, len(nameStr)): print(s, file=file)    # use pretty print to print python base datatype
-
                                                                                           # TBD: add justShow = type|size|subnodes|·..
     def pptree(self, depth=0, sortedP=False, file=sys.stdout, maxDepth=ppMaxDepth):
         '''pretty print many levels: treacl object attributes and their values'''
@@ -97,7 +96,7 @@ class Treacl(object):
         if depth<maxDepth:
             for at in self.attrs_list(sortedP=sortedP):                                   # same as self.__dict__:
                 print(nameStr := ' ' * self.depthIndent * depth + f'{at}: ', end='', file=file)
-                for atv in self.attr_get_aslist(at):                                      # deeper nested lists are not checked
+                for atv in self.attr_get_aslist(at):                                      # more deeply nested lists are not checked
                     if isinstance(atv, Treacl):
                         atv.pptree(depth + 1, file=file, maxDepth=maxDepth)               # recurse
                     else:
@@ -134,11 +133,11 @@ class Treacl(object):
                             for t in v.tree_nodes_to_list() ]
         return resLst
 
-    def tree_find_paths(self, pattrn, varName=''):                                        # list paths that with a simple pattern match
+    def tree_find_paths(self, pthElem, varName=''):                                       # list paths that with a simple string equality match
         '''search tree depth first to find all paths with pattern matching
            attribute anywhere in the path
         '''
-        return [ p for p in self.tree_paths_to_list(varName) if pattrn in p.split('.')]
+        return [ p for p in self.tree_paths_to_list(varName) if pthElem in p.split('.')]
 
     def tree_find_paths_regex(self, regexPattrn, varName="", reFlags=re.I):               # list paths that match a regex pattern
         '''search tree depth first to find all paths with regular-expression pattern matching
