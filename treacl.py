@@ -33,38 +33,45 @@ class Treacl(object):
         else:
             return attrs
 
+    def gav(self, at):
+        '''gav: get attribute value
+           one level of indirection to make getattr() function
+           a method. And might be handy for interception
+        '''
+        return getattr(self, at)
+
     def attr_get_aslist(self, at):                                                        # return value, if its singleton Treacl instance, return as a one-item list
-        atv = getattr(self, at)
+        atv = self.gav(at)
         if isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
             return atv
         else:
             return [atv]
 
+    def has_attr(self, at):                                                               # maybe better have attrs recorded in a separate private dict
+        #return at in self.attrs_list()
+        return hasattr(self, at)
+
+    def eval_path(self, pth):                                                             # danger eval is hackable!
+        ''' return value or node at end of given path'''                                  # use some kind of reduce(gav,path.splt('.') ??
+        return eval(f"self{pth}")
+
     # "user" properties                                                                   # as an alternative to attributes in the dunder .__dict__
                                                                                           # see README explanation
-    __props = {}
-
-    def __init__(self, **kwargs):
-        self.__props = {"name": None,                                                     # making assumption that having at least "name", and "type" seems useful,
-                        "type": None }                                                    # so ok to have core code that references it
-        for k,v in kwargs.items(): setattr(self, k, v)
-
     def addProp(self, pName, value):
-        self.__props[pName] = value
+        self._props[pName] = value
         return value
 
     def delProp(self, pName):
-        del self.__props[pName]
+        del self._props[pName]
         return pName
 
     def getProp(self, pName):
-        return self.__props[pName]
+        return self._props[pName]
 
     def listProps(self):
-        return [ k for k in self.__props.keys() ]
+        return [*self._props]                                                            # return dict keys as a list
 
-
-    # some basic traversal methods
+    # some basic tree traversal methods
 
     depthIndent      =    4                                                               # number of spaces indent for tree printing
     valPrintMaxWidth =   40                                                               # for pformat # width is max horizontal number of characters, e.g when printing a list
@@ -101,10 +108,10 @@ class Treacl(object):
         resLst = []
         for at in self.attrs_list():
             resLst += [pth := f'{cpth}.{at}']
-            if isinstance(atv := getattr(self, at), Treacl):
+            if isinstance(atv := self.gav(at), Treacl):
                 resLst += atv.tree_paths_to_list(pth)                                     # recurse
             elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
-                for ei,e in enumerate(atv):                                               # deeper nested lists are not checked
+                for ei,e in enumerate(atv):                                               # more deeply nested lists are not scanned for Treacl nodes
                     resLst += [lpth := f'{cpth}.{at}[{ei}]']
                     if isinstance(e, Treacl): resLst += e.tree_paths_to_list(lpth)        # recurse
         return resLst
@@ -113,7 +120,7 @@ class Treacl(object):
         '''generate all leaf paths'''
         resLst = []
         for at in self.attrs_list():
-            if   isinstance(atv := getattr(self, at), Treacl): resLst += atv.tree_leaf_paths_to_list(f'{cpth}.{at}')  # recurse
+            if   isinstance(atv := self.gav(at), Treacl): resLst += atv.tree_leaf_paths_to_list(f'{cpth}.{at}')  # recurse
             elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
                 for pth in [ e.tree_leaf_paths_to_list(f'{cpth}.{at}[{ei}]') for ei,e in enumerate(atv) if isinstance(e, Treacl) ]: resLst += pth # keep collated list flat
             else: resLst += [f'{cpth}.{at}']
@@ -176,7 +183,7 @@ class Treacl(object):
             print("{", file=file)
             for at in (atL := self.attrs_list()):                                             # same as self.__dict__:
                 print(nameStr := (' ' * self.depthIndent * depth) + f' "{at}": ', end='', file=file)
-                if isinstance(atv := getattr(self, at), Treacl):
+                if isinstance(atv := self.gav(at), Treacl):
                     atv.tree_to_json(depth + 1, file=file, maxDepth=maxDepth)                 # recurse
                 elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):     # deeper nested lists are not checked
                     print("[", file=file)
@@ -216,7 +223,7 @@ class Treacl(object):
         resLst = []
         for at in self.attrs_list():
             resLst += [pth := f'{varName}.{at}']
-            atv = getattr(self, at)
+            atv = self.gav(at)
             if isinstance(atv, Treacl):
                 if atv not in occurDict: resLst += atv.graph_paths_to_list(pth, occurDict)# recurse
             elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):     # n.b. more deeply nested lists are not checked
