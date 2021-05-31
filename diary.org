@@ -1,0 +1,577 @@
+
+#+BEGIN_SRC elisp :session                  :REM set venv
+(shell-command-to-string  "ls -l /home/kleyn/projects/pyvenvs")
+;(pyvenv-deactivate)
+(pyvenv-activate  "/home/kleyn/projects/pyvenvs/envB-py38-all")
+(shell-command-to-string "echo VIRTUAL_ENV=$VIRTUAL_ENV")
+;(shell-command-to-string "which python")
+;(shell-command-to-string "printenv")
+;;(pyvenv-workon "scratchenv-SNmPgRMB")
+#+END_SRC
+
+#+RESULTS:
+: VIRTUAL_ENV=/home/kleyn/projects/pyvenvs/envB-py38-all
+
+* Try Treacl Stuff
+ :PROPERTIES:
+ :header-args: :cache no  :session jupy-treacl :exports results
+ :END:
+
+#+begin_src
+import sys
+from treacl_tattrs import Treacl, tree_diff
+#from treacl import Treacl, tree_diff
+from see import see
+import pudb; bp = pudb.set_trace
+
+# 1) Example data
+
+def personExample(v=21):
+    person = Treacl()
+    person.age          = 25
+    person.name.first   = "John"
+    person.name.last    = "Smith"
+
+    return person
+
+def personExample1(v=21):
+    person = Treacl()
+    person.age          = 25
+    person.name.first   = "John"
+    person.name.last    = "Smith"
+
+    person.address.street.name        = "Maple"
+    person.address.street.number      = v
+    person.address.city               = "New York"
+    person.address.state.name         = "NY"
+    person.address.postalCode         = "10021"
+    person.address.state.abbreviation = "NY"
+    person.address.state.flower       = "Rose"
+    person.address.state.capital      = "Albany"
+
+    person.address.state.neighbour = [Treacl() for x in range(5)]
+    person.address.state.neighbour[0].name = "Connecticut"
+    person.address.state.neighbour[0].abbreviation = "CT"
+    person.address.state.neighbour[0].type = "state"
+
+    person.address.state.neighbour[1].name = "Massachusetts"
+    person.address.state.neighbour[1].abbreviation = "MA"
+    person.address.state.neighbour[1].type = "state"
+
+    person.address.state.neighbour[2].name = "New Jersey"
+    person.address.state.neighbour[2].abbreviation = "NJ"
+    person.address.state.neighbour[2].type = "state"
+
+    person.address.state.neighbour[3].name = "Ontario"
+    person.address.state.neighbour[3].abbreviation = "ON"
+    person.address.state.neighbour[3].type = "province"
+
+    person.address.state.neighbour[4].name = "Pennsylvania"
+    person.address.state.neighbour[4].abbreviation = "PA"
+    person.address.state.neighbour[4].type = "state"
+
+    # person.address.state.neighbour[5].name = "Quebec"
+    # person.address.state.neighbour[5].abbreviation = "QB"
+    # person.address.state.neighbour[5].type = "province"
+
+    # person.address.state.neighbour[6].name = "Vermont"
+    # person.address.state.neighbour[6].abbreviation = "VT"
+    # person.address.state.neighbour[6].type = "state"
+
+    person.phoneNumbers  = [Treacl() for x in range(3)]
+    person.phoneNumbers[0].type   = "home"
+    person.phoneNumbers[0].number = "212 555-1234"
+    person.phoneNumbers[1].type   = "fax"
+    person.phoneNumbers[1].number = "646 555-4567"
+    person.phoneNumbers[2].type   = "mobile"
+    person.phoneNumbers[2].number = "646 555-1231"
+
+    person.cars  = [Treacl() for x in range(3)]
+    person.cars[0].make  = "Honda"
+    person.cars[0].model = "Prelude"
+    person.cars[1].make  = "Chevrolet"
+    person.cars[1].model = "Impala"
+    person.cars[2].make  = "Audi"
+    person.cars[2].model = "A5"
+
+    person.sex.type = "male"
+    person.status   = "single"
+
+    return person
+
+print("ARGV:",sys.argv)
+argv1 = '..'
+argv2 = False
+argv3 = False
+if len(sys.argv)>=2: argv1 = sys.argv[1]
+if len(sys.argv)>=3: argv2 = bool(int(sys.argv[2]))
+if len(sys.argv)>=4: argv3 = bool(int(sys.argv[3]))
+
+person = personExample()
+
+#person.pptree()                  # no result, formatted print
+for p in person.tree_paths_to_list(): print(p)
+
+if False:
+    tstExpr = argv1                              #'..st*'
+    print(f'tstExpr={tstExpr}\n')
+    #for x in person.tree_find_paths_pathex(tstExpr): print(x)
+    res = person.tree_find_paths_pathex(tstExpr, valP=argv2, printP=argv3)
+    # print(res)
+
+if False:
+    tPath = argv1                              #'..st*'
+    print(f'{tPath=}\n')
+    print(f"EVALP person{tPath} =", person.eval_path(tPath))
+
+if False:
+    person2 = personExample(2)
+    tree_diff(person, person2)
+
+#pexpr = "phoneNumbers[0].number"
+#print(f"EVALP person.{pexpr} =", person.eval_path(pexpr))
+
+#for x in person.tree_paths_pathexpr_dfs(tstExpr): print(x)
+# *       matches everything
+# ?       matches any single character
+# [seq]   matches any character in seq
+# [!seq]  matches any char not in seq
+
+#person.listProps()
+#person.attrs_list()
+#person.ppattrs()                 # no result, formatted print
+
+
+#for p in person.tree_paths_to_list(): print(p)
+#person.tree_nodes_to_list()
+
+#person.tree_find_paths_regex("ty.e")
+#person.tree_find_paths_regex("ty?e") # maybe y
+#person.tree_find_paths_pathex("*.*")
+#person.tree_find_paths_pathex("..make..")
+#person.tree_to_json()
+
+#person.tree_paths_pathexpr_dfs(self, pthExpr="..", cpth="")
+#person.tree_paths_pathexpr_dfs()
+#person.tree_paths_pathexpr_dfs("cars*")
+#bp()
+
+
+#print()
+#for x in person.tree_paths_to_list(): print(x)
+#tstExpr = '..addr*'           # ok
+#tstExpr = '..addr*..*'
+
+#tstExpr = '..'                # ok
+#print(f'tstExpr={tstExpr}\n')
+#for x in person.tree_paths_pathexpr_dfs(tstExpr): print(x)
+#print()
+
+#ss
+
+
+
+
+#+end_src
+
+* from setuptools import setup
+
+# Utility function to read the README file.
+# Used for the long_description.  It's nice, because now 1) we have a top level
+# README file and 2) it's easier to type in the README file than to put a raw
+# string in below ...
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
+setup(
+    name = "an_example_pypi_project",
+    version = "0.0.4",
+    author = "Andrew Carter",
+    author_email = "andrewjcarter@gmail.com",
+    description = ("An demonstration of how to create, document, and publish "
+                                   "to the cheese shop a5 pypi.org."),
+    license = "BSD",
+    keywords = "example documentation tutorial",
+    url = "http://packages.python.org/an_example_pypi_project",
+    packages=['an_example_pypi_project', 'tests'],
+    long_description=read('README'),
+    classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Topic :: Utilities",
+        "License :: OSI Approved :: BSD License",
+    ],
+)
+
+* nested graph http://doc.norang.ca/org-mode.html
+#+begin_src dot :file some_filename.png :cmdline -Kdot -Tpng
+  <context of graphviz source goes here>
+#+end_src
+
+digraph G {
+  size="8,6"
+  ratio=expand
+  edge [dir=both]
+  plcnet [shape=box, label="PLC Network"]
+  subgraph cluster_wrapline {
+    label="Wrapline Control System"
+    color=purple
+    subgraph {
+    rank=same
+    exec
+    sharedmem [style=filled, fillcolor=lightgrey, shape=box]
+    }
+    edge[style=dotted, dir=none]
+    exec -> opserver
+    exec -> db
+    plc -> exec
+    edge [style=line, dir=both]
+    exec -> sharedmem
+    sharedmem -> db
+    plc -> sharedmem
+    sharedmem -> opserver
+  }
+  plcnet -> plc [constraint=false]
+  millwide [shape=box, label="Millwide System"]
+  db -> millwide
+
+  subgraph cluster_opclients {
+    color=blue
+    label="Operator Clients"
+    rankdir=LR
+    labelloc=b
+    node[label=client]
+    opserver -> client1
+    opserver -> client2
+    opserver -> client3
+  }
+}
+
+
+
+
+
+* ideas
+** querying treacl:
+
+  use jq language
+
+
+  SELECT containers.image
+  FROM  kubConfig.spec.template.spec
+  WHERE name=="front-end"
+
+  FROM                          SELECT            WHERE
+  kubConfig.spec.template.spec, containers.image, name=="front-end"
+
+  GENSET                        SUBSET             FUNCTION
+  GENERATE/SOURCE               FILTER             DERIVE
+  GENERATE/SOURCE               PRUNE              DERIVE
+  kubConfig.spec.template.spec, name=="front-end"  containers.image
+
+Slice Assignment
+
+seq[i:j] = values
+
+setitem(seq, slice(i, j), values)
+
+kubConfig = Treacl()
+kubConfig.apiVersion = "apps/v1"
+kubConfig.kind       = "Deployment"
+kubConfig.metadata.name = "rss-site"
+kubConfig.metadata.labels.app = "web"
+kubConfig.spec.replicas = 2
+kubConfig.spec.selector.matchLabels.app = "web"
+kubConfig.spec.template.metadata.labels.app = "web"
+kubConfig.spec.template.spec.containers[:].name= "front-end"
+kubConfig.spec.template.spec.containers[:].image = "nginx"
+kubConfig.spec.template.spec.containers[:].ports.containerPort = 80
+kubConfig.spec.template.spec.containers[:].name  = "rss-reader"
+kubConfig.spec.template.spec.containers[:].image = "nickchase/rss-php-nginx:v1"
+kubConfig.spec.template.spec.containers[:].ports.containerPort = 88
+
+Certificate.Data.X509v3.extensions = []
+Certificate.Data.X509v3.extensions += [(a := t()).X509v3KeyUsage.critical = "Digital Signature"]
+
+
+** 16.4 Playing with graphviz
+
+Graphviz is another great tool for creating graphics in your documents.
+
+The source for a graphviz graphic looks like this in org-mode:
+
+#+begin_src dot :file some_filename.png :cmdline -Kdot -Tpng
+  <context of graphviz source goes here>
+#+end_src
+
+digraph G {
+  size="8,6"
+  ratio=expand
+  edge [dir=both]
+  plcnet [shape=box, label="PLC Network"]
+  subgraph cluster_wrapline {
+    label="Wrapline Control System"
+    color=purple
+    subgraph {
+    rank=same
+    exec
+    sharedmem [style=filled, fillcolor=lightgrey, shape=box]
+    }
+    edge[style=dotted, dir=none]
+    exec -> opserver
+    exec -> db
+    plc -> exec
+    edge [style=line, dir=both]
+    exec -> sharedmem
+    sharedmem -> db
+    plc -> sharedmem
+    sharedmem -> opserver
+  }
+  plcnet -> plc [constraint=false]
+  millwide [shape=box, label="Millwide System"]
+  db -> millwide
+
+  subgraph cluster_opclients {
+    color=blue
+    label="Operator Clients"
+    rankdir=LR
+    labelloc=b
+    node[label=client]
+    opserver -> client1
+    opserver -> client2
+    opserver -> client3
+  }
+}
+
+gv01.png
+
+The -Kdot is optional (defaults to dot) but you can substitute other graphviz types instead here (ie. twopi, neato, circo, etc).
+
+* 20210421 Some ideas around path expressions and depth first search
+#+begin_src python  :REM v96
+
+# def tree_find_paths_pathex2(self, pthExpr, curPth=".", greedyFlg=False):       # list paths that match a path-expression pattern
+    #     '''search tree depth first to find all paths with simple glob-like pattern matching path-expression
+    #          e.g in path-expression "..",                => all paths
+    #          e.g in path-expression "..xyz..",           => all paths containing "xyx" as a path member
+    #          e.g in path-expression "..xpz",             => all paths with leaves xyz
+    #          e.g in path-expression "xx.*yy",  the "*yy" => any attribute ending in "yy"
+    #          e.g in path-expression "xx.yy*",  the "yy*" => any attribute beginning with "yy"
+    #          e.g in path-expression "xx.*.yy", the "*"   => any attribute or list element
+    #     '''
+    #     # TBD bfs vs dfs
+    #     #
+    #     resLst = []
+    #     print('pathExpr', pthExpr)
+    #     if pthExpr:
+    #         curAttrs = self.attrs_list()
+    #         if len(pthExpr)==0:
+    #             pass
+    #         elif pthExpr="..":
+    #             for at in curAttrs:
+    #                 e.tree_find_paths_pathex2(pthExpr, curPth+"."+at)  # "propagate wild card"
+    #         elif pthExpr.startswith(".") and len(pthExpr)==1:
+    #             pth = f'{varName}.{at}'
+    #             if includePartMatch: resLst += [pth]
+    #             if isinstance(atv := getattr(self, at), Treacl):
+    #                 resLst += atv.tree_find_paths_pathex2(pathCdr, pth)                    # recurse
+    #             elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]): # deeper nested lists are not checked
+    #                 for ei,e in enumerate(atv):
+    #                     lpth = f'{varName}.{at}[{ei}]'
+    #                     if includePartMatch: resLst += [lpth]
+    #                     if isinstance(e, Treacl): resLst += e.tree_find_paths_pathex2(pathCdr, lpth)  # recurse
+    #     return resLst
+
+#old json
+
+    def tree_to_json(self, depth=0, file=sys.stdout, maxDepth=ppMaxDepth):
+        '''generate json version of the treacl structure
+           delegating other datatypes to json.dumps() where possible'''
+        if depth<maxDepth:
+            print("{", file=file)
+            for at in (atL := self.attrs_list()):                                             # same as self.__dict__:
+                print(nameStr := (' ' * self.depthIndent * depth) + f' "{at}": ', end='', file=file)
+                if isinstance(atv := getattr(self, at), Treacl):
+                    atv.tree_to_json(depth + 1, file=file, maxDepth=maxDepth)                 # recurse
+                elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):     # deeper nested lists are not checked
+                    print("[", file=file)
+                    for ate in atv:
+                        ate.tree_to_json(depth + 1, file=file, maxDepth=maxDepth)             # recurse
+                        if ate is not atv[-1]: print(",", file=file)
+                    print("]", file=file)
+                else:
+                    try:    print(json.dumps(atv, indent=self.depthIndent * (depth+1)), file=file, end='') # use a to_json method if the datatype has one?
+                    except: print(f'"{type(atv)}"', file=file, end='')
+                if at is not atL[-1]: print(",", file=file)                                   # in json, no comma allowed after last item in dict or list
+            print('}', file=file, end='')
+        else:
+            print('"elided..."', file=file)
+        if depth==0: print(file=file)
+
+      def tree_to_json(self, depth=0, file=sys.stdout, maxDepth=ppMaxDepth):
+        '''generate json version of the treacl structure
+           delegating other datatypes to json.dumps() where possible'''
+        if depth<maxDepth:
+            print("{", file=file)
+            for ai,at in enumerate(atL := self.attrs_list()):                             # same as self.__dict__:
+                print(nameStr := (' ' * self.depthIndent * depth) + f' "{at}": ', end='', file=file)
+                for atv in (atvl := self.attr_get_aslist(at)):                            # deeper nested lists are not checked
+                    if isinstance(atv, Treacl): atv.tree_to_json(depth + 1, file=file, maxDepth=maxDepth)       # recurse
+                    else:
+                        try:    print(json.dumps(atv, indent=self.depthIndent * (depth+1)), file=file, end='')  # use a to_json method if the datatype has one?
+                        except: print(f'"{type(atv)}"', file=file, end='')
+                if ai!=len(atL)-1: print(",", file=file)                                  # in json, no comma allowed after last item in dict or list
+            print('}', file=file, end='')
+        else:
+            print('"elided..."', file=file)
+        if depth==0: print(file=file)
+#+end_src
+#+begin_src python  :REM v97
+    def tree_paths_pathexpr_dfs(self, pthExpr="..", cpth=""):                             # list all paths in tree
+        '''generate all paths mathcing path expression pthExpr, by ordered depth first traversal
+              e.g in path-expression "..",                => all paths
+              e.g in path-expression "..xyz..",           => all paths containing "xyx" as a path member
+              e.g in path-expression "..xpz",             => all paths with leaves xyz
+              e.g in path-expression "xx.*yy",  the "*yy" => any attribute ending in "yy"
+              e.g in path-expression "xx.yy*",  the "yy*" => any attribute beginning with "yy"
+              e.g in path-expression "xx.*.yy", the "*"   => any attribute or list element
+        '''
+
+        # ..
+        # ..a*bc
+        # ..a*bc..
+        # ..a*bc..p*qr
+        # ..a*bcp*qr
+        # a*bc
+        # a*bc..
+
+        resLst = []
+        car, *cdr = re.split('\.\.', pthExpr)
+        # bp()
+        if   pthExpr=='..':
+            mtchStr, nxtPthExpr = "*",    pthExpr                      # 1) path expr is just the wildcard = keep recursing unconditionaly to all leaves no change!#  car==".." and cdr==[]:
+        elif pthExpr[:2]==".." and cdr!=[]:
+            if len([x for x in self.attrs_list() if fnmatch.fnmatch(x, cdr[0])])>0: # hasMatches
+                mtchStr, nxtPthExpr = cdr[0], pthExpr[2+len(cdr[0]):]  # 2)
+            else:
+                mtchStr, nxtPthExpr = "*",    pthExpr                  # 1) path expr is just the wildcard = keep recursing unconditionaly to all leaves no change!#  car==".." and cdr==[]:
+        elif car!='..' and pthExpr!='':
+            mtchStr, nxtPthExpr = car,    pthExpr[len(car):]       # 2) i.e. the car is an attribute pattern to glob match on
+
+        mtchLst = [x for x in self.attrs_list() if fnmatch.fnmatch(x, mtchStr)]
+        bp()
+        if len(mtchLst) > 0:
+            for at in mtchLst:
+                pth = f'{cpth}.{at}'                                         # all paths including sub paths, or just maximal paths
+                if   isinstance(atv := getattr(self, at), Treacl): resLst += atv.tree_paths_pathexpr_dfs(pthExpr, pth)                   # recurse
+                elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
+                    for ei,e in enumerate(atv):                                           # deeper nested lists are not checked
+                        lpth = f'{cpth}.{at}[{ei}]'
+                        if isinstance(e, Treacl): resLst += e.tree_paths_pathexpr_dfs(pthExpr, lpth)     # recurse
+                else: resLst += [pth]
+        else:
+            resLst = [cpth]
+
+        return resLst
+#+end_src
+#+begin_src python  :REM v98
+    def tree_paths_pathexpr_dfs(self, pthExpr="..", cpth=""):                             # list all paths in tree
+        '''generate all paths mathcing path expression pthExpr, by ordered depth first traversal
+              e.g in path-expression "..",                => all paths
+              e.g in path-expression "..xyz..",           => all paths containing "xyx" as a path member
+              e.g in path-expression "..xpz",             => all paths with leaves xyz
+              e.g in path-expression "xx.*yy",  the "*yy" => any attribute ending in "yy"
+              e.g in path-expression "xx.yy*",  the "yy*" => any attribute beginning with "yy"
+              e.g in path-expression "xx.*.yy", the "*"   => any attribute or list element
+        '''
+
+        #bp()
+        resLst = []
+        car, *cdr = re.split('\.\.', pthExpr)
+
+        if  pthExpr=='..':#  car==".." and cdr==[]:                                                       # 1) path expr is just the wildcard = keep recursing unconditionaly to all leaves
+            nxtPthExpr = pthExpr # no change!
+            for at in self.attrs_list():
+                resLst += [pth := f'{cpth}.{at}']                                         # all paths including sub paths, or just maximal paths
+                if   isinstance(atv := getattr(self, at), Treacl): resLst += atv.tree_paths_pathexpr_dfs(pthExpr, pth)                   # recurse
+                elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
+                    for ei,e in enumerate(atv):                                           # deeper nested lists are not checked
+                        resLst += [lpth := f'{cpth}.{at}[{ei}]']
+                        if isinstance(e, Treacl): resLst += e.tree_paths_pathexpr_dfs(pthExpr, lpth)     # recurse
+
+        elif pthExpr[:2]==".." and cdr!=[]:                                                       # 2)
+            nxtPthExpr = pthExpr[2+len(cdr[0]):]
+            for at in [x for x in self.attrs_list() if fnmatch.fnmatch(x, cdr[0])]:
+                resLst += [pth := f'{cpth}.{at}']                                         # all paths including sub paths, or just maximal paths
+                if   isinstance(atv := getattr(self, at), Treacl): resLst += atv.tree_paths_pathexpr_dfs(nxtPthExpr, pth)                   # recurse
+                elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
+                    for ei,e in enumerate(atv):                                           # deeper nested lists are not checked
+                        resLst += [lpth := f'{cpth}.{at}[{ei}]']
+                        if isinstance(e, Treacl): resLst += e.tree_paths_pathexpr_dfs(nxtPthExpr, lpth)     # recurse
+
+        elif car!='..' and pthExpr!='':                                                                        # 2) i.e. the car is an attribute pattern to glob match on
+            nxtPthExpr = pthExpr[len(car):]
+            for at in [x for x in self.attrs_list() if fnmatch.fnmatch(x, car)]:
+                resLst += [pth := f'{cpth}.{at}']                                         # all paths including sub paths, or just maximal paths
+                if   isinstance(atv := getattr(self, at), Treacl): resLst += atv.tree_paths_pathexpr_dfs(nxtPthExpr, pth)                   # recurse
+                elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
+                    for ei,e in enumerate(atv):                                           # deeper nested lists are not checked
+                        resLst += [lpth := f'{cpth}.{at}[{ei}]']
+                        if isinstance(e, Treacl): resLst += e.tree_paths_pathexpr_dfs(nxtPthExpr, lpth)     # recurse
+
+        else: # path expr is empty
+            pass #?
+        return resLst
+
+#+end_src
+
+* 20200530_15:14:02 flat list list comprehension double loop
+lst = [1,2, [3,4], 5, [6,7,8], 9]
+[ y for x in lst for y in x]
+
+* 20200528_14:48:08 graph exporting
+GML format
+graph [
+  comment "This is a sample graph"
+  directed 1
+  id 42
+  label "Hello, I am a graph"
+  node [
+      id 1
+      label "node 1"
+      thisIsASampleAttribute 42
+  ]
+  node [
+      id 2
+      label "node 2"
+      thisIsASampleAttribute 43
+  ]
+  node [
+      id 3
+      label "node 3"
+      thisIsASampleAttribute 44
+  ]
+  edge [
+      source 1
+      target 2
+      label "Edge from node 1 to node 2"
+  ]
+  edge [
+      source 2
+      target 3
+      label "Edge from node 2 to node 3"
+  ]
+  edge [
+      source 3
+      target 1
+      label "Edge from node 3 to node 1"
+  ]
+]
+ "dot" format
+digraph {
+    a -> b[label="0.2",weight="0.2"];
+    a -> c[label="0.4",weight="0.4"];
+    c -> b[label="0.6",weight="0.6"];
+    c -> e[label="0.6",weight="0.6"];
+    e -> e[label="0.1",weight="0.1"];
+    e -> b[label="0.7",weight="0.7"];
+}
