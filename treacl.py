@@ -53,13 +53,22 @@ class Treacl(object):
         #return at in self.attrs_list()
         return hasattr(self, at)
 
-    def eval_path(self, pth):                                                             # danger eval is hackable!
+    def evp(self, pth):                                                                   # very short name is better than "eval_path",  danger eval is hackable!
+        ''' eval path expression: return value or node at end of given path'''            # use some kind of reduce(gav,path.splt('.') ??
+        return eval(f"self{pth}")
+
+    def eval_path(self, pth):                                                             # deprecated, use .evp() danger eval is hackable!
         ''' return value or node at end of given path'''                                  # use some kind of reduce(gav,path.splt('.') ??
         return eval(f"self{pth}")
 
+
     # --- "user" properties                                                              # as an alternative to attributes in the dunder .__dict__
-                                                                                          # see README explanation
-    def addProp(self, pName, value):
+                                                                                         # see README explanation
+    def setProp(self, pName, value):
+        self._props[pName] = value
+        return value
+
+    def addProp(self, pName, value):                                                     # deprecated, use .setProp() should be setProp since it will repalace if alreday there
         self._props[pName] = value
         return value
 
