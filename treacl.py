@@ -89,29 +89,29 @@ class Treacl(object):
 
     # --- some basic tree traversal methods
 
-    depthIndent      =    4                                                               # number of spaces indent for tree printing
-    valPrintMaxWidth =   40                                                               # for pformat # width is max horizontal number of characters, e.g when printing a list
-    ppMaxDepth       = 1000                                                               # default maximum depth for indented printing/exporting of treacl trees or graphs
+    _depthIndent      =    4                                                              # number of spaces indent for tree printing
+    _valPrintMaxWidth =   40                                                              # for pformat # width is max horizontal number of characters, e.g when printing a list
+    _ppMaxDepth       = 1000                                                               # default maximum depth for indented printing/exporting of treacl trees or graphs
 
     def pformat_indented(self, v, indent=0):
         '''use pprint pformat but then add additional indent for given depth'''           # pprint module inserts one less whitespace for first line
-        pfStrings = pformat(v, width=self.valPrintMaxWidth).split('\n')
+        pfStrings = pformat(v, width=self._valPrintMaxWidth).split('\n')
         return [ ('' if num==0 else ' ' * indent) + line for num, line in enumerate(pfStrings) ]
 
     def ppattrs(self, sortedP=False, file=sys.stdout):
         '''pretty print one level: treacl object attributes and their values'''
         print(file=file)                                                                  # TBD: if singleton, don't print a CRLF
         for at in self.attrs_list(sortedP=sortedP):                                       # same as self.__dict__:
-            print(nameStr := ' ' * self.depthIndent * 0 + f'{at}: ', end='', file=file)
+            print(nameStr := ' ' * self._depthIndent * 0 + f'{at}: ', end='', file=file)
             for atv in self.attr_get_aslist(at):                                          # deeper nested lists are not checked
                 for s in self.pformat_indented(atv, len(nameStr)): print(s, file=file)    # use pretty print to print python base datatype
                                                                                           # TBD: add justShow = type|size|subnodes|·..
-    def pptree(self, depth=0, sortedP=False, file=sys.stdout, maxDepth=ppMaxDepth):
+    def pptree(self, depth=0, sortedP=False, file=sys.stdout, maxDepth=_ppMaxDepth):
         '''pretty print many levels: treacl object attributes and their values'''
         print(file=file)                                                                  # TBD: if singleton, don't print a CRLF
         if depth<maxDepth:
             for at in self.attrs_list(sortedP=sortedP):                                   # same as self.__dict__:
-                print(nameStr := ' ' * self.depthIndent * depth + f'{at}: ', end='', file=file)
+                print(nameStr := ' ' * self._depthIndent * depth + f'{at}: ', end='', file=file)
                 for atv in self.attr_get_aslist(at):                                      # more deeply nested lists are not checked
                     if isinstance(atv, Treacl):
                         atv.pptree(depth + 1, file=file, maxDepth=maxDepth)               # recurse
@@ -251,13 +251,13 @@ class Treacl(object):
             else: resLst += [f'{cpth}.{at}']
 
 
-    def tree_to_json(self, depth=0, file=sys.stdout, maxDepth=ppMaxDepth):
+    def tree_to_json(self, depth=0, file=sys.stdout, maxDepth=_ppMaxDepth):
         '''generate json version of the treacl structure
            delegating other datatypes to json.dumps() where possible'''
         if depth<maxDepth:
             print("{", file=file)
             for at in (atL := self.attrs_list()):                                             # same as self.__dict__:
-                print(nameStr := (' ' * self.depthIndent * depth) + f' "{at}": ', end='', file=file)
+                print(nameStr := (' ' * self._depthIndent * depth) + f' "{at}": ', end='', file=file)
                 if isinstance(atv := self.gav(at), Treacl):
                     atv.tree_to_json(depth + 1, file=file, maxDepth=maxDepth)                 # recurse
                 elif isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):     # deeper nested lists are not checked
@@ -267,7 +267,7 @@ class Treacl(object):
                         if ate is not atv[-1]: print(",", file=file)
                     print("]", file=file)
                 else:
-                    try:    print(json.dumps(atv, indent=self.depthIndent * (depth+1)), file=file, end='') # use a to_json method if the datatype has one?
+                    try:    print(json.dumps(atv, indent=self._depthIndent * (depth+1)), file=file, end='') # use a to_json method if the datatype has one?
                     except: print(f'"{type(atv)}"', file=file, end='')
                 if at is not atL[-1]: print(",", file=file)                                   # in json, no comma allowed after last item in dict or list
             print('}', file=file, end='')
@@ -279,12 +279,12 @@ class Treacl(object):
 
     # --- graph methods
 
-    def ppgraph(self, depth=0, occurDict={}, sortedP=False, maxDepth=ppMaxDepth):
-        '''print treacl graph recursively'''                                              # print(' ' * self.depthIndent * depth+self.getProp("name"))
+    def ppgraph(self, depth=0, occurDict={}, sortedP=False, maxDepth=_ppMaxDepth):
+        '''print treacl graph recursively'''                                              # print(' ' * self._depthIndent * depth+self.getProp("name"))
         occurDict[self] = True                                                            # TBD: by changing this to a counter, one could cycle up to a limit
         for at in self.attrs_list(sortedP=sortedP):                                       # TBD: if singleton, don't print a CRLF
             print()
-            print(nameStr := ' ' * self.depthIndent * depth + f'{at}: ', end='')
+            print(nameStr := ' ' * self._depthIndent * depth + f'{at}: ', end='')
             for atv in self.attr_get_aslist(at):                                          # deeper nested lists are not checked
                 if isinstance(atv, Treacl):
                     if atv not in occurDict: atv.ppgraph(depth + 1, occurDict=occurDict, maxDepth=maxDepth)  # recurse
