@@ -20,7 +20,7 @@ class Treacl(object):
                        "type": None }                                                    # so ok to have core code that references it
         for k,v in kwargs.items(): setattr(self, k, v)
 
-    # attribute manipulation
+    # --- attribute manipulation
 
     def __getattr__(self, name):                                                          # the dunder method that gets called when attribute
         '''only called for undefined attributes'''                                        # does not (yet) exist in the object (__dict__)
@@ -60,7 +60,7 @@ class Treacl(object):
         ''' return value or node at end of given path'''                                  # use some kind of reduce(gav,path.splt('.') ??
         return eval(f"self{pth}")
 
-    # "user" properties                                                                   # as an alternative to attributes in the dunder .__dict__
+    # --- "user" properties                                                              # as an alternative to attributes in the dunder .__dict__
                                                                                           # see README explanation
     def addProp(self, pName, value):
         self._props[pName] = value
@@ -267,9 +267,8 @@ class Treacl(object):
         if depth==0: print(file=file)
 
     # def tree_find_paths_pathexex  # TBD extended path-expressions
-    # def tree_diff(self, rhTree):  # compute difference between trees
 
-    # graph functions
+    # --- graph methods
 
     def ppgraph(self, depth=0, occurDict={}, sortedP=False, maxDepth=ppMaxDepth):
         '''print treacl graph recursively'''                                              # print(' ' * self.depthIndent * depth+self.getProp("name"))
