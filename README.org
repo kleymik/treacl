@@ -1,7 +1,7 @@
-(the README.org best viewed raw or in org-mode)
+(this README.org best viewed raw or in org-mode)
 
 
-  Treacl - simple examples which exploit making class instances' attributes dynamic
+  Treacl - simple examples which exploit making class instances' attributes recursively dynamic
 
 
 * introduction
@@ -11,7 +11,7 @@ creating trees and directed graphs.
 
 In regular Python, though a /first/ level attribute will be dynamically added to an instance of a
 class (e.g. "foo.aa = 1"), it will fail when attempting more than one level ("foo.aa.bb.cc = 1").
-Treacl enables this by defaulting to automatically assign the intermediate attributes with a new empty
+Treacl enables this recursively by defaulting to automatically assign the intermediate attributes with a new empty
 Treacl class instance as value:
 
 #+BEGIN_SRC python
@@ -168,7 +168,7 @@ default.
 #+END_SRC
 
 - Matlab:     Yes, In Matlab "structs" (and hence its weird cousin "struct Array"), and the effectively
-              "evaluating parentheses" (e.g. "foo.(bar)") provide dynamic attributes.
+              "evaluating parentheses" (e.g. "foo.(bar)") provide dyanmic attributes.
 #+BEGIN_SRC matlab
               e  = struct();
               e.aa.bb.cc.dd = 1;
@@ -198,6 +198,8 @@ Access to methods by the dot operator is unaffected, but it is sometimes prefera
 separate set of attributes (called, say, "properties") maintained in a separate dict (as illustrated
 in the code) to keep properties associated with the nodes or links in the graph.
 
+- 2021-05-05 added simple path expression search
+- 2021-05-05 added path evaluator
 - 2020-08-10 added simple json exporter
 - 2020-07-20 pass in new attribus via kwargs in constructor
 - 2020-06-03 tweaked/condensed recursive functions
