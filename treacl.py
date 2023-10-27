@@ -72,7 +72,22 @@ class Treacl(object):
     def listProps(self):
         return [*self._props]                                                            # return dict keys as a list
 
-    # some basic tree traversal methods
+    # --- inspection utilities
+
+    def st(self):                                                                        # see tree of attributes and type
+        for f in self.tree_paths_to_list():                                              # TBD: omit type if it endswith "Treacl"
+            vType = str(type(eval("self"+f))).split("'")[1]
+            print("  {0:<40s} {1:s}".format(f, "" if vType.endswith('Treacl') else vType))
+
+    def stp(self, tstExpr='..'):                                                         # see tree paths according to path expression
+        for p in self.tree_find_paths_pathex(tstExpr): print(p)
+
+    def stv(self):    self.pptree(maxDepth=1)
+    def stvv(self):   self.pptree(maxDepth=2)
+    def stvvv(self):  self.pptree(maxDepth=3)
+    def stvvvv(self): self.pptree(maxDepth=4)
+
+    # --- some basic tree traversal methods
 
     depthIndent      =    4                                                               # number of spaces indent for tree printing
     valPrintMaxWidth =   40                                                               # for pformat # width is max horizontal number of characters, e.g when printing a list
