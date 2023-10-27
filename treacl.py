@@ -33,10 +33,8 @@ class Treacl(object):
 
     def attrs_list(self, sortedP=False):
         attrs = [ k for k in vars(self).keys() if not k.startswith('_') ]                 # maybe better have attrs recorded in a separate private dict
-        if sortedP==True:
-            return sorted(attrs)
-        else:
-            return attrs
+        if sortedP==True: return sorted(attrs)
+        else:             return attrs
 
     def gav(self, at):
         '''gav: get attribute value
@@ -47,10 +45,8 @@ class Treacl(object):
 
     def attr_get_aslist(self, at):                                                        # return value, if its singleton Treacl instance, return as a one-item list
         atv = self.gav(at)
-        if isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]):
-            return atv
-        else:
-            return [atv]
+        if isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]): return atv
+        else:                                                                   return [atv]
 
     def has_attr(self, at):                                                               # maybe better have attrs recorded in a separate private dict
         #return at in self.attrs_list()
@@ -191,10 +187,8 @@ class Treacl(object):
             else:
                 for p in selPthLst: print(p)
 
-        if valP:
-            return dict([ (p, self.eval_path(p)) for p in selPthLst ])
-        else:
-            return selPthLst
+        if valP: return dict([ (p, self.eval_path(p)) for p in selPthLst ])
+        else:    return selPthLst
 
     def tree_find_paths_pathex_filter(self, pthLst, pthXpr): # leavesOnly=Falselist paths that match a path-expression pattern
 
