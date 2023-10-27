@@ -57,35 +57,35 @@ kept pre-eminent.
 ## yaml markdown equivalence example
 
 
-          YAML                                          Python- Treacl
-          ====                                          ==============
+   YAML                                          Python- Treacl
+   ====                                          ==============
 
-                                                        kubConfig = Treacl()
-          apiVersion: apps/v1                           kubConfig.apiVersion = "apps/v1"
-          kind: Deployment                              kubConfig.kind       = "Deployment"
-          metadata:                                     kubConfig.metadata.name = "rss-site"
-            name: rss-site                              kubConfig.metadata.labels.app = "web"
-            labels:                                     kubConfig.spec.replicas = 2
-              app: web                                  kubConfig.spec.selector.matchLabels.app = "web"
-          spec:                                         kubConfig.spec.template.metadata.labels.app = "web"
-            replicas: 2                                 kubConfig.spec.template.spec.containers = [Treacl()]
-            selector:                                   kubConfig.spec.template.spec.containers[0].name  = "front-end"
-              matchLabels:                              kubConfig.spec.template.spec.containers[0].image = "nginx"
-                app: web                                kubConfig.spec.template.spec.containers[0].ports.containerPort = 80
-            template:                                   kubConfig.spec.template.spec.containers += [Treacl()]
-              metadata:                                 kubConfig.spec.template.spec.containers[1].name  = "rss-reader"
-                labels:                                 kubConfig.spec.template.spec.containers[1].image = "nickchase/rss-php-nginx:v1"
-                  app: web                              kubConfig.spec.template.spec.containers[1].ports.containerPort = 88
-              spec:
-                containers:
-                  - name: front-end
-                    image: nginx
-                    ports:
-                      - containerPort: 80
-                  - name: rss-reader
-                    image: nickchase/rss-php-nginx:v1
-                    ports:
-                      - containerPort: 88
+                                                 kubConfig = Treacl()
+   apiVersion: apps/v1                           kubConfig.apiVersion = "apps/v1"
+   kind: Deployment                              kubConfig.kind       = "Deployment"
+   metadata:                                     kubConfig.metadata.name = "rss-site"
+     name: rss-site                              kubConfig.metadata.labels.app = "web"
+     labels:                                     kubConfig.spec.replicas = 2
+       app: web                                  kubConfig.spec.selector.matchLabels.app = "web"
+   spec:                                         kubConfig.spec.template.metadata.labels.app = "web"
+     replicas: 2                                 kubConfig.spec.template.spec.containers = [Treacl()]
+     selector:                                   kubConfig.spec.template.spec.containers[0].name  = "front-end"
+       matchLabels:                              kubConfig.spec.template.spec.containers[0].image = "nginx"
+         app: web                                kubConfig.spec.template.spec.containers[0].ports.containerPort = 80
+     template:                                   kubConfig.spec.template.spec.containers += [Treacl()]
+       metadata:                                 kubConfig.spec.template.spec.containers[1].name  = "rss-reader"
+         labels:                                 kubConfig.spec.template.spec.containers[1].image = "nickchase/rss-php-nginx:v1"
+           app: web                              kubConfig.spec.template.spec.containers[1].ports.containerPort = 88
+       spec:
+         containers:
+           - name: front-end
+             image: nginx
+             ports:
+               - containerPort: 80
+           - name: rss-reader
+             image: nickchase/rss-php-nginx:v1
+             ports:
+               - containerPort: 88
 
     >>> kubConfig.pptree()
 
