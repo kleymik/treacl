@@ -20,6 +20,7 @@ class Treacl(object):
                        "type": None }                                                    # so ok to have core code that references it
         for k,v in kwargs.items(): setattr(self, k, v)
 
+
     # --- attribute manipulation
 
     def __getattr__(self, name):                                                          # the dunder method that gets called when attribute
@@ -72,6 +73,7 @@ class Treacl(object):
     def listProps(self):
         return [*self._props]                                                            # return dict keys as a list
 
+
     # --- inspection utilities
 
     def st(self):                                                                        # see tree of attributes and type
@@ -87,11 +89,12 @@ class Treacl(object):
     def stvvv(self):  self.pptree(maxDepth=3)
     def stvvvv(self): self.pptree(maxDepth=4)
 
+
     # --- some basic tree traversal methods
 
     _depthIndent      =    4                                                              # number of spaces indent for tree printing
     _valPrintMaxWidth =   40                                                              # for pformat # width is max horizontal number of characters, e.g when printing a list
-    _ppMaxDepth       = 1000                                                               # default maximum depth for indented printing/exporting of treacl trees or graphs
+    _ppMaxDepth       = 1000                                                              # default maximum depth for indented printing/exporting of treacl trees or graphs
 
     def pformat_indented(self, v, indent=0):
         '''use pprint pformat but then add additional indent for given depth'''           # pprint module inserts one less whitespace for first line
@@ -276,6 +279,7 @@ class Treacl(object):
         if depth==0: print(file=file)
 
     # def tree_find_paths_pathexex  # TBD extended path-expressions
+
 
     # --- graph methods
 
