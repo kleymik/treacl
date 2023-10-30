@@ -1,7 +1,7 @@
 #
 #  treacl.py
 #
-# Treacl - Tree Class - exploiting dynamic attibutes in Python
+# Treacl - a Tree Class - exploiting dynamic attibutes in Python
 #
 # 2018-06-02 kleymik  - yet another small tree/graph datatype
 
@@ -15,9 +15,9 @@ from fnmatch import fnmatch
 class Treacl(object):
     ''' Treacl: a tree class'''
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs):                                                        # kwargs is key value pairs added to property list dict
         self._props = {"name": None,                                                     # making assumption that having at least "name", and "type" seems useful,
-                       "type": None }                                                    # so ok to have core code that references it
+                       "type": None }                                                    # so ok to have core code that references them
         for k,v in kwargs.items(): setattr(self, k, v)
 
 
@@ -33,7 +33,7 @@ class Treacl(object):
     def __setstate__(self, state): vars(self).update(state)
 
     def attrs_list(self, sortedP=False):
-        attrs = [ k for k in vars(self).keys() if not k.startswith('_') ]                 # maybe better have attrs recorded in a separate private dict
+        attrs = [ k for k in vars(self).keys() if not k.startswith('_') ]                 # maybe better to have attrs recorded in a separate private dict
         if sortedP==True: return sorted(attrs)
         else:             return attrs
 
@@ -62,13 +62,13 @@ class Treacl(object):
         return eval(f"self{pth}")
 
 
-    # --- "user" properties                                                              # as an alternative to attributes in the dunder .__dict__
-                                                                                         # see README explanation
+    # --- "user" properties                                                               # as an alternative to attributes in the dunder .__dict__
+                                                                                          # see README explanation
     def setProp(self, pName, value):
         self._props[pName] = value
         return value
 
-    def addProp(self, pName, value):                                                     # deprecated, use .setProp() should be setProp since it will repalace if alreday there
+    def addProp(self, pName, value):                                                      # deprecated, use .setProp() should be setProp since it will repalace if alreday there
         self._props[pName] = value
         return value
 
@@ -80,20 +80,20 @@ class Treacl(object):
         return self._props[pName]
 
     def listProps(self):
-        return [*self._props]                                                            # return dict keys as a list
+        return [*self._props]                                                             # return dict keys as a list
 
 
     # --- inspection utilities
 
-    def st(self):                                                                        # see tree of attributes and type
-        for f in self.tree_paths_to_list():                                              # TBD: omit type if it endswith "Treacl"
+    def st(self):                                                                         # see tree of attributes and type
+        for f in self.tree_paths_to_list():                                               # TBD: omit type if it endswith "Treacl"
             vType = str(type(eval("self"+f))).split("'")[1]
             print("  {0:<40s} {1:s}".format(f, "" if vType.endswith('Treacl') else vType))
 
-    def stp(self, tstExpr='..'):                                                         # see tree paths according to path expression
+    def stp(self, tstExpr='..'):                                                          # see tree paths according to path expression
         for p in self.tree_find_paths_pathex(tstExpr): print(p)
 
-    def stv(self):    self.pptree(maxDepth=1)
+    def stv(self):    self.pptree(maxDepth=1)                                             # convenience inspection methods
     def stvv(self):   self.pptree(maxDepth=2)
     def stvvv(self):  self.pptree(maxDepth=3)
     def stvvvv(self): self.pptree(maxDepth=4)
@@ -101,9 +101,9 @@ class Treacl(object):
 
     # --- some basic tree traversal methods
 
-    _depthIndent      =    4                                                              # number of spaces indent for tree printing
-    _valPrintMaxWidth =   40                                                              # for pformat # width is max horizontal number of characters, e.g when printing a list
-    _ppMaxDepth       = 1000                                                              # default maximum depth for indented printing/exporting of treacl trees or graphs
+    _depthIndent      =    4                                                               # number of spaces indent for tree printing
+    _valPrintMaxWidth =   40                                                               # for pformat # width is max horizontal number of characters, e.g when printing a list
+    _ppMaxDepth       = 1000                                                               # default maximum depth for indented printing/exporting of treacl trees or graphs
 
     def pformat_indented(self, v, indent=0):
         '''use pprint pformat but then add additional indent for given depth'''           # pprint module inserts one less whitespace for first line
