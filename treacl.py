@@ -197,25 +197,31 @@ class Treacl(object):
                 ?         matches any single character
                 [seq]     matches any character in seq
                 [!seq]    matches any character not in seq
-          The glob style matching is applied to the attributes of a path, not the the path as a whole
+          The glob style matching is applied to the attributes composing a path, not the path as a whole
         '''
 
         if caseFoldP:
-            pthLst = [p.lower() for p in self.tree_leaf_paths_to_list()]                 # start with all paths, then exclude during path expression traversal
+            pthLst = [p.lower() for p in self.tree_leaf_paths_to_list()]                  # start with all paths, then exclude during path expression traversal
             pthXpr = pthXpr.lower()
         else:
-            pthLst = self.tree_leaf_paths_to_list()                                      # start with all paths, then exclude during path expression traversal
+            pthLst = self.tree_leaf_paths_to_list()                                       # start with all paths, then exclude during path expression traversal
 
-        selPthLst = self.tree_find_paths_pathex_filter(pthLst, pthXpr)                   # leavesOnly=Falselist paths that match a path-expression pattern
+        selPthLst = self.tree_find_paths_pathex_filter(pthLst, pthXpr)                    # leavesOnly=Falselist paths that match a path-expression pattern
 
         if printP:
             if valP:
-                for p in selPthLst: print(p, '=', self.eval_path(p))
+                for p in selPthLst: print(p, '=', self.evp(p))
             else:
                 for p in selPthLst: print(p)
 
-        if valP: return dict([ (p, self.eval_path(p)) for p in selPthLst ])
-        else:    return selPthLst
+        if   valP==True:        return dict([ (p, self.evp(p)) for p in selPthLst ])
+        elif valP==False:       return selPthLst
+        elif valP=='valsOnly':  return [ self.evp(p) for p in selPthLst ]                 # just the values in a list
+        elif valP=='singleton': return [ self.evp(p) for p in selPthLst ][0]              # assumes there is only on element in the list
+        elif valP=='asTree':    return None                                               # merge the paths back into a tree
+
+        # assumes only one value is found and extracts it from the list
+        # list(rr.tree_find_paths_pathex('..*sigType*', valP=1, printP=0).values())[0]
 
     def tree_find_paths_pathex_filter(self, pthLst, pthXpr): # leavesOnly=Falselist paths that match a path-expression pattern
 
@@ -238,9 +244,9 @@ class Treacl(object):
                 elif pthXpr.startswith('='):          # path expression ends with a value-match predicate
                     mtchElm, pthXpr = pthXpr, ''
                     if mtchElm[1:].startswith('~'):
-                        pthLst = [ p for p in pthLst if not fnmatch(str(self.eval_path(p)), mtchElm[2:]) ] # match path leaf value# use fnmatch.filter?
+                        pthLst = [ p for p in pthLst if not fnmatch(str(self.evp(p)), mtchElm[2:]) ] # match path leaf value# use fnmatch.filter?
                     else:
-                        pthLst = [ p for p in pthLst if     fnmatch(str(self.eval_path(p)), mtchElm[1:]) ] # match path leaf value# use fnmatch.filter?
+                        pthLst = [ p for p in pthLst if     fnmatch(str(self.evp(p)), mtchElm[1:]) ] # match path leaf value# use fnmatch.filter?
 
                 else:                                 # path expression ends with a value-match predicate
                     mtchElm, pthXpr = pthXpr, ''
