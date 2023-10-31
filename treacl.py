@@ -15,10 +15,12 @@ from fnmatch import fnmatch
 class Treacl(object):
     ''' Treacl: a tree class'''
 
-    def __init__(self, **kwargs):                                                        # kwargs is key value pairs added to property list dict
-        self._props = {"name": None,                                                     # making assumption that having at least "name", and "type" seems useful,
-                       "type": None }                                                    # so ok to have core code that references them
-        for k,v in kwargs.items(): setattr(self, k, v)
+    def __init__(self, **kwargs):
+        print('__init_')
+        setattr(self, '_tattrs', [])                                                      #
+        setattr(self, '_props', {"name": None,                                            # making assumption that having at least "name", and "type" seems useful,
+                                 "type": None })                                          # so ok to have core code that references them
+        for k,v in kwargs.items(): self.__props[k] = v                                    # object constructor kwargs go into props
 
 
     # --- attribute manipulation
@@ -26,6 +28,8 @@ class Treacl(object):
     def __getattr__(self, name):                                                          # the dunder method that gets called when attribute
         '''only called for undefined attributes'''                                        # does not (yet) exist in the object (__dict__)
         setattr(self, name, t := Treacl())                                                # I am the walrus
+        self._tattrs += [ name ]
+        print('__getatt__r()', self._tattrs)
         return t
 
     def __getstate__(self): return vars(self)                                             # otherwise pickle complains
@@ -33,42 +37,33 @@ class Treacl(object):
     def __setstate__(self, state): vars(self).update(state)
 
     def attrs_list(self, sortedP=False):
-        attrs = [ k for k in vars(self).keys() if not k.startswith('_') ]                 # maybe better to have attrs recorded in a separate private dict
-        if sortedP==True: return sorted(attrs)
-        else:             return attrs
+        print('attrs_list() B', self._tattrs)
+        if sortedP==True: return sorted(self._tattrs)
+        else:             return self._tattrs
 
     def gav(self, at):
         '''gav: get attribute value
            one level of indirection to make getattr() function
            a method. And might be handy for interception
         '''
+        print('gav()', list(self._tattrs.keys()))
         return getattr(self, at)
 
-    def attr_get_aslist(self, at):                                                        # return value, if its singleton Treacl instance, return as a one-item list
+    def attr_get_aslist(self, at):                                                        # return value, if it's a singleton Treacl instance, return as a one-item list
         atv = self.gav(at)
         if isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]): return atv
         else:                                                                   return [atv]
 
-    def has_attr(self, at):                                                               # maybe better have attrs recorded in a separate private dict
-        #return at in self.attrs_list()
-        return hasattr(self, at)
+    def has_attr(self, at):                                                              # "treacl" attrs recorded in a separate private dict
+        return at in self._tattrs
 
     def evp(self, pth):                                                                   # very short name is better than "eval_path",  danger eval is hackable!
         ''' eval path expression: return value or node at end of given path'''            # use some kind of reduce(gav,path.splt('.') ??
         return eval(f"self{pth}")
 
-    def eval_path(self, pth):                                                             # deprecated, use .evp() danger eval is hackable!
-        ''' return value or node at end of given path'''                                  # use some kind of reduce(gav,path.splt('.') ??
-        return eval(f"self{pth}")
-
-
     # --- "user" properties                                                               # as an alternative to attributes in the dunder .__dict__
                                                                                           # see README explanation
     def setProp(self, pName, value):
-        self._props[pName] = value
-        return value
-
-    def addProp(self, pName, value):                                                      # deprecated, use .setProp() should be setProp since it will repalace if alreday there
         self._props[pName] = value
         return value
 
