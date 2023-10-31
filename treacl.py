@@ -294,7 +294,7 @@ class Treacl(object):
         if depth==0: print(file=file)
 
     # def tree_find_paths_pathexex  # TBD extended path-expressions
-
+    # def tree_diff(self, rhTree):  # compute difference between trees
 
     # --- graph methods
 
@@ -353,6 +353,9 @@ class Treacl(object):
     def graph_save(self, fPath):
         '''super simple - save treacl graph/tree and all attached data using pickle'''
         with open(fPath,'wb') as f: pickle.dump(self, f)
+
+
+# --- functions
 
 def treacl_load(fPath):                                                                   # module function rather than class method, since it creates treacl instances
     '''super simple - load treacl graph/tree and all attached data using pickle'''
