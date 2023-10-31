@@ -1,5 +1,16 @@
 
-#+BEGIN_SRC elisp :session                  :REM set venv
+* Log
+20231029_12:11:20 add geological eras and sub-eras as another example
+20200530_15:14:02 flat list list comprehension double loop
+20200528_14:48:08 graph exporting
+20210421 Some ideas around path expressions and depth first search
+
+* Treacl Examples Workspace
+ :PROPERTIES:
+ :header-args: :cache no  :session jupy-treacl :exports results
+ :END:
+
+#+BEGIN_SRC elisp :session                        :REM set venv - do this first
 (shell-command-to-string  "ls -l /home/kleyn/projects/pyvenvs")
 ;(pyvenv-deactivate)
 ;(pyvenv-activate  "/home/kleyn/projects/pyvenvs/envB-py38-all")
@@ -8,31 +19,80 @@
 ;(shell-command-to-string "printenv")
 ;;(pyvenv-workon "scratchenv-SNmPgRMB")
 #+END_SRC
-
 #+RESULTS:
-: total 28
-: drwxrwxr-x 7 kleyn kleyn 4096 Mar 18 18:26 envA.A-py38-ml
-: drwxrwxr-x 6 kleyn kleyn 4096 Dec  2  2019 envA-py38
-: drwxrwxr-x 7 kleyn kleyn 4096 Dec  2  2019 envB-py38-all
-: drwxrwxr-x 7 kleyn kleyn 4096 Dec  2  2019 envC-py37
-: drwxrwxr-x 6 kleyn kleyn 4096 Apr 12 13:55 envD.D-py39-ml
-: drwxrwxr-x 5 kleyn kleyn 4096 Dec 23 22:31 envD-py39-clean
-: drwxrwxr-x 7 kleyn kleyn 4096 Dec 26 18:25 envE-py39-all
+#+begin_example
+total 56
+drwxrwxr-x 7 kleyn kleyn 4096 Oct 23  2021 envA.A-py38-ml
+drwxrwxr-x 6 kleyn kleyn 4096 Oct 23  2021 envA-py38
+drwxrwxr-x 7 kleyn kleyn 4096 Oct 23  2021 envB-py38-all
+drwxrwxr-x 7 kleyn kleyn 4096 Oct 25  2021 envC-py37
+drwxrwxr-x 7 kleyn kleyn 4096 Oct 25  2021 envD.D-py39-ml
+drwxrwxr-x 5 kleyn kleyn 4096 Oct 25  2021 envD-py39-clean
+drwxrwxr-x 7 kleyn kleyn 4096 Oct 25  2021 envE-py39-all
+drwxrwxr-x 5 kleyn kleyn 4096 Feb 19  2022 envE-py39-test
+drwxrwxr-x 7 kleyn kleyn 4096 Aug  9  2022 envF.A-py310-all
+drwxrwxr-x 5 kleyn kleyn 4096 Aug  9  2022 envF-py310-clean
+drwxrwxr-x 7 kleyn kleyn 4096 Sep 11 16:13 envG-py311-all
+drwxrwxr-x 5 kleyn kleyn 4096 Sep 11 16:01 envG-py311-clean
+drwxrwxr-x 8 kleyn kleyn 4096 Aug  9  2022 junk
+-rw-rw-r-- 1 kleyn kleyn   72 Sep 29  2021 Untitled.ipynb
+#+end_example
 
-* Try Treacl Stuff
- :PROPERTIES:
- :header-args: :cache no  :session jupy-treacl :exports results
- :END:
-
-#+begin_src jupyter-python   :REM data-gen functions
+#+begin_src jupyter-python                        :REM imports
 import sys
 from treacl import Treacl, tree_diff
-#from treacl_tattrs import Treacl, tree_diff
-#from treacl import Treacl, tree_diff
 from see import see
-#import pudb; bp = pudb.set_trace
+from importlib import reload 
 
-# 1) Example data
+#from treacl_tattrs import Treacl, tree_diff
+#import pudb; bp = pudb.set_trace
+#+end_src
+#+RESULTS:
+
+** Example: Geological eras
+#+begin_src jupyter-python                        :REM example treacl tree: Geologiocal Periods
+
+
+# use temp var "bd" (= boundary) to assign boundary date (millions of years before now) 
+# to both start one period and beginning of another 
+gts = Treacl()
+
+gts.cenozoic.quaternary.holocene     = Treacl(type="epoch",  end=0.0, start=(bd :=    0.01))
+gts.cenozoic.quaternary.pleistocene  = Treacl(type="epoch",  end=bd,  start=(bd :=    1.6 ))
+
+gts.cenozoic.tertiary.pliocene       = Treacl(type="epoch",  end=bd,  start=(bd :=    5.3 ))
+gts.cenozoic.tertiary.miocene        = Treacl(type="epoch",  end=bd,  start=(bd :=   23.7 ))
+gts.cenozoic.tertiary.oligocene      = Treacl(type="epoch",  end=bd,  start=(bd :=   36.6 ))
+gts.cenozoic.tertiary.eocene         = Treacl(type="epoch",  end=bd,  start=(bd :=   57.8 ))
+gts.cenozoic.tertiary.paleocene      = Treacl(type="epoch",  end=bd,  start=(bd :=   65.5 ))
+
+gts.mesozoic.cretaceous              = Treacl(type="period", end=bd,  start=(bd :=  144   ))
+gts.mesozoic.jurassic                = Treacl(type="period", end=bd,  start=(bd :=  208   ))
+gts.mesozoic.triassic                = Treacl(type="period", end=bd,  start=(bd :=  245   ))
+
+gts.paleozoic.permian                = Treacl(type="period", end=bd,  start=(bd :=  286   ))
+gts.paleozoic.carboniferous          = Treacl(type="period", end=bd,  start=(bd :=  360   ))
+gts.paleozoic.devonian               = Treacl(type="period", end=bd,  start=(bd :=  408   ))
+gts.paleozoic.silurian               = Treacl(type="period", end=bd,  start=(bd :=  438   ))
+gts.paleozoic.ordovician             = Treacl(type="period", end=bd,  start=(bd :=  505   ))
+gts.paleozoic.cambrian               = Treacl(type="period", end=bd,  start=(bd :=  570   ))
+
+gts.precambrian.proterozoic          = Treacl(type="eon",    end=bd,  start=(bd := 2500   ))
+gts.precambrian.archean              = Treacl(type="eon",    end=bd,  start=(bd := 3800   ))
+gts.precambrian.hadean               = Treacl(type="eon",    end=bd,  start=       4600    )
+
+#for e in gts.attrs_list(): gts.evp(f".{e}").addProp("type","era")
+#for e in gts.attrs_list(): print(gts.evp(f".{e}").getProp("type"))
+
+gts.pptree()
+
+#+end_src
+#+RESULTS:
+#+begin_example
+#+end_example
+
+** Example: Person
+#+begin_src jupyter-python                        :REM example treacl tree: Person 
 
 def personExample(v=21):
     person = Treacl()
@@ -107,10 +167,6 @@ def personExample1(v=21):
 
     return person
 
-#+end_src
-#+RESULTS:
-
-#+begin_src jupyter-python   :REM 
 person = personExample1()
 #person.pptree()                  # no result, formatted print
 for p in person.tree_paths_to_list(): print(p)
@@ -131,7 +187,6 @@ if False:
     person2 = personExample(2)
     tree_diff(person, person2)
 #+end_src
-
 #+RESULTS:
 #+begin_example
   .age
@@ -194,6 +249,9 @@ if False:
   .sex.type
   .status
 #+end_example
+
+
+
 
 print("ARGV:",sys.argv)
 argv1 = '..'
@@ -319,11 +377,7 @@ digraph G {
 }
 
 
-
-
-
-* ideas
-** querying treacl:
+* querying treacl:
 
   use jq language
 
@@ -364,8 +418,7 @@ kubConfig.spec.template.spec.containers[:].ports.containerPort = 88
 Certificate.Data.X509v3.extensions = []
 Certificate.Data.X509v3.extensions += [(a := t()).X509v3KeyUsage.critical = "Digital Signature"]
 
-
-** 16.4 Playing with graphviz
+* Playing with graphviz
 
 Graphviz is another great tool for creating graphics in your documents.
 
@@ -418,7 +471,7 @@ gv01.png
 
 The -Kdot is optional (defaults to dot) but you can substitute other graphviz types instead here (ie. twopi, neato, circo, etc).
 
-* 20210421 Some ideas around path expressions and depth first search
+* Some ideas around path expressions and depth first search
 #+begin_src python  :REM v96
 
 # def tree_find_paths_pathex2(self, pthExpr, curPth=".", greedyFlg=False):       # list paths that match a path-expression pattern
@@ -596,11 +649,11 @@ The -Kdot is optional (defaults to dot) but you can substitute other graphviz ty
 
 #+end_src
 
-* 20200530_15:14:02 flat list list comprehension double loop
+* flat list list comprehension double loop
 lst = [1,2, [3,4], 5, [6,7,8], 9]
 [ y for x in lst for y in x]
 
-* 20200528_14:48:08 graph exporting
+* graph exporting
 GML format
 graph [
   comment "This is a sample graph"
@@ -647,3 +700,33 @@ digraph {
     e -> e[label="0.1",weight="0.1"];
     e -> b[label="0.7",weight="0.7"];
 }
+
+
+* cuts
+gts.cenozoic(type="era").quaternary(     type="period").holocene(   type="epoch",    end=0.0, start=(bd :=    0.01))
+gts.cenozoic(type="era").quaternary(     type="period").pleistocene(type="epoch",    end=bd,  start=(bd :=    1.6))
+
+gts.cenozoic(type="era").tertiary(       type="period").pliocene(   type="epoch",    end=bd,  start=(bd :=    5.3))
+gts.cenozoic(type="era").tertiary(       type="period").miocene(    type="epoch",    end=bd,  start=(bd :=   23.7))
+gts.cenozoic(type="era").tertiary(       type="period").oligocene(  type="epoch",    end=bd,  start=(bd :=   36.6))
+gts.cenozoic(type="era").tertiary(       type="period").eocene(     type="epoch",    end=bd,  start=(bd :=   57.8))
+gts.cenozoic(type="era").tertiary(       type="period").paleocene(  type="epoch",    end=bd,  start=(bd :=   65.5))
+
+gts.mesozoic(type="era").cretaceous(     type="period",                              end=bd,  start=(bd :=  144))
+gts.mesozoic(type="era").jurassic(       type="period",                              end=bd,  start=(bd :=  208))
+gts.mesozoic(type="era").triassic(       type="period",                              end=bd,  start=(bd :=  245))
+
+gts.paleozoic(type="era").permian(       type="period",                              end=bd,  start=(bd :=  286))
+gts.paleozoic(type="era").carboniferous( type="period",                              end=bd,  start=(bd :=  360))
+gts.paleozoic(type="era").devonian(      type="period",                              end=bd,  start=(bd :=  408))
+gts.paleozoic(type="era").silurian(      type="period",                              end=bd,  start=(bd :=  438))
+gts.paleozoic(type="era").ordovician(    type="period",                              end=bd,  start=(bd :=  505))
+gts.paleozoic(type="era").cambrian(      type="period",                              end=bd,  start=(bd :=  570))
+
+gts.precambrian(type="era").proterozoic( type="eon",                                 end=bd,  start=(bd  := 2500))
+gts.precambrian(type="era").archean(     type="eon",                                 end=bd,  start=(bd  := 3800))
+gts.precambrian(type="era").hadean(      type="eon",                                 end=bd,  start=        4600)
+
+* Org Settings
+#+STARTUP: fold
+#+STARTUP: overview

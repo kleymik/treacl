@@ -26,7 +26,7 @@ if __name__ == '__main__':
            newOutFile = f"./tests/{ts}_test.out"
            with redirect_stdout(outfile := open(newOutFile, 'w')):
                exec(open(f"./examples/{ts}.py").read())
-               outfile.close()
+               #outfile.close()
            with open(refOutFile) as fRef: refText = fRef.readlines()
            with open(newOutFile) as fOut: outText = fOut.readlines()
            numDiffLines = 0
