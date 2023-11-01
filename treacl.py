@@ -137,18 +137,6 @@ class Treacl(object):
                     else:
                         for s in self.pformat_indented(atv, len(nameStr)): print(s, file=file)# use pretty print to print python base datatype
 
-    def pptree2(self, depth=0, sortedP=False, file=sys.stdout, maxDepth=_ppMaxDepth):
-        '''pretty print many levels: treacl object attributes and their values'''
-        print(file=file)                                                                  # TBD: if singleton, don't print a CRLF
-        if depth<maxDepth:
-            for at in self.attrs_list(sortedP=sortedP):                                   # same as self.__dict__:
-                print(nameStr := ' ' * self._depthIndent * depth + f'{at}: ', end='', file=file)
-                for atv in self.attr_get_aslist(at):                                      # more deeply nested lists are not checked
-                    if isinstance(atv, Treacl):
-                        atv.pptree2(depth + 1, file=file, maxDepth=maxDepth)              # recurse
-                    else:
-                        for s in self.pformat_indented(atv, len(nameStr)): print(s, file=file)# use pretty print to print python base datatype
-
     def tree_paths_to_list(self, cpth=""):                                                # list all paths in tree
         '''generate all paths to a given depth'''
         resLst = []
