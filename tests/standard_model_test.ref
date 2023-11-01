@@ -38,7 +38,7 @@ M:
                     I: 
                         name: 'gluon'
                         I: 
-                        name: 'higgs'
+                        name: 'BEH'
                         I: 
                             name: 'weak bosons'
                             M: 

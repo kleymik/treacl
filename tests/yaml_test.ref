@@ -1,4 +1,4 @@
-Sample person in YAML:
+Sample config in YAML:
 
 apiVersion: apps/v1
 kind: Deployment
@@ -26,7 +26,7 @@ spec:
           ports:
             - containerPort: 88
 
-Sample person from TREACL:
+Sample config from TREACL:
 
 
 apiVersion: 'apps/v1'

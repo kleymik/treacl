@@ -51,9 +51,9 @@ if __name__ == '__main__':
     print("Sample config: regex filter list of paths")
     for p in cfg.tree_find_paths_regex(".+e.+", "cfg"): print(p)
 
-    print()
-    print("Sample config: path expression filter list of paths")
-    for p in cfg.tree_find_paths_pathex("a.*.c.*", "cfg"): print(p)
+    #print()
+    #print("Sample config: path expression filter list of paths")
+    #for p in cfg.tree_find_paths_pathex("a.*.c.*", "cfg"): print(p)
 
     with open("./tests/configuration.gml",'w') as f:
         asGml = ut.paths_to_gml(cfg.tree_nodes_to_list())

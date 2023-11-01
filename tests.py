@@ -8,15 +8,15 @@ from glob import glob
 
 if __name__ == '__main__':
 
-   print(sys.argv)
-   for f in sorted(glob("./tests/*.ref")): print(f)
+   print("Selected test(s)", sys.argv, "\n")
+   for f in sorted(glob("./tests/*.ref")): print("   ",f)
 
    if sys.argv[1]=='all':
-       testScripts = ["configuration",  "divide_by_7", "json", "ssl_x509_cert", "standard_model", "table", "universe", "yaml", "xml"]
+       testScripts = ["configuration", "divide_by_7", "json", "ssl_x509_cert", "standard_model", "table", "universe", "yaml", "xml"]
        checkOuputDiffs = True
    else:
        testScripts = sys.argv[1:]
-       checkOuputDiffs = False
+       checkOuputDiffs = True
 
    for ts in testScripts:
        print("-"*100, end='')
@@ -26,7 +26,7 @@ if __name__ == '__main__':
            newOutFile = f"./tests/{ts}_test.out"
            with redirect_stdout(outfile := open(newOutFile, 'w')):
                exec(open(f"./examples/{ts}.py").read())
-               #outfile.close()
+               outfile.close()
            with open(refOutFile) as fRef: refText = fRef.readlines()
            with open(newOutFile) as fOut: outText = fOut.readlines()
            numDiffLines = 0

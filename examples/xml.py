@@ -40,8 +40,8 @@ if __name__ == '__main__':
     print("sample person in XML:")
     print(person_in_xml)
 
-    person = sample_xml()
     print()
+    person = sample_xml()
     print("sample person from TREACL:")
     print()
     person.pptree()

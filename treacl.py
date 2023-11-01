@@ -15,10 +15,11 @@ from fnmatch import fnmatch
 class Treacl(object):
     ''' Treacl: a tree class'''
 
-    def __init__(self, **kwargs):                                                        # kwargs is key value pairs added to property list dict
-        self._props = {"name": None,                                                     # making assumption that having at least "name", and "type" seems useful,
-                       "type": None }                                                    # so ok to have core code that references them
-        for k,v in kwargs.items(): setattr(self, k, v)
+
+    def __init__(self, **kwargs):
+        setattr(self, '_tattrs', [])
+        setattr(self, '_props',  {})
+        for k,v in kwargs.items(): self._props[k] = v                                     # object constructor kwargs go into props
 
 
     # --- attribute manipulation
@@ -28,14 +29,20 @@ class Treacl(object):
         setattr(self, name, t := Treacl())                                                # I am the walrus
         return t
 
+    def __setattr__(self, name, val):
+        if not name.startswith("_"): self.__dict__['_tattrs'] += [name]                   # go directly to the dict to avoid setattr infinite recursion
+        self.__dict__[name] = val
+
     def __getstate__(self): return vars(self)                                             # otherwise pickle complains
 
     def __setstate__(self, state): vars(self).update(state)
 
+
+    # --- attribute access
+
     def attrs_list(self, sortedP=False):
-        attrs = [ k for k in vars(self).keys() if not k.startswith('_') ]                 # maybe better to have attrs recorded in a separate private dict
-        if sortedP==True: return sorted(attrs)
-        else:             return attrs
+        if sortedP==True: return sorted(self._tattrs)
+        else:             return self._tattrs
 
     def gav(self, at):
         '''gav: get attribute value
@@ -44,31 +51,22 @@ class Treacl(object):
         '''
         return getattr(self, at)
 
-    def attr_get_aslist(self, at):                                                        # return value, if its singleton Treacl instance, return as a one-item list
+    def attr_get_aslist(self, at):                                                        # return value, if it's a singleton Treacl instance, return as a one-item list
         atv = self.gav(at)
         if isinstance(atv, list) and any([isinstance(e, Treacl) for e in atv]): return atv
         else:                                                                   return [atv]
 
-    def has_attr(self, at):                                                               # maybe better have attrs recorded in a separate private dict
-        #return at in self.attrs_list()
-        return hasattr(self, at)
+    def has_attr(self, at):                                                              # "treacl" attrs recorded in a separate private dict
+        return at in self._tattrs
 
     def evp(self, pth):                                                                   # very short name is better than "eval_path",  danger eval is hackable!
         ''' eval path expression: return value or node at end of given path'''            # use some kind of reduce(gav,path.splt('.') ??
         return eval(f"self{pth}")
 
-    def eval_path(self, pth):                                                             # deprecated, use .evp() danger eval is hackable!
-        ''' return value or node at end of given path'''                                  # use some kind of reduce(gav,path.splt('.') ??
-        return eval(f"self{pth}")
-
 
     # --- "user" properties                                                               # as an alternative to attributes in the dunder .__dict__
                                                                                           # see README explanation
-    def setProp(self, pName, value):
-        self._props[pName] = value
-        return value
-
-    def addProp(self, pName, value):                                                      # deprecated, use .setProp() should be setProp since it will repalace if alreday there
+    def setProp(self, pName, value):                                                      # setProp rather than addProp since it will replace if prop already exists
         self._props[pName] = value
         return value
 
@@ -99,7 +97,7 @@ class Treacl(object):
     def stvvvv(self): self.pptree(maxDepth=4)
 
 
-    # --- some basic tree traversal methods
+    # --- tree traversal methods
 
     _depthIndent      =    4                                                               # number of spaces indent for tree printing
     _valPrintMaxWidth =   40                                                               # for pformat # width is max horizontal number of characters, e.g when printing a list
@@ -118,7 +116,28 @@ class Treacl(object):
             for atv in self.attr_get_aslist(at):                                          # deeper nested lists are not checked
                 for s in self.pformat_indented(atv, len(nameStr)): print(s, file=file)    # use pretty print to print python base datatype
                                                                                           # TBD: add justShow = type|size|subnodes|·..
-    def pptree(self, depth=0, sortedP=False, file=sys.stdout, maxDepth=_ppMaxDepth):
+
+    def pptree(self, depth=0, sortedP=False, propsP=False, file=sys.stdout, maxDepth=_ppMaxDepth):       # shows properties if propsP=True
+        '''pretty print many levels: treacl object attributes & values
+           and optionally their properties & values'''
+        print(file=file)                                                                  # TBD: if singleton, don't print a CRLF
+        if propsP:
+            props = self.listProps()
+            if len(props)>0:
+                print(' ' * self._depthIndent * depth + f'--', end='', file=file)
+                for p in props:
+                    if self.getProp(p): print(f' {p}={self.getProp(p)}', end='', file=file)
+                print('', file=file)
+        if depth<maxDepth:
+            for at in self.attrs_list(sortedP=sortedP):                                   # same as self.__dict__:
+                print(nameStr := ' ' * self._depthIndent * depth + f'{at}: ', end='', file=file)
+                for atv in self.attr_get_aslist(at):                                      # more deeply nested lists are not checked
+                    if isinstance(atv, Treacl):
+                        atv.pptree(depth + 1, file=file, maxDepth=maxDepth)               # recurse
+                    else:
+                        for s in self.pformat_indented(atv, len(nameStr)): print(s, file=file)# use pretty print to print python base datatype
+
+    def pptree2(self, depth=0, sortedP=False, file=sys.stdout, maxDepth=_ppMaxDepth):
         '''pretty print many levels: treacl object attributes and their values'''
         print(file=file)                                                                  # TBD: if singleton, don't print a CRLF
         if depth<maxDepth:
@@ -126,7 +145,7 @@ class Treacl(object):
                 print(nameStr := ' ' * self._depthIndent * depth + f'{at}: ', end='', file=file)
                 for atv in self.attr_get_aslist(at):                                      # more deeply nested lists are not checked
                     if isinstance(atv, Treacl):
-                        atv.pptree(depth + 1, file=file, maxDepth=maxDepth)               # recurse
+                        atv.pptree2(depth + 1, file=file, maxDepth=maxDepth)              # recurse
                     else:
                         for s in self.pformat_indented(atv, len(nameStr)): print(s, file=file)# use pretty print to print python base datatype
 
@@ -257,8 +276,6 @@ class Treacl(object):
 
         return pthLst
 
-    # def tree_find_paths_pathexex  # TBD extended path-expressions
-    # def tree_diff(self, rhTree):  # compute difference between trees
 
     def pathRecurse(pthExpr):
         resLst = []
@@ -296,7 +313,7 @@ class Treacl(object):
     # def tree_find_paths_pathexex  # TBD extended path-expressions
     # def tree_diff(self, rhTree):  # compute difference between trees
 
-    # --- graph methods
+    # --- graph traversal methods
 
     def ppgraph(self, depth=0, occurDict={}, sortedP=False, maxDepth=_ppMaxDepth):
         '''print treacl graph recursively'''                                              # print(' ' * self._depthIndent * depth+self.getProp("name"))

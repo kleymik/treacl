@@ -57,11 +57,11 @@ spec:
             - containerPort: 88
 '''
 
-    print("Sample person in YAML:")
+    print("Sample config in YAML:")
     print(yaml_kub)
 
     treacl_kub = sample_kub()
-    print("Sample person from TREACL:")
+    print("Sample config from TREACL:")
     print()
     treacl_kub.pptree()
 
