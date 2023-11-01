@@ -1,10 +1,36 @@
 
 * Log
+20231101_18:13:12 checking tests still ok, branch="tattrs_and_props"
 20231029_12:11:20 add geological eras and sub-eras as another example
 20200530_15:14:02 flat list list comprehension double loop
 20200528_14:48:08 graph exporting
 20210421 Some ideas around path expressions and depth first search
 
+
+
+* checking tests still ok
+python ./tests.py yaml
+
+J ./tests/yaml_test.ref
+J ./tests/xml_test.ref
+J ./tests/universe_test.ref
+J ./tests/table_test.ref
+J ./tests/standard_model_test.ref
+J ./tests/ssl_x509_cert_test.ref
+J ./tests/json_test.ref
+J ./tests/divide_by_7_test.ref
+
+./tests/configuration_test.ref
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------Executing yaml test
+yam
 * Treacl Examples Workspace
  :PROPERTIES:
  :header-args: :cache no  :session jupy-treacl :exports results
