@@ -35,6 +35,9 @@ class Treacl(object):
 
     def __setstate__(self, state): vars(self).update(state)
 
+
+    # --- attribute access
+
     def attrs_list(self, sortedP=False):
         print('attrs_list() B', self._tattrs)
         if sortedP==True: return sorted(self._tattrs)
