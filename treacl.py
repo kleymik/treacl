@@ -15,12 +15,11 @@ from fnmatch import fnmatch
 class Treacl(object):
     ''' Treacl: a tree class'''
 
+
     def __init__(self, **kwargs):
-        print('__init_')
-        setattr(self, '_tattrs', [])                                                      #
-        setattr(self, '_props', {"name": None,                                            # making assumption that having at least "name", and "type" seems useful,
-                                 "type": None })                                          # so ok to have core code that references them
-        for k,v in kwargs.items(): self.__props[k] = v                                    # object constructor kwargs go into props
+        setattr(self, '_tattrs', [])
+        setattr(self, '_props',  {})
+        for k,v in kwargs.items(): self._props[k] = v                                     # object constructor kwargs go into props
 
 
     # --- attribute manipulation
