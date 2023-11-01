@@ -27,9 +27,11 @@ class Treacl(object):
     def __getattr__(self, name):                                                          # the dunder method that gets called when attribute
         '''only called for undefined attributes'''                                        # does not (yet) exist in the object (__dict__)
         setattr(self, name, t := Treacl())                                                # I am the walrus
-        self._tattrs += [ name ]
-        print('__getatt__r()', self._tattrs)
         return t
+
+    def __setattr__(self, name, val):
+        if not name.startswith("_"): self.__dict__['_tattrs'] += [name]                   # go directly to the dict to avoid setattr infinite recursion
+        self.__dict__[name] = val
 
     def __getstate__(self): return vars(self)                                             # otherwise pickle complains
 
