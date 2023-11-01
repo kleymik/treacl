@@ -65,9 +65,6 @@ spec:
     print()
     treacl_kub.pptree()
 
-    print()
-    treacl_kub.pptree2()
-
     with open("./tests/yaml.gml",'w') as f:
         asGml = ut.paths_to_gml(treacl_kub.tree_nodes_to_list())
         for l in asGml: print(l, file=f)
