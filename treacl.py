@@ -63,9 +63,10 @@ class Treacl(object):
         ''' eval path expression: return value or node at end of given path'''            # use some kind of reduce(gav,path.splt('.') ??
         return eval(f"self{pth}")
 
+
     # --- "user" properties                                                               # as an alternative to attributes in the dunder .__dict__
                                                                                           # see README explanation
-    def setProp(self, pName, value):
+    def setProp(self, pName, value):                                                      # setProp rather than addProp since it will replace if prop already exists
         self._props[pName] = value
         return value
 
@@ -96,7 +97,7 @@ class Treacl(object):
     def stvvvv(self): self.pptree(maxDepth=4)
 
 
-    # --- some basic tree traversal methods
+    # --- tree traversal methods
 
     _depthIndent      =    4                                                               # number of spaces indent for tree printing
     _valPrintMaxWidth =   40                                                               # for pformat # width is max horizontal number of characters, e.g when printing a list
@@ -254,8 +255,6 @@ class Treacl(object):
 
         return pthLst
 
-    # def tree_find_paths_pathexex  # TBD extended path-expressions
-    # def tree_diff(self, rhTree):  # compute difference between trees
 
     def pathRecurse(pthExpr):
         resLst = []
@@ -293,7 +292,7 @@ class Treacl(object):
     # def tree_find_paths_pathexex  # TBD extended path-expressions
     # def tree_diff(self, rhTree):  # compute difference between trees
 
-    # --- graph methods
+    # --- graph traversal methods
 
     def ppgraph(self, depth=0, occurDict={}, sortedP=False, maxDepth=_ppMaxDepth):
         '''print treacl graph recursively'''                                              # print(' ' * self._depthIndent * depth+self.getProp("name"))
