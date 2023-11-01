@@ -117,7 +117,7 @@ class Treacl(object):
                 for s in self.pformat_indented(atv, len(nameStr)): print(s, file=file)    # use pretty print to print python base datatype
                                                                                           # TBD: add justShow = type|size|subnodes|·..
 
-    def pptree2(self, depth=0, sortedP=False, propsP=False, file=sys.stdout, maxDepth=_ppMaxDepth):      # shows properties if propsP=Trues
+    def pptree(self, depth=0, sortedP=False, propsP=False, file=sys.stdout, maxDepth=_ppMaxDepth):       # shows properties if propsP=True
         '''pretty print many levels: treacl object attributes & values
            and optionally their properties & values'''
         print(file=file)                                                                  # TBD: if singleton, don't print a CRLF
@@ -133,11 +133,11 @@ class Treacl(object):
                 print(nameStr := ' ' * self._depthIndent * depth + f'{at}: ', end='', file=file)
                 for atv in self.attr_get_aslist(at):                                      # more deeply nested lists are not checked
                     if isinstance(atv, Treacl):
-                        atv.pptree2(depth + 1, file=file, maxDepth=maxDepth)              # recurse
+                        atv.pptree(depth + 1, file=file, maxDepth=maxDepth)               # recurse
                     else:
                         for s in self.pformat_indented(atv, len(nameStr)): print(s, file=file)# use pretty print to print python base datatype
 
-    def pptree(self, depth=0, sortedP=False, file=sys.stdout, maxDepth=_ppMaxDepth):
+    def pptree2(self, depth=0, sortedP=False, file=sys.stdout, maxDepth=_ppMaxDepth):
         '''pretty print many levels: treacl object attributes and their values'''
         print(file=file)                                                                  # TBD: if singleton, don't print a CRLF
         if depth<maxDepth:
@@ -145,7 +145,7 @@ class Treacl(object):
                 print(nameStr := ' ' * self._depthIndent * depth + f'{at}: ', end='', file=file)
                 for atv in self.attr_get_aslist(at):                                      # more deeply nested lists are not checked
                     if isinstance(atv, Treacl):
-                        atv.pptree(depth + 1, file=file, maxDepth=maxDepth)               # recurse
+                        atv.pptree2(depth + 1, file=file, maxDepth=maxDepth)              # recurse
                     else:
                         for s in self.pformat_indented(atv, len(nameStr)): print(s, file=file)# use pretty print to print python base datatype
 
