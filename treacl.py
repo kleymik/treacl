@@ -41,7 +41,6 @@ class Treacl(object):
     # --- attribute access
 
     def attrs_list(self, sortedP=False):
-        print('attrs_list() B', self._tattrs)
         if sortedP==True: return sorted(self._tattrs)
         else:             return self._tattrs
 
@@ -50,7 +49,6 @@ class Treacl(object):
            one level of indirection to make getattr() function
            a method. And might be handy for interception
         '''
-        print('gav()', list(self._tattrs.keys()))
         return getattr(self, at)
 
     def attr_get_aslist(self, at):                                                        # return value, if it's a singleton Treacl instance, return as a one-item list
