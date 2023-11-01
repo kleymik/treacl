@@ -1,6 +1,8 @@
 
 
-# Treacl - simple examples which exploit making class instances' attributes dynamic
+# Treacl 
+
+making class instances' attributes dynamic
 
 see README.org 
 
