@@ -18,60 +18,60 @@ import utils.util as ut
 def standard_model_interactions():
 
     # elementary particles and their groupings
-    ep = t();           ep.name = "elementary particles";   ep.addProp('type', "grouping")
+    ep = t();           ep.name = "elementary particles";   ep.setProp('type', "grouping")
 
     # fermions
-    fm = t();           fm.name = "fermions";               fm.addProp('type', "grouping")
+    fm = t();           fm.name = "fermions";               fm.setProp('type', "grouping")
     # leptons
-    lp = t();           lp.name = "leptons";                lp.addProp('type', "grouping")
+    lp = t();           lp.name = "leptons";                lp.setProp('type', "grouping")
     #  neutral leptons
-    lpn = t();         lpn.name = "neutral leptons";       lpn.addProp('type', "grouping")
-    en = t();           en.name = "electron neutrino";      en.addProp('type', "elementary")
-    tn = t();           tn.name = "tau neutrino";           tn.addProp('type', "elementary")
-    mnn = t();         mnn.name = "muon neutrino";         mnn.addProp('type', "elementary")
+    lpn = t();         lpn.name = "neutral leptons";       lpn.setProp('type', "grouping")
+    en = t();           en.name = "electron neutrino";      en.setProp('type', "elementary")
+    tn = t();           tn.name = "tau neutrino";           tn.setProp('type', "elementary")
+    mnn = t();         mnn.name = "muon neutrino";         mnn.setProp('type', "elementary")
     lpn.M = [en, tn, mnn]
     #  charged leptons
-    lpc = t();         lpc.name = "charged leptons";       lpc.addProp('type', "grouping")
-    el = t();           el.name = "electron";               el.addProp('type', "elementary")
-    tau = t();         tau.name = "tau";                   tau.addProp('type', "elementary")
-    mn = t();           mn.name = "muon";                   mn.addProp('type', "elementary")
+    lpc = t();         lpc.name = "charged leptons";       lpc.setProp('type', "grouping")
+    el = t();           el.name = "electron";               el.setProp('type', "elementary")
+    tau = t();         tau.name = "tau";                   tau.setProp('type', "elementary")
+    mn = t();           mn.name = "muon";                   mn.setProp('type', "elementary")
     lpc.M = [el, tau, mn]
     lp.M = [lpn, lpc]
     # quarks
-    qk = t();           qk.name = "quarks";                 qk.addProp('type', "grouping")
+    qk = t();           qk.name = "quarks";                 qk.setProp('type', "grouping")
     #  quarks up/down
-    qkud = t();       qkud.name = "up/down quarks";       qkud.addProp('type', "grouping")
-    qku = t();         qku.name = "up quark";              qku.addProp('type', "grouping")
-    qkd = t();         qkd.name = "down quark";            qkd.addProp('type', "grouping")
+    qkud = t();       qkud.name = "up/down quarks";       qkud.setProp('type', "grouping")
+    qku = t();         qku.name = "up quark";              qku.setProp('type', "grouping")
+    qkd = t();         qkd.name = "down quark";            qkd.setProp('type', "grouping")
     qkud.M = [qku, qkd]
     #  quarks charm/strange
-    qkcs = t();       qkcs.name = "charm strange quarks"; qkcs.addProp('type', "grouping")
-    qkc = t();         qkc.name = "charm quark";           qkc.addProp('type', "elementary")
-    qks = t();         qks.name = "strange quark";         qks.addProp('type', "elementary")
+    qkcs = t();       qkcs.name = "charm strange quarks"; qkcs.setProp('type', "grouping")
+    qkc = t();         qkc.name = "charm quark";           qkc.setProp('type', "elementary")
+    qks = t();         qks.name = "strange quark";         qks.setProp('type', "elementary")
     qkcs.M = [qkc, qks]
     #  quarks top/bottom
-    qktb = t();       qktb.name = "top/bottom quarks";   qktb.addProp('type', "grouping")
-    qkt = t();         qkt.name = "top quark";            qkt.addProp('type', "elementary")
-    qkb = t();         qkb.name = "bottom quark";         qkb.addProp('type', "elementary")
+    qktb = t();       qktb.name = "top/bottom quarks";   qktb.setProp('type', "grouping")
+    qkt = t();         qkt.name = "top quark";            qkt.setProp('type', "elementary")
+    qkb = t();         qkb.name = "bottom quark";         qkb.setProp('type', "elementary")
     qktb.M = [qkt, qkb]
     qk.M = [qkud, qkcs, qktb]
     fm.M = [lp, qk]
 
     # bosons
-    bn = t();           bn.name = "fermions";               bn.addProp('type', "grouping")
+    bn = t();           bn.name = "fermions";               bn.setProp('type', "grouping")
     # weak bosons
-    wb = t();           wb.name = "weak bosons";            wb.addProp('type', "grouping")
-    wp = t();           wp.name = "w-plus boson";           wp.addProp('type', "elementary")
-    wm = t();           wm.name = "w-minus boson";          wm.addProp('type', "elementary")
-    zb = t();           zb.name = "z boson";                zb.addProp('type', "elementary")
+    wb = t();           wb.name = "weak bosons";            wb.setProp('type', "grouping")
+    wp = t();           wp.name = "w-plus boson";           wp.setProp('type', "elementary")
+    wm = t();           wm.name = "w-minus boson";          wm.setProp('type', "elementary")
+    zb = t();           zb.name = "z boson";                zb.setProp('type', "elementary")
     wb.M = [wp, wm, zb]
 
     # gluon
-    gn = t();           gn.name = "gluon";                  gn.addProp('type', "elementary")
+    gn = t();           gn.name = "gluon";                  gn.setProp('type', "elementary")
     # photon
-    ph = t();           ph.name = "photon";                 ph.addProp('type', "elementary")
+    ph = t();           ph.name = "photon";                 ph.setProp('type', "elementary")
     # BEH boson
-    hg = t();           hg.name = "BEH";                    hg.addProp('type', "elementary")
+    hg = t();           hg.name = "BEH";                    hg.setProp('type', "elementary")
     bn.M = [wb, gn, ph, hg]
 
     ep.M = [fm, bn] # currently, it seems the universe consists of bosons and fermions
@@ -91,20 +91,19 @@ def standard_model_interactions():
 
     # more properties
     # charge
-    lpn.addProp('charge', '0')
-    lpc.addProp('charge', '-1')
-    qku.addProp('charge', '2/3')
-    qkd.addProp('charge', '-1/3')
-    qkc.addProp('charge', '2/3')
-    qks.addProp('charge', '-1/3')
-    qkt.addProp('charge', '2/3')
-    qkb.addProp('charge', '-1/3')
+    lpn.setProp('charge', '0')
+    lpc.setProp('charge', '-1')
+    qku.setProp('charge', '2/3')
+    qkd.setProp('charge', '-1/3')
+    qkc.setProp('charge', '2/3')
+    qks.setProp('charge', '-1/3')
+    qkt.setProp('charge', '2/3')
+    qkb.setProp('charge', '-1/3')
     # spin
-    ph.addProp('spin', '1/2')
-    wb.addProp('spin', '1')
-    gn.addProp('spin', '1')
-    ph.addProp('spin', '1')
-    hg.addProp('spin', '0')
+    wb.setProp('spin', '1')
+    gn.setProp('spin', '1')
+    ph.setProp('spin', '1')
+    hg.setProp('spin', '0')
 
     return ep   # all elementary particles
 
