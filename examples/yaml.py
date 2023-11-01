@@ -57,13 +57,16 @@ spec:
             - containerPort: 88
 '''
 
-    print("Sample person in YAML:")
+    print("Sample config in YAML:")
     print(yaml_kub)
 
     treacl_kub = sample_kub()
-    print("Sample person from TREACL:")
+    print("Sample config from TREACL:")
     print()
     treacl_kub.pptree()
+
+    print()
+    treacl_kub.pptree2()
 
     with open("./tests/yaml.gml",'w') as f:
         asGml = ut.paths_to_gml(treacl_kub.tree_nodes_to_list())
