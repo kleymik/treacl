@@ -198,6 +198,7 @@ Access to methods by the dot operator is unaffected, but it is sometimes prefera
 separate set of attributes (called, say, "properties") maintained in a separate dict (as illustrated
 in the code) to keep properties associated with the nodes or links in the graph.
 
+- 2023-11-01 pass in props via constructor
 - 2021-05-05 added simple path expression search
 - 2021-05-05 added path evaluator
 - 2020-08-10 added simple json exporter
@@ -211,7 +212,6 @@ in the code) to keep properties associated with the nodes or links in the graph.
 * TBD
 
 possible improvements:
-- pass in props via constructor
 - a more cute/declarative way to do attributes values which are lists of treacl instances,
   i.e. a one-statement way to do "foo = [t(), t()]; foo[0].bar = 1"
 - option for automatically including backpointers
