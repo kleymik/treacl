@@ -87,7 +87,6 @@ def standard_model_interactions():
     qk.I  = [gn, ph, hg, wb]
     lpc.I = [ph, hg]
     wp.I  = [ph]
-    wp.I  = [ph]
 
     # more properties
     # charge
@@ -119,7 +118,7 @@ if __name__ == '__main__':
     with open("./tests/standard_model.gml",'w') as f:
         asGml = ut.paths_to_gml(sm.graph_nodes_to_list())
         for l in asGml: print(l, file=f)
-    for l in asGml: print(l)
+    # for l in asGml: print(l)
 
 
 
